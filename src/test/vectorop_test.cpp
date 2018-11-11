@@ -15,11 +15,10 @@
 namespace mcl {
   
 bool VectorOpTest() {
-  
-  std::vector<Complex> vector_a(3);
-  vector_a[0] = Complex(1.0, 0.0);
-  vector_a[1] = Complex(0.0, 1.0);
-  vector_a[2] = Complex(1.0, 0.5);
+  Vector<Complex, 3> vector_a;
+  vector_a.At(0) = Complex(1.0, 0.0);
+  vector_a.At(1) = Complex(0.0, 1.0);
+  vector_a.At(2) = Complex(1.0, 0.5);
   
   ASSERT(Length(vector_a) == 3);
   

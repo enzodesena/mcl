@@ -9,6 +9,7 @@
 #include "elementaryop.h"
 #include "comparisonop.h"
 #include "vectorop.h"
+#include "vector.h"
 #include <limits>
 
 #if MCL_LOAD_BOOST
@@ -101,8 +102,9 @@ Int Next2(Int input) {
   return (UInt) pow(2, NextPow2(input));
 }
   
-Real Entropy(std::vector<Real> pdf, Real base) {
-  pdf = Multiply<Real>(pdf, 1.0/Sum(pdf));
+template<typename T, int length>
+T Entropy(Vector<T, length> pdf, Real base) {
+  pdf = Multiply(pdf, 1.0/Sum(pdf));
   return -Sum(Multiply(pdf, Log(pdf)))/log(base);
 }
   
