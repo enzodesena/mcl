@@ -136,15 +136,19 @@ T Add(const T* input_data, const Int num_samples) noexcept;
  Equivalent to Matlab's vector(from_index:to_index). (Careful about the
  different indexes convention between here and Matlab.
  */
-template<class T> 
-std::vector<T> Subset(const std::vector<T>& vector,
-                      const Int from_index, const Int to_index) noexcept {
+template<class T>
+Vector<T,kDynamicLength> Subset(
+    const std::vector<T>& input,
+    const Int from_index,
+    const Int to_index) noexcept {
   ASSERT(from_index < (Int)vector.size());
   ASSERT(to_index < (Int)vector.size());
   ASSERT(from_index <= to_index);
-  
-  return std::vector<T>(vector.begin() + from_index,
-                        vector.begin() + to_index + 1);
+  Vector<T,kDynamicLength> output(to_index-from_index+1);
+  for (int i=from_index; i<to_index; ++i) {
+    output[i-from_index] = input[i];
+  }
+  return std::move(output);
 }
 
 
@@ -153,8 +157,11 @@ std::vector<T> Subset(const std::vector<T>& vector,
  [vector_a; vector_b].
  */
 template<class T>
-std::vector<T> Concatenate(std::vector<T> vector_a,
-                           const std::vector<T>& vector_b) noexcept {
+Vector<T,kDynamicLength> Concatenate(
+    const std::vector<T>& vector_a,
+    const std::vector<T>& vector_b) noexcept {
+  Vector<T,kDynamicLength> output(vector_a.length() + vector_b.length());
+  
   std::vector<T> output = Zeros<T>((Int)vector_a.size()+(Int)vector_b.size());
   vector_a.insert(vector_a.end(), vector_b.begin(), vector_b.end());
   return vector_a;
@@ -379,8 +386,9 @@ T Prod(const std::vector<T>& vector) noexcept {
   
 /** Dot product between two vectors. Equivalent to Matlab's dot(a,b) */
 template<class T>
-T Dot(const std::vector<T>& vector_a,
-              const std::vector<T>& vector_b) noexcept {
+T Dot(
+    const std::vector<T>& vector_a,
+    const std::vector<T>& vector_b) noexcept {
   const Int num_elements = (Int)vector_a.size();
   ASSERT(num_elements == (Int)vector_b.size());
   
@@ -391,8 +399,7 @@ T Dot(const std::vector<T>& vector_a,
   return output;
 }
 
-Real Norm(const std::vector<Real>& vector,
-                  Real l_norm = 2.0) noexcept;
+Real Norm(const std::vector<Real>& vector, Real l_norm = 2.0) noexcept;
 
 template<class T>
 void Print(const T* vector, const Int num_elements) noexcept {
@@ -442,8 +449,9 @@ Real Geomean(const std::vector<Real>& input) noexcept;
  normalised inside the function. Hence Mean(input, ones(N)) gives the same
  result as Mean(input, ones(N)/N).
  */
-Real Mean(const std::vector<Real>& input,
-                  const std::vector<Real>& weigths) noexcept;
+Real Mean(
+    const std::vector<Real>& input,
+    const std::vector<Real>& weigths) noexcept;
   
 /** 
  Returns the standard deviation of the `input` vector. Equivalent to Matlab's
@@ -459,8 +467,9 @@ Real Var(const std::vector<Real>& input,
                  const std::vector<Real>& weights) noexcept;
   
 /** Splits a string using a delimiter. */
-std::vector<std::string> Split(const std::string& string,
-                                       char delim) noexcept;
+std::vector<std::string> Split(
+    const std::string& string,
+    char delim) noexcept;
   
 /** Converts roots to polynomial. Equivalent to Matlab's poly(roots) */
 std::vector<Complex> Poly(const std::vector<Complex> roots) noexcept;

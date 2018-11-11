@@ -141,8 +141,7 @@ bool PointWiseOpTest() {
   
   
   
-  
-  std::vector<Real> vector_o = Zeros<Real>(3);
+  Vector<double, 3> vector_o(Zeros<double,3>());
   vector_o[0] = 1.0;
   vector_o[1] = 2.5;
   vector_o[2] = 4.2;

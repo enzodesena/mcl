@@ -85,7 +85,10 @@ namespace mcl {
   typedef float Real; /**< Real type */
 #endif
   
-typedef std::complex<Real> Complex; /**< Complex type */
+template<typename T>
+using Complex = std::complex<T>;
+  
+//typedef std::complex<Real> Complex; /**< Complex type */
   
 #ifdef MCL_ENV64BIT
   typedef unsigned long long UInt; /**< Unsigned int type */
