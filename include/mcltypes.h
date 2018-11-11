@@ -11,6 +11,10 @@
 #ifndef MCL_MCLTYPES_H
 #define MCL_MCLTYPES_H
 
+
+template<class T>
+constexpr T pi_const = T(3.141592653589793238462643383279502884197169399375105820974944);
+
 #ifndef PI
   #define PI 3.141592653589793238462643383279502884197169399375105820974944
 #endif
@@ -72,6 +76,7 @@
 
 namespace mcl {
 
+  
 #define MCL_DATA_TYPE_DOUBLE 1
   
 #if MCL_DATA_TYPE_DOUBLE
@@ -90,6 +95,8 @@ typedef std::complex<Real> Complex; /**< Complex type */
   typedef long Int; /**< Int type */
 #endif
 
+  
+  
 class Logger {
 public:
   static Logger& GetInstance() {

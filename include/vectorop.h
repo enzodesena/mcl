@@ -6,14 +6,14 @@
  Authors: Enzo De Sena, enzodesena@gmail.com
  */
 
-#ifndef MCL_VECTOROP_H
-#define MCL_VECTOROP_H
+#pragma once
 
 
 #include "mcltypes.h"
 #include "elementaryop.h"
 #include "basicop.h"
 #include "matrixop.h"
+#include "vector.h"
 #include <vector>
 #include <iostream>
 
@@ -22,94 +22,113 @@ namespace mcl {
   
   
 /** Equivalent to Matlab's length(input). */
-template<class T>
-Int Length(const std::vector<T>& input) noexcept {
-  return (UInt) input.size();
+template<class T, int length>
+int Length(const Vector<T,length>& input) noexcept {
+  return input.length();
 }
 
 
-/** Returns a vector of zeros */
-template <class T> 
-std::vector<T> Zeros(Int length) noexcept {
-  //TODO: check if this returns zeros for all types
-  return std::vector<T>(length);
-}
-
-template <class T> 
-std::vector<T> EmptyVector() noexcept {
-  return std::vector<T>();
+template <class T, int length>
+void SetToZero(Vector<T, length> vector) {
+  for (int i=0; i<length; ++i) { vector.At(i) = 0.0; }
 }
   
-/**
- Adds zero until the output vector has a length of total_length.
- If the length of input is smaller than total_length, than it returns the
- vector with the first total_length elements.
- */
-template<class T> 
-std::vector<T> ZeroPad(const std::vector<T>& input,
-                       const Int total_length) noexcept {
-  std::vector<T> output = Zeros<T>(total_length);
-  Int M = ((Int)input.size() < total_length) ? input.size() : total_length;
-  for (Int i=0; i<M; ++i) { output[i] = input[i]; }
-  return output;
+/** Returns a vector of zeros */
+template <class T, int length>
+Vector<T, length> Zeros() noexcept {
+  Vector<T, length> vector;
+  SetToZero(vector);
+  return std::move(vector);
 }
 
+template <class T>
+Vector<T, kDynamicLength> Zeros(int length) noexcept {
+  Vector<T, kDynamicLength> vector(length);
+  SetToZero(vector);
+  return std::move(vector);
+}
 
+template <class T>
+  Vector<T, kDynamicLength> EmptyVector() noexcept {
+  return Vector<T, kDynamicLength>(0);
+}
+  
+
+template<typename T, int length>
+void Multiply(
+    const Vector<T, length>& input,
+    const T gain,
+    Vector<T, length>& output) noexcept {
+  ASSERT(input.length() == output.length());
+  for (Int i=0; i<output.length(); ++i) {
+    output.At(i) = input.At(i)*gain;
+  }
+}
 
 /** 
  Returns the point by point multiplication of the vector with the gain.
  Equivalent to Matlab's vector_a.*gain.
  */
-template<class T> 
-std::vector<T> Multiply(const std::vector<T>& vector,
-                                const T gain) noexcept {
-  std::vector<T> output(vector.size());
-  for (Int i=0; i<(Int)vector.size(); ++i) {
-    output[i] = vector[i]*gain;
-  }
-  return output;
+template<typename T, int length>
+Vector<T, length> Multiply(
+    const Vector<T, length>& vector,
+    const T gain) noexcept {
+  Vector<T,length> output;
+  Multiply(vector, gain, output);
+  return std::move(output);
 }
+
+
+void Multiply(
+    const double* input_data,
+    const int num_samples,
+    const double gain,
+    double* output_data) noexcept;
   
-  
-void Multiply(const Real* input_data,
-                      const Int num_samples,
-                      const Real gain,
-                      Real* output_data) noexcept;
-  
-template<>
-inline std::vector<Real> Multiply(const std::vector<Real>& input,
-                                          const Real gain) noexcept {
-  std::vector<Real> output(input.size());
-  Multiply(input.data(), input.size(), gain, output.data());
-  return output;
+template<int length>
+Vector<double, length> Multiply(
+    const Vector<double, length>& input,
+    const double gain) noexcept {
+  Vector<double,length> output;
+  Multiply(input.data(), input.length(), gain, output.data());
+  return std::move(output);
 }
   
 /** This calculates the multiplication of a vector (`input_data_mult`)
  by a constant (`gain`), and then adds the resulting vector to
  another vector (`input_data_add'). */
-void MultiplyAdd(const Real* input_data_mult,
-                         const Real gain,
-                         const Real* input_data_add,
-                         const Int num_samples,
-                         Real* output_data) noexcept;
+void MultiplyAdd(
+    const double* input_data_mult,
+    const double gain,
+    const double* input_data_add,
+    const int num_samples,
+    double* output_data) noexcept;
   
   
 /** 
  Returns the point by point addition of the two vectors.
  Equivalent to Matlab's vector_a+vector_b.
  */
-template<class T>
-std::vector<T> Add(const std::vector<T>& vector_a,
-                           const T scalar) noexcept {
-  std::vector<T> output((Int)vector_a.size());
-  for (Int i=0; i<(Int)vector_a.size(); ++i) {
-    output[i] = vector_a[i]+scalar;
-  }
-  return output;
+template<class T, int length>
+void Add(
+    const Vector<T, length>& vector,
+    const T scalar,
+    Vector<T, length>& output_vector) noexcept {
+  ASSERT(vector.length() == output_vector.length());
+  for (int i=0; i<vector.length(); ++i) { output_vector[i] = vector[i]+scalar; }
+}
+
+template<class T, int length>
+Vector<T, length> Add(
+    const Vector<T, length>& vector,
+    const T scalar) noexcept {
+  Vector<T, length> output(vector.length());
+  Add(vector, scalar, output);
+  return std::move(output);
 }
   
-
-Real Add(const Real* input_data, const Int num_samples) noexcept;
+template<class T>
+T Add(const T* input_data, const Int num_samples) noexcept;
 
   
 /** 
@@ -162,7 +181,7 @@ std::vector<T> BinaryVector(const T& element_a, const T& element_b) noexcept {
  Flips the vector. Equivalent to matlab's flipud or fliplr (which for vectors
  are equivalent).
  */
-template<class T>
+template<class T, int length>
 std::vector<T> Flip(std::vector<T> vector) noexcept {
   if (vector.size() <= 1) { return vector; }
   Int N(Length(vector));
@@ -242,7 +261,7 @@ AddVectors(const std::vector<std::vector<T> >& vectors) noexcept {
  */
 template<class T>
 std::vector<T> AddVectors(const std::vector<T>& vector_a,
-                                  const std::vector<T>& vector_b) noexcept {
+                          const std::vector<T>& vector_b) noexcept {
   // Get maximum length
   Int max_length(Max((Int)vector_a.size(), (Int)vector_b.size()));
   
@@ -478,6 +497,21 @@ std::vector<Real> OverlapAdd(const std::vector<std::vector<Real> >& frames,
   
 std::vector<Complex> ConvertToComplex(std::vector<Real> input) noexcept;
   
-} /**< namespace mcl */
+  
+/**
+ Adds zero until the output vector has a length of total_length.
+ If the length of input is smaller than total_length, than it returns the
+ vector with the first total_length elements.
+ */
+template<class T, int length>
+std::vector<T> ZeroPad(
+    const std::vector<T>& input,
+    const Int total_length) noexcept {
+  std::vector<T> output = Zeros<T>(total_length);
+  Int M = ((Int)input.size() < total_length) ? input.size() : total_length;
+  for (Int i=0; i<M; ++i) { output[i] = input[i]; }
+  return output;
+}
 
-#endif
+
+} /**< namespace mcl */
