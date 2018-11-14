@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		571F9A5817955B160059A90D /* statisticsop.h in Headers */ = {isa = PBXBuildFile; fileRef = 571F9A5717955B160059A90D /* statisticsop.h */; };
-		571F9A5B17955BD60059A90D /* statisticsop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 571F9A5917955BD60059A90D /* statisticsop.cpp */; };
 		571F9A5C17955BD60059A90D /* statisticsop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 571F9A5917955BD60059A90D /* statisticsop.cpp */; };
 		572A876A19C070ED00F62F8F /* pointwiseop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57BA6FFF15B42297002F077F /* pointwiseop.cpp */; };
 		572A876B19C070ED00F62F8F /* vectorop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57BA700B15B42BBD002F077F /* vectorop.cpp */; };
@@ -24,58 +23,32 @@
 		572A877619C070ED00F62F8F /* statisticsop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 571F9A5917955BD60059A90D /* statisticsop.cpp */; };
 		572A877919C070ED00F62F8F /* statisticsop.h in Headers */ = {isa = PBXBuildFile; fileRef = 571F9A5717955B160059A90D /* statisticsop.h */; };
 		572A877A19C070ED00F62F8F /* dataop.h in Headers */ = {isa = PBXBuildFile; fileRef = 57EAE5BF18AA80FC001DC4D4 /* dataop.h */; };
-		57301BCA1D6B01A000D6F5B0 /* butter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57301BC91D6B01A000D6F5B0 /* butter.cpp */; };
 		57301BCB1D6B01A000D6F5B0 /* butter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57301BC91D6B01A000D6F5B0 /* butter.cpp */; };
 		57301BCC1D6B01A000D6F5B0 /* butter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57301BC91D6B01A000D6F5B0 /* butter.cpp */; };
-		57301BCE1D6B01A800D6F5B0 /* kiss_fft.c in Sources */ = {isa = PBXBuildFile; fileRef = 57301BCD1D6B01A800D6F5B0 /* kiss_fft.c */; };
 		57301BCF1D6B01A800D6F5B0 /* kiss_fft.c in Sources */ = {isa = PBXBuildFile; fileRef = 57301BCD1D6B01A800D6F5B0 /* kiss_fft.c */; };
 		57301BD01D6B01A800D6F5B0 /* kiss_fft.c in Sources */ = {isa = PBXBuildFile; fileRef = 57301BCD1D6B01A800D6F5B0 /* kiss_fft.c */; };
-		573F9FA21662799800929EE2 /* matrixop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 573F9FA01662799800929EE2 /* matrixop.cpp */; };
+		573150E42198F8CD00F29476 /* mcl_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57B4EF6C1CD8174E00134991 /* mcl_test.cpp */; };
+		573150E52198F99F00F29476 /* vectorop_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57B4EF771CD8177900134991 /* vectorop_test.cpp */; };
 		573F9FA31662799800929EE2 /* matrixop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 573F9FA01662799800929EE2 /* matrixop.cpp */; };
-		575737C61CFD07C6008E46CD /* quaternion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 575737C51CFD07C6008E46CD /* quaternion.cpp */; };
 		575737C71CFD07C6008E46CD /* quaternion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 575737C51CFD07C6008E46CD /* quaternion.cpp */; };
 		575737C81CFD07C6008E46CD /* quaternion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 575737C51CFD07C6008E46CD /* quaternion.cpp */; };
-		5762F7B31DB30B82007A4C64 /* dataop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57EAE5C118AA8148001DC4D4 /* dataop.cpp */; };
-		5778D80F15B616320015AAC9 /* firfilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5778D80D15B616320015AAC9 /* firfilter.cpp */; };
 		5778D81015B616320015AAC9 /* firfilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5778D80D15B616320015AAC9 /* firfilter.cpp */; };
-		5778D81115B616320015AAC9 /* iirfilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5778D80E15B616320015AAC9 /* iirfilter.cpp */; };
 		5778D81215B616320015AAC9 /* iirfilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5778D80E15B616320015AAC9 /* iirfilter.cpp */; };
 		578BDE692149BEFB001D89B9 /* digitalfilter_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57B4EF701CD8177900134991 /* digitalfilter_test.cpp */; };
-		57B4EF6D1CD8174E00134991 /* mcl_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57B4EF6C1CD8174E00134991 /* mcl_test.cpp */; };
-		57B4EF781CD8177900134991 /* basicop_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57B4EF6E1CD8177900134991 /* basicop_test.cpp */; };
-		57B4EF791CD8177900134991 /* comparisonop_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57B4EF6F1CD8177900134991 /* comparisonop_test.cpp */; };
-		57B4EF7A1CD8177900134991 /* digitalfilter_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57B4EF701CD8177900134991 /* digitalfilter_test.cpp */; };
-		57B4EF7B1CD8177900134991 /* elementaryop_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57B4EF711CD8177900134991 /* elementaryop_test.cpp */; };
-		57B4EF7C1CD8177900134991 /* matrixop_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57B4EF721CD8177900134991 /* matrixop_test.cpp */; };
-		57B4EF7D1CD8177900134991 /* pointwiseop_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57B4EF731CD8177900134991 /* pointwiseop_test.cpp */; };
-		57B4EF7E1CD8177900134991 /* random_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57B4EF741CD8177900134991 /* random_test.cpp */; };
-		57B4EF7F1CD8177900134991 /* statisticsop_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57B4EF751CD8177900134991 /* statisticsop_test.cpp */; };
-		57B4EF801CD8177900134991 /* transformop_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57B4EF761CD8177900134991 /* transformop_test.cpp */; };
-		57B4EF811CD8177900134991 /* vectorop_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57B4EF771CD8177900134991 /* vectorop_test.cpp */; };
-		57B71D14162DD231003411BA /* randomop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57B71D13162DD231003411BA /* randomop.cpp */; };
 		57B71D15162DD231003411BA /* randomop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57B71D13162DD231003411BA /* randomop.cpp */; };
-		57BA700015B42297002F077F /* pointwiseop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57BA6FFF15B42297002F077F /* pointwiseop.cpp */; };
 		57BA700115B42297002F077F /* pointwiseop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57BA6FFF15B42297002F077F /* pointwiseop.cpp */; };
-		57BA700C15B42BBD002F077F /* vectorop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57BA700B15B42BBD002F077F /* vectorop.cpp */; };
 		57BA700D15B42BBD002F077F /* vectorop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57BA700B15B42BBD002F077F /* vectorop.cpp */; };
-		57BA701015B43B64002F077F /* elementaryop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57BA700F15B43B64002F077F /* elementaryop.cpp */; };
 		57BA701115B43B64002F077F /* elementaryop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57BA700F15B43B64002F077F /* elementaryop.cpp */; };
-		57BA701415B43C61002F077F /* comparisonop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57BA701315B43C60002F077F /* comparisonop.cpp */; };
 		57BA701515B43C61002F077F /* comparisonop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57BA701315B43C60002F077F /* comparisonop.cpp */; };
-		57BA701815B4915E002F077F /* transformop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57BA701715B4915E002F077F /* transformop.cpp */; };
 		57BA701915B4915E002F077F /* transformop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57BA701715B4915E002F077F /* transformop.cpp */; };
-		57BA701C15B492D5002F077F /* basicop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57BA701B15B492D4002F077F /* basicop.cpp */; };
 		57BA701D15B492D5002F077F /* basicop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57BA701B15B492D4002F077F /* basicop.cpp */; };
 		57E73F9D1CD7CB1D00095F6E /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57E73F9C1CD7CB1D00095F6E /* Accelerate.framework */; };
 		57E73FA51CD7CBAC00095F6E /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57E73F9C1CD7CB1D00095F6E /* Accelerate.framework */; };
 		57E73FA81CD7CBBA00095F6E /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57E73F9C1CD7CB1D00095F6E /* Accelerate.framework */; };
 		57EAE5C018AA80FC001DC4D4 /* dataop.h in Headers */ = {isa = PBXBuildFile; fileRef = 57EAE5BF18AA80FC001DC4D4 /* dataop.h */; };
 		57EAE5C318AA8148001DC4D4 /* dataop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57EAE5C118AA8148001DC4D4 /* dataop.cpp */; };
-		57FE67C81CFB61EE00E3CB2A /* quaternion_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57FE67C71CFB61EE00E3CB2A /* quaternion_test.cpp */; };
-		57FE67CA1CFB794300E3CB2A /* point.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57FE67C91CFB794300E3CB2A /* point.cpp */; };
 		57FE67CB1CFB794300E3CB2A /* point.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57FE67C91CFB794300E3CB2A /* point.cpp */; };
 		57FE67CC1CFB794300E3CB2A /* point.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57FE67C91CFB794300E3CB2A /* point.cpp */; };
-		57FE67CF1CFB7A4D00E3CB2A /* point_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57FE67CE1CFB7A4D00E3CB2A /* point_test.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -489,35 +462,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5762F7B31DB30B82007A4C64 /* dataop.cpp in Sources */,
-				57B4EF6D1CD8174E00134991 /* mcl_test.cpp in Sources */,
-				57BA700015B42297002F077F /* pointwiseop.cpp in Sources */,
-				57301BCA1D6B01A000D6F5B0 /* butter.cpp in Sources */,
-				57BA700C15B42BBD002F077F /* vectorop.cpp in Sources */,
-				57BA701015B43B64002F077F /* elementaryop.cpp in Sources */,
-				57B4EF7B1CD8177900134991 /* elementaryop_test.cpp in Sources */,
-				57B4EF7E1CD8177900134991 /* random_test.cpp in Sources */,
-				57FE67CF1CFB7A4D00E3CB2A /* point_test.cpp in Sources */,
-				57301BCE1D6B01A800D6F5B0 /* kiss_fft.c in Sources */,
-				57BA701415B43C61002F077F /* comparisonop.cpp in Sources */,
-				57BA701815B4915E002F077F /* transformop.cpp in Sources */,
-				57B4EF7C1CD8177900134991 /* matrixop_test.cpp in Sources */,
-				57B4EF7F1CD8177900134991 /* statisticsop_test.cpp in Sources */,
-				57B4EF7A1CD8177900134991 /* digitalfilter_test.cpp in Sources */,
-				57B4EF811CD8177900134991 /* vectorop_test.cpp in Sources */,
-				575737C61CFD07C6008E46CD /* quaternion.cpp in Sources */,
-				57B4EF781CD8177900134991 /* basicop_test.cpp in Sources */,
-				57BA701C15B492D5002F077F /* basicop.cpp in Sources */,
-				57B4EF801CD8177900134991 /* transformop_test.cpp in Sources */,
-				5778D80F15B616320015AAC9 /* firfilter.cpp in Sources */,
-				5778D81115B616320015AAC9 /* iirfilter.cpp in Sources */,
-				57FE67C81CFB61EE00E3CB2A /* quaternion_test.cpp in Sources */,
-				57B71D14162DD231003411BA /* randomop.cpp in Sources */,
-				57FE67CA1CFB794300E3CB2A /* point.cpp in Sources */,
-				573F9FA21662799800929EE2 /* matrixop.cpp in Sources */,
-				571F9A5B17955BD60059A90D /* statisticsop.cpp in Sources */,
-				57B4EF7D1CD8177900134991 /* pointwiseop_test.cpp in Sources */,
-				57B4EF791CD8177900134991 /* comparisonop_test.cpp in Sources */,
+				573150E42198F8CD00F29476 /* mcl_test.cpp in Sources */,
+				573150E52198F99F00F29476 /* vectorop_test.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

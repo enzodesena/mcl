@@ -9,54 +9,105 @@
 #pragma once
 #include <array>
 #include <vector>
+#include "mcltypes.h"
 
+namespace mcl
+{
+
+/** Test function for the functions in this file */
+bool VectorOpTest();
 
 constexpr int kDynamicLength = -1;
 constexpr int kReferenced = -2;
 
 
 template<typename T = double, int vector_length = kDynamicLength>
-class Vector : std::array<T, vector_length> {
+class Vector : private std::array<T, vector_length>
+{
 public:
   using std::array<T, vector_length>::operator[];
+  using Iterator = typename std::array<T, vector_length>::iterator;
+  using std::array<T, vector_length>::begin;
+  using std::array<T, vector_length>::end;
+  using std::array<T, vector_length>::data;
   
-  Vector() {
-    puts(__PRETTY_FUNCTION__);
+  Vector () noexcept {}
+  
+  Vector(int length) noexcept { ASSERT(length == vector_length); }
+  
+  inline int length()
+  {
+    return static_cast<int>(vector_length);
   }
   
-  Vector(int length) { ASSERT(length == vector_length); }
-  
-  inline int length() {
-    return vector_length;
+  inline T& At(int index) noexcept
+  {
+    ASSERT(index > 0 & index < length());
+    return std::array<T, vector_length>::at(index);
   }
   
-  inline T At(int index) {
-    ASSERT(index>=0 & index<this->size());
-    return this[index];
+  inline const T& At(int index) const noexcept
+  {
+    ASSERT(index > 0 & index < length());
+    return std::array<T, vector_length>::at(index);
   }
+  
 };
 
 
 template<typename T>
-class Vector<T,kDynamicLength> : std::vector<T> {
+class Vector<T, kDynamicLength> : private std::vector<T>
+{
 public:
   using std::vector<T>::operator[];
-
-  Vector(int initial_length) : std::vector<T>(initial_length) {
-    puts(__PRETTY_FUNCTION__);
-  }
-  
+  using Iterator = typename std::vector<T>::iterator;
+  using std::vector<T>::begin;
+  using std::vector<T>::end;
   using std::vector<T>::data;
-  
-  inline int length() {
-    return this->size();
+
+  T operator[](int index)
+  {
+    return std::vector<T>[index];
   }
   
-  inline T At(int index) {
-    ASSERT(index>=0 & index<this->size());
-    return this[index];
+  Vector() : std::vector<T>() {}
+  
+  Vector(int initial_length) : std::vector<T>(initial_length) {}
+  
+  inline void PushBack(const T& element)
+  {
+    std::vector<T>::push_back(element);
+  }
+  
+  inline int length()
+  {
+    return static_cast<int>(this->size());
+  }
+  
+  inline T& At(int index) noexcept
+  {
+    ASSERT(index > 0 & index < length());
+    return std::vector<T>::at(index);
+  }
+  
+  inline const T& At(int index) const noexcept
+  {
+    ASSERT(index > 0 & index < length());
+    return std::vector<T>::at(index);
+  }
+  
+  inline void SetElements(
+    const int index,
+    const Iterator& new_elements_begin,
+    const Iterator& new_elements_end) const noexcept
+  {
+    for (auto iter = begin()+index; iter < end(); iter++)
+    {
+      *iter = *(new_elements_begin++);
+    }
   }
 };
+
 
 //template<typename T>
 //class Vector<T,kReferenced> {
@@ -71,3 +122,7 @@ public:
 //    return this[index];
 //  }
 //};
+
+
+
+} /**< namespace mcl */

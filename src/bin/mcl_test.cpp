@@ -8,13 +8,14 @@
 
 
 #include <iostream>
-#include "matrixop.h"
-#include "vectorop.h"
-#include "transformop.h"
-#include "statisticsop.h"
-#include "firfilter.h"
-#include "randomop.h"
-#include "iirfilter.h"
+//#include "matrixop.h"
+//#include "vectorop.h"
+#include "vector.h"
+//#include "transformop.h"
+//#include "statisticsop.h"
+//#include "firfilter.h"
+//#include "randomop.h"
+//#include "iirfilter.h"
 
 
 
@@ -22,25 +23,25 @@ int main (int argc, char * const argv[]) {
   using namespace mcl;
 
 #ifndef NDEBUG
-  FirFilter::Test();
-  Quaternion::Test();
-  ElementaryOpTest();
-  BasicOpTest();
+//  FirFilter::Test();
+//  Quaternion::Test();
+//  ElementaryOpTest();
+//  BasicOpTest();
   VectorOpTest();
-  PointWiseOpTest();
-  TransformOpTest();
-  MatrixOpTest();
-  StatisticsOpTest();
-  ComparisonOpTest();
-  PointTest();
-  IirFilter::Test();
-  RandomGenerator::Test();
+//  PointWiseOpTest();
+//  TransformOpTest();
+//  MatrixOpTest();
+//  StatisticsOpTest();
+//  ComparisonOpTest();
+//  PointTest();
+//  IirFilter::Test();
+//  RandomGenerator::Test();
   std::cout<<"All tests succeded!\n";
 #else
   std::cout<<"Not running tests since NDEBUG is defined and asserts are ignored.\n";
 #endif
 
-  FirFilter::SpeedTests();
+//  FirFilter::SpeedTests();
   
   return 0;
 }

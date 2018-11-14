@@ -478,9 +478,6 @@ std::vector<Complex> Poly(const std::vector<Real> roots) noexcept;
 /** Returns true if all elements are non negative */
 bool IsNonNegative(const std::vector<Real>& input) noexcept;
   
-/** Test function for the functions in this file */
-bool VectorOpTest();
-  
 Matrix<Real> Cov(const std::vector<Real>& x,
                          const std::vector<Real>& y) noexcept;
   

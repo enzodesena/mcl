@@ -6,10 +6,10 @@
  Authors: Enzo De Sena, enzodesena@gmail.com
  */
 
+#pragma once
+
 #include <assert.h>
 
-#ifndef MCL_MCLTYPES_H
-#define MCL_MCLTYPES_H
 
 
 template<class T>
@@ -186,6 +186,3 @@ private:
 
 } // namespace mcl
 
-
-
-#endif
