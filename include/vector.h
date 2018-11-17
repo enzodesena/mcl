@@ -40,18 +40,17 @@ public:
     return static_cast<int>(vector_length);
   }
   
-  inline T& At(int index) noexcept
+  inline T& operator[](const int index) noexcept
   {
-    ASSERT(index > 0 & index < length());
-    return std::array<T, vector_length>::at(index);
+    ASSERT(index>=0 && index < length());
+    return data()[index];
   }
   
-  inline const T& At(int index) const noexcept
+  inline const T& operator[](const int index) const noexcept
   {
-    ASSERT(index > 0 & index < length());
-    return std::array<T, vector_length>::at(index);
+    ASSERT(index>=0 && index < length());
+    return data()[index];
   }
-  
 };
 
 
@@ -65,43 +64,44 @@ public:
   using std::vector<T>::end;
   using std::vector<T>::data;
 
-  T operator[](int index)
-  {
-    return std::vector<T>[index];
-  }
-  
-  Vector() : std::vector<T>() {}
-  
-  Vector(int initial_length) : std::vector<T>(initial_length) {}
-  
-  inline void PushBack(const T& element)
-  {
-    std::vector<T>::push_back(element);
-  }
-  
-  inline int length()
+  inline int length() const noexcept
   {
     return static_cast<int>(this->size());
   }
   
-  inline T& At(int index) noexcept
+  inline T& operator[](const int index) noexcept
   {
-    ASSERT(index > 0 & index < length());
-    return std::vector<T>::at(index);
+    ASSERT(index>=0 && index < length());
+    return data()[index];
   }
   
-  inline const T& At(int index) const noexcept
+  inline const T& operator[](const int index) const noexcept
   {
-    ASSERT(index > 0 & index < length());
-    return std::vector<T>::at(index);
+    ASSERT(index>=0 && index < length());
+    return data()[index];
+  }
+  
+  Vector() noexcept : std::vector<T>()
+  {
+  }
+  
+  Vector(int initial_length) noexcept : std::vector<T>(initial_length)
+  {
+  }
+  
+  inline void PushBack(const T& element) noexcept
+  {
+    std::vector<T>::push_back(element);
   }
   
   inline void SetElements(
     const int index,
     const Iterator& new_elements_begin,
-    const Iterator& new_elements_end) const noexcept
+    const Iterator& new_elements_end) noexcept
   {
-    for (auto iter = begin()+index; iter < end(); iter++)
+    for (auto iter = begin()+index;
+         iter < end() && new_elements_begin != new_elements_end;
+         iter++)
     {
       *iter = *(new_elements_begin++);
     }

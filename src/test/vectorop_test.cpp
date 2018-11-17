@@ -23,9 +23,8 @@ bool VectorOpTest() {
   ASSERT(myvector_a[0] == 0.1);
   ASSERT(myvector_a[1] == 0.2);
   ASSERT(myvector_a[2] == 0.3);
-  ASSERT(myvector_a.At(2) == 0.3);
-  
-  myvector_a.At(2) = -0.3;
+  ASSERT(myvector_a[2] == 0.3);
+  myvector_a[2] = -0.3;
   ASSERT(myvector_a[2] == -0.3);
   
   Vector<double, kDynamicLength> myvector_b;
@@ -36,8 +35,8 @@ bool VectorOpTest() {
   ASSERT(myvector_b[1] == 0.2);
   ASSERT(myvector_b[2] == 0.3);
   
-  myvector_b.At(2) = -0.3;
-  ASSERT(myvector_b.At(2) == -0.3);
+  myvector_b[2] = -0.3;
+  ASSERT(myvector_b[2] == -0.3);
 
 //  Vector<Complex, 3> vector_a;
 //  vector_a.At(0) = Complex(1.0, 0.0);
