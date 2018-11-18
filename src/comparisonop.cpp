@@ -14,15 +14,7 @@
 #include <vector>
 
 
-#if defined(__APPLE__)
-#if (__GNUC__ >= 4)
-#include <cmath>
-#define isnan(x) std::isnan(x)
-#else
-#include <math.h>
-#define isnan(x) __isnand((double)x)
-#endif
-#endif
+
 
 namespace mcl {
   
@@ -37,9 +29,9 @@ bool IsNan(Real num) {
   return isnan(num);
 }
 
-std::vector<bool> IsNan(std::vector<Real> input) {
+std::vector<bool> IsNan(Vector<Real> input) {
   std::vector<bool> output;
-  for (Int i=0; i<(Int)input.size(); ++i) {
+  for (Int i=0; i<(Int)input.length(); ++i) {
     output.push_back(IsNan(input[i]));
   }
   return output;
@@ -49,9 +41,9 @@ bool IsInf(Real num) {
   return std::isinf(num);
 }
 
-std::vector<bool> IsInf(std::vector<Real> input) {
+std::vector<bool> IsInf(Vector<Real> input) {
   std::vector<bool> output;
-  for (Int i=0; i<(Int)input.size(); ++i) {
+  for (Int i=0; i<(Int)input.length(); ++i) {
     output.push_back(IsInf(input[i]));
   }
   return output;
@@ -59,14 +51,14 @@ std::vector<bool> IsInf(std::vector<Real> input) {
 
 std::vector<bool> Not(std::vector<bool> input) {
   std::vector<bool> output;
-  for (Int i=0; i<(Int)input.size(); ++i) {
+  for (Int i=0; i<(Int)input.length(); ++i) {
     output.push_back(!input[i]);
   }
   return output;
 }
 
 bool All(std::vector<bool> input) {
-  for (Int i=0; i<(Int)input.size(); ++i) {
+  for (Int i=0; i<(Int)input.length(); ++i) {
     if (input[i] == false) {
       return false;
     }
@@ -79,7 +71,7 @@ bool None(std::vector<bool> input) {
 }
 
 bool Any(std::vector<bool> input) {
-  for (Int i=0; i<(Int)input.size(); ++i) {
+  for (Int i=0; i<(Int)input.length(); ++i) {
     if (input[i] == true) {
       return true;
     }
@@ -95,12 +87,12 @@ bool IsLargerOrEqual(const Real num_a, const Real num_b, const Real precision) {
   return num_a >= (num_b - precision);
 }
 
-bool AreAllSmallerOrEqual(const std::vector<Real>& vector_a,
-                          const std::vector<Real>& vector_b) {
-  if ((Int)vector_a.size() != (Int)vector_b.size())
+bool AreAllSmallerOrEqual(const Vector<Real>& vector_a,
+                          const Vector<Real>& vector_b) {
+  if ((Int)vector_a.length() != (Int)vector_b.length())
     return false;
   
-  for (Int i=0; i<(Int)(Int)vector_a.size(); ++i) {
+  for (Int i=0; i<(Int)(Int)vector_a.length(); ++i) {
     if (! IsSmallerOrEqual(vector_a[i], vector_b[i])) { return false; }
   }
   
@@ -121,17 +113,17 @@ bool IsEqual(const Quaternion& q_a, const Quaternion& q_b) {
 
 bool IsEqual(const std::vector<Int>& vector_a,
              const std::vector<Int>& vector_b) {
-  if ((Int)vector_a.size() != (Int)vector_b.size())
+  if ((Int)vector_a.length() != (Int)vector_b.length())
     return false;
   
-  for (Int i=0; i<(Int)vector_a.size(); ++i) {
+  for (Int i=0; i<(Int)vector_a.length(); ++i) {
     if (vector_a[i] != vector_b[i]) { return false; }
   }
   return true;
 }
 
 bool IsReal(const std::vector<Complex>& input) {
-  const Int size = input.size();
+  const Int size = input.length();
   for (Int i=0; i<size; ++i) {
     if (! IsEqual(input[i].imag(), 0.0)) { return false; }
   }
@@ -141,8 +133,8 @@ bool IsReal(const std::vector<Complex>& input) {
 
 
 bool IsEqual(std::vector<Point> points_a, std::vector<Point> points_b) {
-  const Int num_points = (Int)points_a.size();
-  if (num_points != (Int)points_b.size()) { return false; }
+  const Int num_points = (Int)points_a.length();
+  if (num_points != (Int)points_b.length()) { return false; }
   for (Int i=0; i<num_points; ++i) {
     if (! IsEqual(points_a[i], points_b[i])) { return false; }
   }
@@ -172,17 +164,17 @@ bool IsEqual(const Real* input_data_a,
   
 
 bool IsEqual(const Real* input_data_a,
-             const std::vector<Real> input_data_b,
+             const Vector<Real> input_data_b,
              Real precision) {
-  return IsEqual(input_data_a, input_data_b.data(), input_data_b.size(),
+  return IsEqual(input_data_a, input_data_b.data(), input_data_b.length(),
                  precision);
 }
 
   
-bool IsEqual(const std::vector<Real> input_data_b,
+bool IsEqual(const Vector<Real> input_data_b,
              const Real* input_data_a,
              Real precision) {
-  return IsEqual(input_data_a, input_data_b.data(), input_data_b.size(),
+  return IsEqual(input_data_a, input_data_b.data(), input_data_b.length(),
                  precision);
 }
   

@@ -64,35 +64,35 @@ void Add(const Real* input_data_a,
 #endif
 }
   
-std::vector<Complex> ComplexVector(const std::vector<Real>& input) noexcept {
-  std::vector<Complex> output(input.size());
-  for (Int i=0; i<(Int)input.size(); ++i) { output[i] = Complex(input[i], 0.0); }
+std::vector<Complex> ComplexVector(const Vector<Real>& input) noexcept {
+  std::vector<Complex> output(input.length());
+  for (Int i=0; i<(Int)input.length(); ++i) { output[i] = Complex(input[i], 0.0); }
   return output;
 }
 
-std::vector<Real> RealPart(const std::vector<Complex>& input) noexcept {
-  std::vector<Real> output(input.size());
-  for (Int i=0; i<(Int)input.size(); ++i) { output[i] = input[i].real(); }
+Vector<Real> RealPart(const std::vector<Complex>& input) noexcept {
+  Vector<Real> output(input.length());
+  for (Int i=0; i<(Int)input.length(); ++i) { output[i] = input[i].real(); }
   return output;
 }
 
-std::vector<Real> Imag(const std::vector<Complex>& input) noexcept {
-  std::vector<Real> output(input.size());
-  for (Int i=0; i<(Int)input.size(); ++i) { output[i] = input[i].imag(); }
+Vector<Real> Imag(const std::vector<Complex>& input) noexcept {
+  Vector<Real> output(input.length());
+  for (Int i=0; i<(Int)input.length(); ++i) { output[i] = input[i].imag(); }
   return output;
 }
 
 
-std::vector<Real> Inverse(const std::vector<Real>& vector) noexcept {
-  std::vector<Real> output(vector.size());
-  for (Int i=0; i<(Int)vector.size(); ++i) { output[i] = 1.0/vector[i]; }
+Vector<Real> Inverse(const Vector<Real>& vector) noexcept {
+  Vector<Real> output(vector.length());
+  for (Int i=0; i<(Int)vector.length(); ++i) { output[i] = 1.0/vector[i]; }
   return output;
 }
 
 
 std::vector<Complex> Conj(const std::vector<Complex>& vector) noexcept {
-  std::vector<Complex> output(vector.size());
-  for (Int i=0; i<(Int)vector.size(); ++i) { 
+  std::vector<Complex> output(vector.length());
+  for (Int i=0; i<(Int)vector.length(); ++i) { 
     output[i] = Conj(vector[i]); 
   }
   return output;
@@ -100,18 +100,18 @@ std::vector<Complex> Conj(const std::vector<Complex>& vector) noexcept {
 
 
 
-std::vector<Real> Pow(const std::vector<Real>& vector, Real exponent) noexcept {
-  std::vector<Real> output(vector.size());
-  for (Int i=0; i<(Int)vector.size(); ++i) { 
+Vector<Real> Pow(const Vector<Real>& vector, Real exponent) noexcept {
+  Vector<Real> output(vector.length());
+  for (Int i=0; i<(Int)vector.length(); ++i) { 
     output[i] = Pow(vector[i], exponent);
   }
   return output;
 }
 
 
-std::vector<Real> HalfWave(const std::vector<Real>& input) noexcept {
-  std::vector<Real> output = Zeros<Real>(input.size());
-  for (Int i=0; i<(Int)input.size(); ++i) {
+Vector<Real> HalfWave(const Vector<Real>& input) noexcept {
+  Vector<Real> output = Zeros<Real>(input.length());
+  for (Int i=0; i<(Int)input.length(); ++i) {
     if (input[i] > 0.0)
       output[i] = input[i];
   }
@@ -119,54 +119,54 @@ std::vector<Real> HalfWave(const std::vector<Real>& input) noexcept {
 }
 
 
-std::vector<Real> Abs(const std::vector<Real>& input) noexcept {
-  std::vector<Real> output(input.size());
-  for (Int i=0; i<(Int)input.size(); ++i) { 
+Vector<Real> Abs(const Vector<Real>& input) noexcept {
+  Vector<Real> output(input.length());
+  for (Int i=0; i<(Int)input.length(); ++i) { 
     output[i] = std::fabs(input[i]);
   }
   return output;
 }
 
 
-std::vector<Real> Abs(const std::vector<Complex>& input) noexcept {
-  std::vector<Real> output(input.size());
-  for (Int i=0; i<(Int)input.size(); ++i) { 
+Vector<Real> Abs(const std::vector<Complex>& input) noexcept {
+  Vector<Real> output(input.length());
+  for (Int i=0; i<(Int)input.length(); ++i) { 
     output[i] = std::abs(input[i]);
   }
   return output;
 }
 
 
-std::vector<Real> Log(const std::vector<Real>& vector) noexcept {
-  Int n(vector.size());
-  std::vector<Real> output(vector.size());
+Vector<Real> Log(const Vector<Real>& vector) noexcept {
+  Int n(vector.length());
+  Vector<Real> output(vector.length());
   for (Int i=0; i<n; ++i) { output[i] = log(vector[i]); }
   return output;
 }
   
-std::vector<Real> Log10(const std::vector<Real>& vector) noexcept {
-  Int n(vector.size());
-  std::vector<Real> output(vector.size());
+Vector<Real> Log10(const Vector<Real>& vector) noexcept {
+  Int n(vector.length());
+  Vector<Real> output(vector.length());
   for (Int i=0; i<n; ++i) { output[i] = log10(vector[i]); }
   return output;
 }
 
-std::vector<Real> Cos(const std::vector<Real>& vector) noexcept {
-  Int n(vector.size());
-  std::vector<Real> output(vector.size());
+Vector<Real> Cos(const Vector<Real>& vector) noexcept {
+  Int n(vector.length());
+  Vector<Real> output(vector.length());
   for (Int i=0; i<n; ++i) { output[i] = cos(vector[i]); }
   return output;
 }
   
-std::vector<Real> Sin(const std::vector<Real>& vector) noexcept {
-  Int n(vector.size());
-  std::vector<Real> output(vector.size());
+Vector<Real> Sin(const Vector<Real>& vector) noexcept {
+  Int n(vector.length());
+  Vector<Real> output(vector.length());
   for (Int i=0; i<n; ++i) { output[i] = sin(vector[i]); }
   return output;
 }
 
 std::vector<Int> ConvertToInt(const std::vector<UInt>& vector) noexcept {
-  const Int length = vector.size();
+  const Int length = vector.length();
   std::vector<Int> output(length);
   for (Int i=0; i<length; ++i) { output[i] = (Int) vector[i]; }
   return output;

@@ -16,7 +16,7 @@
 namespace mcl {
   
 bool BasicOpTest() {
-  std::vector<Real> vector_d(4);
+  Vector<Real> vector_d(4);
   vector_d[0] = -0.3;
   vector_d[1] = 0.3;
   vector_d[2] = 2.4;
@@ -28,7 +28,7 @@ bool BasicOpTest() {
   ASSERT(IsEqual(Min(vector_d), -12.4));
   ASSERT(MinIndex(vector_d) == 3);
   
-  std::vector<Real> vector_e(4);
+  Vector<Real> vector_e(4);
   vector_e[0] = -0.3;
   vector_e[1] = 30.3;
   vector_e[2] = 2.4;
@@ -40,17 +40,17 @@ bool BasicOpTest() {
   ASSERT(IsEqual(Min(vector_e), -0.3));
   ASSERT(MinIndex(vector_e) == 0);
 
-  std::vector<Real> vector_f(1);
+  Vector<Real> vector_f(1);
   vector_f[0] = 1.0;
   ASSERT(MinIndex(vector_f) == 0);
   ASSERT(MaxIndex(vector_f) == 0);
   
-  std::vector<Real> vector_g(1);
+  Vector<Real> vector_g(1);
   vector_g[0] = -1.0;
   ASSERT(MinIndex(vector_g) == 0);
   ASSERT(MaxIndex(vector_g) == 0);
   
-  std::vector<Real> vector_h = Zeros<Real>(5);
+  Vector<Real> vector_h = Zeros<Real>(5);
   vector_h[3] = -1.0;
   vector_h[4] = 1.0;
   ASSERT(MinIndex(vector_h) == 3);
@@ -69,7 +69,7 @@ bool BasicOpTest() {
   ASSERT(Max(vector_z) == 64286);
   
   // Testing find peaks
-  std::vector<Real> vector_l(5);
+  Vector<Real> vector_l(5);
   vector_l[0] = -0.3;
   vector_l[1] = 30.3;
   vector_l[2] = 2.4;
@@ -87,8 +87,8 @@ bool BasicOpTest() {
   ASSERT(IsEqual(vector_l_peaks_2, vector_l_peaks_2_cmp));
   
   // Checks that it behaves like matlab
-  ASSERT(FindPeaksIndexes(Ones(3)).size() == 0);
-  ASSERT(FindPeaksIndexes(Zeros<Real>(3)).size() == 0);
+  ASSERT(FindPeaksIndexes(Ones(3)).length() == 0);
+  ASSERT(FindPeaksIndexes(Zeros<Real>(3)).length() == 0);
   
   
   std::vector<UInt> vector_m(4);
@@ -110,7 +110,7 @@ bool BasicOpTest() {
   ASSERT(MaxIndex(Zeros<Real>(3)) == 0);
   
   
-  std::vector<Real> vector_n(4);
+  Vector<Real> vector_n(4);
   vector_n[0] = 2.3;
   vector_n[1] = 2.1;
   vector_n[2] = 1.1;

@@ -23,8 +23,8 @@ namespace mcl {
 IirFilter Butter(const Int order, const Real w_low, const Real w_high) {
   std::vector<double> DenC = ComputeDenCoeffs((int) order, w_low, w_high);
   std::vector<double> NumC = ComputeNumCoeffs((int) order, w_low, w_high, DenC);
-  std::vector<Real> denominator(DenC.begin(), DenC.end());
-  std::vector<Real> numerator(NumC.begin(), NumC.end());
+  Vector<Real> denominator(DenC.begin(), DenC.end());
+  Vector<Real> numerator(NumC.begin(), NumC.end());
   
   return IirFilter(numerator, denominator);
 }

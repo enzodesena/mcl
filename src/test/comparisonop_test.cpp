@@ -20,11 +20,11 @@ bool ComparisonOpTest() {
   ASSERT(IsSmallerOrEqual(0.1, 0.5));
   ASSERT(IsSmallerOrEqual(-0.5, -0.1));
   
-  std::vector<Real> vector_a(3);
+  Vector<Real> vector_a(3);
   vector_a[0] = 0.1;
   vector_a[1] = -0.1;
   vector_a[2] = -2.6;
-  std::vector<Real> vector_b(3);
+  Vector<Real> vector_b(3);
   vector_b[0] = 0.1;
   vector_b[1] = -0.5;
   vector_b[2] = -3.0;
@@ -32,7 +32,7 @@ bool ComparisonOpTest() {
   ASSERT(AreAllSmallerOrEqual(vector_b, vector_a));
   ASSERT(!AreAllSmallerOrEqual(vector_a, vector_b));
   
-  std::vector<Real> vector_c(3);
+  Vector<Real> vector_c(3);
   vector_c[0] = 0.1;
   vector_c[1] = -0.5;
   vector_c[2] = 2.1;
@@ -47,7 +47,7 @@ bool ComparisonOpTest() {
   ASSERT(!IsNan(-1.0));
   
   /* Returns true if num is nan */
-  std::vector<Real> input;
+  Vector<Real> input;
   input.push_back(1.0);
   input.push_back(NAN);
   std::vector<bool> output_a = IsNan(input);
@@ -83,7 +83,7 @@ bool ComparisonOpTest() {
   ASSERT(IsInf(INFINITY));
   ASSERT(IsInf(-INFINITY));
   
-  std::vector<Real> input_d;
+  Vector<Real> input_d;
   input_d.push_back(INFINITY);
   input_d.push_back(-INFINITY);
   input_d.push_back(0.1);

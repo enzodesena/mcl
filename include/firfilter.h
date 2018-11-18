@@ -23,7 +23,7 @@ public:
   FirFilter() noexcept;
   
   /** Constructs an FIR filter with impulse response B. */
-  FirFilter(const std::vector<Real> B) noexcept;
+  FirFilter(const Vector<Real> B) noexcept;
   
   /** 
    Returns the output of the filter for an input equal to `input`.
@@ -48,16 +48,16 @@ public:
    @param[in] update_length How many calls to Filter it takes to update the
    coefficients. A value of 0 means that the update is instantaneous. A call
    to Filter(const Real input) counts one, just like
-   Filter(const std::vector<Real>& input).
+   Filter(const Vector<Real>& input).
    */
-  void SetImpulseResponse(const std::vector<Real>& impulse_response,
+  void SetImpulseResponse(const Vector<Real>& impulse_response,
                           const Int update_length = 0) noexcept;
   
   /** Resets the state of the filter */
   void Reset() noexcept;
   
   /** Returns the impulse response of the filter */
-  std::vector<Real> impulse_response() noexcept;
+  Vector<Real> impulse_response() noexcept;
   
   /** Constructs a filter for which output==gain*input always. */
   static FirFilter GainFilter(const Real gain) noexcept;
@@ -101,7 +101,7 @@ private:
   
   Real FilterStraight(Real input_sample) noexcept;
   
-  std::vector<Real> FilterSequential(const std::vector<Real>& input) noexcept;
+  Vector<Real> FilterSequential(const Vector<Real>& input) noexcept;
   
   /** Method called to slowly update the filter coefficients. It is called
    every time one of the Filter method is called and is activated only
@@ -109,8 +109,8 @@ private:
    batch. */
   void UpdateCoefficients() noexcept;
   
-  std::vector<Real> impulse_response_;
-  std::vector<Real> impulse_response_old_;
+  Vector<Real> impulse_response_;
+  Vector<Real> impulse_response_old_;
   Int update_index_;
   Int update_length_;
   
@@ -118,8 +118,8 @@ private:
   
   /* This is the current vector of coefficients. When the filter is updating
    this will in general be different from impulse_response_. */
-  std::vector<Real> coefficients_;
-  std::vector<Real> delay_line_;
+  Vector<Real> coefficients_;
+  Vector<Real> delay_line_;
   Int counter_;
   Int length_;
 };

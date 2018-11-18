@@ -30,13 +30,13 @@ public:
    Returns a vector containing pseudorandom values drawn from the standard
    normal distribution. Equivalent to Matlab's randn(size,1);
    */
-  std::vector<Real> Randn(const Int size);
+  Vector<Real> Randn(const Int size);
   
   /**
    Returns a vector containing pseudorandom values drawn from the uniform
     distribution. Equivalent to Matlab's rand(size,1);
    */
-  std::vector<Real> Rand(const Int size);
+  Vector<Real> Rand(const Int size);
   
   /** 
    Returns a single pseudorandom value drawn from the uniform

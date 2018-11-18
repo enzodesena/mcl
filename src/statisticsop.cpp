@@ -15,8 +15,8 @@
 
 namespace mcl {
   
-Real Corr(const std::vector<Real>& x,
-          const std::vector<Real>& y) {
+Real Corr(const Vector<Real>& x,
+          const Vector<Real>& y) {
   
   Real pearson_num_lin = Sum(mcl::Multiply(Add(x,-Mean(x)),
                                              Add(y,-Mean(y))));

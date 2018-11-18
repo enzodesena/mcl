@@ -6,42 +6,174 @@
  Authors: Enzo De Sena, enzodesena@gmail.com
  */
 
-#ifndef MCL_ELEMENTARYOP_H
-#define MCL_ELEMENTARYOP_H
+#pragma once
 
 #include "mcltypes.h"
+#include "comparisonop.h"
 
 namespace mcl {
   
 template<class T>
-T Max(const T& scalar_a, const T& scalar_b) noexcept {
-  if (scalar_a >= scalar_b) { return scalar_a; }
-  else { return scalar_b; }
+T Max(
+  const T scalar_a,
+  const T scalar_b) noexcept
+{
+  if (scalar_a >= scalar_b)
+  {
+    return scalar_a;
+  }
+  else
+  {
+    return scalar_b;
+  }
 }
   
 template<class T>
-T Min(const T& scalar_a, const T& scalar_b) noexcept {
-  if (scalar_a < scalar_b) { return scalar_a; }
-  else { return scalar_b; }
+T Min(
+  const T scalar_a,
+  const T scalar_b) noexcept
+{
+  if (scalar_a < scalar_b)
+  {
+    return scalar_a;
+  }
+  else
+  {
+    return scalar_b;
+  }
 }
 
-/** Equivalent to Matlab's rem(scalar_a,scalar_b) */
-Real Rem(const Real& scalar_a, const Real& scalar_b);
-
-/** Equivalent to Matlab's mod(scalar_a,scalar_b) */
-Real Mod(const Real& scalar_a, const Real& scalar_b);
-
-/** Equivalent to Matlab's mod(scalar_a,scalar_b) */
-Int Mod(const Int& scalar_a, const Int& scalar_b);
 
 /** Equivalent to Matlab's fix(scalar) */
-Int Fix(const Real scalar);
+template<typename T>
+Int Fix(const T scalar)
+{
+  if (scalar >= 0.0)
+  {
+    return (Int) floor((double) scalar);
+  }
+  else
+  {
+    return (Int) ceil((double) scalar);
+  }
+}
+
+/**
+ Equivalent to Matlab's sign. Returns 1 if the element
+ is greater than zero, 0 if it equals zero and -1 if it is less than zero.
+ */
+template<typename T>
+Int Sign(const T scalar)
+{
+  if (IsApproximatelyEqual(scalar, 0.0, std::numeric_limits<T>::epsilon()))
+  {
+    return 0;
+  }
+  else if (scalar > 0.0)
+  {
+    return 1;
+  }
+  else
+  {
+    return -1;
+  }
+}
+
+
+/** Equivalent to Matlab's rem(scalar_a,scalar_b) */
+template<typename T>
+T Rem(
+  const T x,
+  const T y)
+{
+  if (IsApproximatelyEqual(y, (T) 0.0, std::numeric_limits<T>::epsilon()))
+  {
+    return x;
+  }
+  if (IsApproximatelyEqual(x, y, std::numeric_limits<T>::epsilon()))
+  {
+    return static_cast<T>(0.0);
+  }
+  Int n = Fix(x/y);
+  return x - ((T) n)*y;
+}
+
+/** Equivalent to Matlab's mod(scalar_a,scalar_b) */
+template<typename T>
+T Mod(
+  const T x,
+  const T y)
+{
+  static_assert(! std::is_integral<T>::value);
+  if (IsApproximatelyEqual(y, 0, std::numeric_limits<T>::epsilon()))
+  {
+    return x;
+  }
+  if (IsApproximatelyEqual(x, y, std::numeric_limits<T>::epsilon()))
+  {
+    return static_cast<T>(0.0);
+  }
+  Int signum(Sign(x/y));
+  if (signum == 1 || signum == 0)
+  {
+    return Rem(x, y);
+  }
+  else
+  {
+    return Rem(x, y);
+  }
+}
+
+template<>
+int Mod<int>(
+  const int x,
+  const int y)
+{
+  if (y == 0)
+  {
+    return x;
+  }
+  if (x == y || x == -y) {
+    return 0;
+  }
+  int n(static_cast<int>(Fix(((Real) x)/((Real) y))));
+  int signum(static_cast<int>(Sign(((Real) x)/((Real) y))));
+  if (signum == 1 || signum == 0) {
+    return x - n*y;
+  }
+  else {
+    return x - n*y + y;
+  }
+}
+
+template<>
+Int Mod<Int>(
+  const Int x,
+  const Int y)
+{
+  if (y == 0)
+  {
+    return x;
+  }
+  if (x == y || x == -y) {
+    return 0;
+  }
+  Int n = Fix(((Real) x)/((Real) y));
+  Int signum(Sign(((Real) x)/((Real) y)));
+  if (signum == 1 || signum == 0) {
+    return x - n*y;
+  }
+  else {
+    return x - n*y + y;
+  }
+}
+
 
 /** Equivalent to Matlab's abs(scalar) */
 Real Abs(Real input);
   
 /** Equivalent to Matlab's abs(scalar) */
-Real Abs(Complex input);
+Real Abs(Complex<Real> input);
   
 /** Power function. Equivalent to Matlab's input^exponent. */
 Real Pow(Real input, Real exponent);
@@ -56,23 +188,17 @@ inline Int RoundToInt(Real input) {
   output += (input-output >= 0.5) - (input-output <= -0.5);
   return output;
 }
-    
-/** 
- Equivalent to Matlab's sign. Returns 1 if the element
- is greater than zero, 0 if it equals zero and -1 if it is less than zero.
- */
-Int Sign(const Real scalar);
   
 /** Returns the conjugate of the element. Equivalent to Matlab's conj(scalar). */
-Complex Conj(Complex scalar);
+Complex<Real> Conj(Complex<Real> scalar);
 
 /** Returns the real part of a complex scalar. Equivalent to Matlab's 
  real(scalar). I am calling it `RealPart' since `Real' denotes the number type */
-Real RealPart(Complex scalar);
+Real RealPart(Complex<Real> scalar);
   
 /** Returns the imaginary part of a complex scalar. Equivalent to Matlab's
  imag(scalar). I am calling it `ImagPart' for consistency with `RealPart' */
-Real ImagPart(Complex scalar);
+Real ImagPart(Complex<Real> scalar);
   
 /** Equivalent to Matlab's nextpow2(input) */
 Int NextPow2(Real input);
@@ -93,18 +219,18 @@ Real LinearInterpolation(Real x1, Real y1, Real x2, Real y2, Real x);
  Returns true if the imaginary part is approximately zero. The precision used
  is VERY_SMALL in equality operations, hence use only for testing.
  */
-bool IsReal(const std::vector<Complex>& input);
+bool IsReal(const std::vector<Complex<Real>>& input);
   
 /** 
  Calculates the entropy of a discreate random variable with given `pdf'.
  It normalises the pdf if its sum is not 1.
  Note: this function is identical to Matlab's only for uint8 values.
  */
-Real Entropy(std::vector<Real> pdf, Real base);
+Real Entropy(Vector<Real> pdf, Real base);
   
 bool ElementaryOpTest();
   
-#if MCL_LOAD_BOOST
+#ifdef MCL_LOAD_BOOST
 /** 
  Returns the value of the associated Legendre polynomial of degree `n' and
  order `m' of the values x. Equivalent to the m-th value of the vector
@@ -122,10 +248,8 @@ Real AssociatedLegendreP(Int n, Int m, Real x);
  P_\ell^m ( \cos{\theta} ) \, e^{i m \varphi }
  which are orthonormal
  */
-Complex SphericalHarmonic(Int n, Int m, Real theta, Real phi);
+Complex<Real> SphericalHarmonic(Int n, Int m, Real theta, Real phi);
 #endif
   
   
 } /**< namespace mcl  */
-
-#endif

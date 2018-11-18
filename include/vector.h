@@ -20,22 +20,28 @@ bool VectorOpTest();
 constexpr int kDynamicLength = -1;
 constexpr int kReferenced = -2;
 
-
 template<typename T = double, int vector_length = kDynamicLength>
 class Vector : private std::array<T, vector_length>
 {
 public:
-  using std::array<T, vector_length>::operator[];
+  using std::array<T,vector_length>::operator[];
   using Iterator = typename std::array<T, vector_length>::iterator;
-  using std::array<T, vector_length>::begin;
-  using std::array<T, vector_length>::end;
-  using std::array<T, vector_length>::data;
+  using std::array<T,vector_length>::begin;
+  using std::array<T,vector_length>::end;
+  using std::array<T,vector_length>::data;
   
-  Vector () noexcept {}
+  Vector() noexcept
+  {
+  }
   
-  Vector(int length) noexcept { ASSERT(length == vector_length); }
+  Vector(
+    int length,
+    T value = T()) noexcept
+  {
+    ASSERT(length == vector_length);
+  }
   
-  inline int length()
+  inline int length() const noexcept
   {
     return static_cast<int>(vector_length);
   }
@@ -58,6 +64,18 @@ template<typename T>
 class Vector<T, kDynamicLength> : private std::vector<T>
 {
 public:
+  Vector() noexcept : std::vector<T>()
+  {
+  }
+  
+  Vector(
+    int initial_length,
+    T value = T()) noexcept
+    : std::vector<T>(initial_length, value)
+  {
+  }
+  
+  
   using std::vector<T>::operator[];
   using Iterator = typename std::vector<T>::iterator;
   using std::vector<T>::begin;
@@ -81,31 +99,24 @@ public:
     return data()[index];
   }
   
-  Vector() noexcept : std::vector<T>()
-  {
-  }
-  
-  Vector(int initial_length) noexcept : std::vector<T>(initial_length)
-  {
-  }
-  
   inline void PushBack(const T& element) noexcept
   {
     std::vector<T>::push_back(element);
   }
   
-  inline void SetElements(
-    const int index,
-    const Iterator& new_elements_begin,
-    const Iterator& new_elements_end) noexcept
-  {
-    for (auto iter = begin()+index;
-         iter < end() && new_elements_begin != new_elements_end;
-         iter++)
-    {
-      *iter = *(new_elements_begin++);
-    }
-  }
+//  inline void SetElements(
+//    const Iterator&
+//    const Iterator& new_elements_begin,
+//    const Iterator& new_elements_end) noexcept
+//  {
+//    auto iter =
+//    for (auto iter = begin()+index;
+//         iter < end() && new_elements_begin < new_elements_end;
+//         iter++)
+//    {
+//      *iter = *(new_elements_begin++);
+//    }
+//  }
 };
 
 

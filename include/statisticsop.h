@@ -18,8 +18,8 @@ using std::vector;
 namespace mcl {
   
 /** Returns the Pearson linear correlation between `vector_a` and `vector_b` */
-Real Corr(const std::vector<Real>& vector_a,
-                  const std::vector<Real>& vector_b);
+Real Corr(const Vector<Real>& vector_a,
+                  const Vector<Real>& vector_b);
 
   
 bool StatisticsOpTest();

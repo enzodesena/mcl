@@ -42,20 +42,20 @@ public:
   Matrix(Int num_rows, Int num_columns) noexcept : num_rows_(num_rows), 
           num_columns_(num_columns) {
     for (Int i=0; i<num_rows; ++i) {
-      data_.push_back(std::vector<T>(num_columns));
+      data_.push_back(Vector<T>(num_columns));
     }
   }
   
   /**
    Constructs a matrix from a vector of vectors (outer vector represents rows)
    */
-  Matrix(const std::vector<std::vector<T> > vectors) noexcept {
-    num_rows_ = vectors.size();
+  Matrix(const std::vector<Vector<T> > vectors) noexcept {
+    num_rows_ = vectors.length();
     if (num_rows_ > 0) {
-      num_columns_ = vectors[0].size();
+      num_columns_ = vectors[0].length();
       for (Int i=1; i<num_rows_; ++i) {
         // Check that all rows have the same number of columns
-        if ((Int)vectors[i].size() != num_columns_) {
+        if ((Int)vectors[i].length() != num_columns_) {
           ASSERT_WITH_MESSAGE(false, "One or more rows do not have the same number of columns");
         }
       }
@@ -75,8 +75,8 @@ public:
   }
   
   /** Sets an entire column */
-  void SetColumn(Int index_column, std::vector<T> column) noexcept {
-    ASSERT((Int)column.size() == num_rows_);
+  void SetColumn(Int index_column, Vector<T> column) noexcept {
+    ASSERT((Int)column.length() == num_rows_);
     ASSERT(index_column < num_columns_);
     for (Int i=0; i<num_rows_; ++i) {
       SetElement(i, index_column, column[i]);
@@ -84,8 +84,8 @@ public:
   }
   
   /** Sets an entire row */
-  void SetRow(Int index_row, std::vector<T> row) noexcept {
-    ASSERT((Int)row.size() == num_columns_);
+  void SetRow(Int index_row, Vector<T> row) noexcept {
+    ASSERT((Int)row.length() == num_columns_);
     ASSERT(index_row < num_rows_);
     data_[index_row] = row;
   }
@@ -98,22 +98,22 @@ public:
   }
   
   /** Accesses an entire row */
-  std::vector<T> GetRow(Int index_row) const noexcept {
+  Vector<T> GetRow(Int index_row) const noexcept {
     ASSERT(index_row < num_rows_);
     return data_[index_row];
   }
   
   /** Accesses an entire column */
-  std::vector<T> GetColumn(Int index_column) const noexcept {
+  Vector<T> GetColumn(Int index_column) const noexcept {
     ASSERT(index_column < num_columns_);
-    std::vector<T> output(num_rows_);
+    Vector<T> output(num_rows_);
     for (Int i=0; i<num_rows_; ++i) { output[i] = data_[i][index_column]; }
     return output;
   }
   
   /** Returns the serialised matrix. Equivalent to Matlab's matrix(:) */
-  std::vector<T> Serial() const noexcept {
-    std::vector<T> serial(num_columns()*num_rows());
+  Vector<T> Serial() const noexcept {
+    Vector<T> serial(num_columns()*num_rows());
     
     Int k=0;
     for (Int j=0; j<num_columns(); ++j) {
@@ -147,7 +147,7 @@ public:
   }
   
   /** Returns the raw data */
-  std::vector<std::vector<T> > data() noexcept { return data_; }
+  std::vector<Vector<T> > data() noexcept { return data_; }
   
   /**
    Reads a matrix. Elements have to be separated by tabs and there
@@ -163,9 +163,9 @@ public:
     Int number_of_columns = 0;
     while (std::getline(in_file, line)) {
       std::vector<std::string> elements = Split(line, '\t');
-      if (number_of_columns == 0) { number_of_columns = (Int) elements.size(); }
+      if (number_of_columns == 0) { number_of_columns = (Int) elements.length(); }
       else {
-        ASSERT(number_of_columns == (Int)elements.size());
+        ASSERT(number_of_columns == (Int)elements.length());
       }
       
       ++number_of_rows; 
@@ -181,7 +181,7 @@ public:
     for(Int row=0; row<number_of_rows; ++row) {
       std::getline(in_file, line);
       std::vector<std::string> elements = Split(line, '\t');
-      for (Int column=0; column<(Int)elements.size(); ++column) {
+      for (Int column=0; column<(Int)elements.length(); ++column) {
         matrix.SetElement(row, column, (T) StringToDouble(elements[column]));
       }
     }
@@ -212,7 +212,7 @@ public:
   
 private:
   // Outer is rows, inner is columns. Hence, data_[0] is the first column.
-  std::vector<std::vector<T> > data_;
+  std::vector<Vector<T> > data_;
   Int num_rows_;
   Int num_columns_;
 };
@@ -276,14 +276,16 @@ Matrix<T> Multiply(const Matrix<T>& matrix_a,
 }
   
 template<class T>
-std::vector<T> Multiply(const Matrix<T>& matrix_a,
-                                const std::vector<T>& vector) noexcept {
-  ASSERT(matrix_a.num_columns() == (Int)vector.size());
-  Matrix<T> temp_input((Int) vector.size(), 1);
+Vector<T> Multiply(
+  const Matrix<T>& matrix_a,
+  const Vector<T>& vector) noexcept
+{
+  ASSERT(matrix_a.num_columns() == (Int)vector.length());
+  Matrix<T> temp_input((Int) vector.length(), 1);
   temp_input.SetColumn(0, vector);
   Matrix<T> temp_output = Multiply(matrix_a, temp_input);
   ASSERT(temp_output.num_columns() == 1);
-  ASSERT(temp_output.num_rows() == (Int)vector.size());
+  ASSERT(temp_output.num_rows() == (Int)vector.length());
   
   return temp_output.GetColumn(0);
 }

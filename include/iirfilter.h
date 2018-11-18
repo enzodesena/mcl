@@ -26,7 +26,7 @@ public:
    Constructs an IIR filter (II-type direct implementation). B and A are numerator
    and denominator of the filter, respectively.
    */
-  IirFilter(std::vector<Real> B,std::vector<Real> A);
+  IirFilter(Vector<Real> B,Vector<Real> A);
   
   
   /** 
@@ -50,8 +50,8 @@ public:
    Updates the filter coefficients. May cause articafts if the coefficients are
    updated too rapidly.
    */
-  void SetCoefficients(const std::vector<Real>& B,
-                       const std::vector<Real>& A) noexcept;
+  void SetCoefficients(const Vector<Real>& B,
+                       const Vector<Real>& A) noexcept;
   
   /** Sets the coefficients as identical to those of another filter. */
   void SetCoefficients(const IirFilter& filter) noexcept;
@@ -67,10 +67,10 @@ public:
                                         const Real value) noexcept;
   
   /** Returns the forward coefficients */
-  std::vector<Real> B() const;
+  Vector<Real> B() const;
   
   /** Returns the backward coefficients */
-  std::vector<Real> A() const;
+  Vector<Real> A() const;
   
   void Reset();
   
@@ -86,8 +86,8 @@ public:
   virtual ~IirFilter();
   
 private:
-  std::vector<Real> B_;
-  std::vector<Real> A_;
+  Vector<Real> B_;
+  Vector<Real> A_;
   
   // By storing A[0] before normalisation we can output B() and A() before
   // normalisation while keeping the internal representation normalised
@@ -105,14 +105,14 @@ public:
   IirFilterBank(const std::vector<IirFilter>& filters) noexcept :
         filters_(filters) {}
   
-  virtual Int num_filters() noexcept { return filters_.size(); }
+  virtual Int num_filters() noexcept { return filters_.length(); }
   
   /** Returns the output of the filter bank for an input equal to `input`. */
-  virtual std::vector<Real> Filter(const Real input);
+  virtual Vector<Real> Filter(const Real input);
   
   /** Returns the output of the filter bank for a given input. */
-  virtual std::vector<std::vector<Real> >
-  Filter(const std::vector<Real>& input);
+  virtual std::vector<Vector<Real> >
+  Filter(const Vector<Real>& input);
   
   /** Resets the state of the filter */
   virtual void Reset();

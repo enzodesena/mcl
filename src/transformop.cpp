@@ -44,8 +44,8 @@ std::vector<Complex> Ifft(const std::vector<Complex>& input,
 
 
 
-std::vector<Complex> Hilbert(const std::vector<Real>& input) noexcept {
-  Int n = input.size();
+std::vector<Complex> Hilbert(const Vector<Real>& input) noexcept {
+  Int n = input.length();
   
   std::vector<Complex> x = Fft(ComplexVector(input), n);
   
@@ -76,9 +76,9 @@ std::vector<Complex> Hilbert(const std::vector<Real>& input) noexcept {
 
 // Returns the real cepstrum of the real sequence X.
 // Equivalent to Matlab's rceps(vector)
-std::vector<Real> RCeps(const std::vector<Real>& x) noexcept {
+Vector<Real> RCeps(const Vector<Real>& x) noexcept {
   Int n = Length(x);
-  std::vector<Real> fftxabs = Abs(Fft(ComplexVector(x), n));
+  Vector<Real> fftxabs = Abs(Fft(ComplexVector(x), n));
   //  TODO: implement this check.
   //  if any(fftxabs == 0)
   //    error(generatemsgid('ZeroInFFT'),...
@@ -90,23 +90,23 @@ std::vector<Real> RCeps(const std::vector<Real>& x) noexcept {
 
 // Returns the (unique) minimum-phase sequence that has the same real 
 // cepstrum as vector. Equivalent to Matlab's [~, out] = rceps(vector).
-std::vector<Real> MinPhase(const std::vector<Real>& x) noexcept {
+Vector<Real> MinPhase(const Vector<Real>& x) noexcept {
   Int n = Length(x);
   // odd = fix(rem(n,2));
   Int odd = Fix(Rem((Int) n,2));
   
   //  wn = [1; 2*ones((n+odd)/2-1,1) ; ones(1-rem(n,2),1); zeros((n+odd)/2-1,1)];
-  std::vector<Real> wn_1 = Concatenate(UnaryVector((Real) 1.0), 
+  Vector<Real> wn_1 = Concatenate(UnaryVector((Real) 1.0), 
                                        Multiply(Ones((n+odd)/2-1), (Real) 2.0));
-  std::vector<Real> wn_2 = Concatenate(wn_1, Ones(1-(Int)Rem((Int)n,2)));
-  std::vector<Real> wn = Concatenate(wn_2, Zeros<Real>((n+odd)/2-1));
+  Vector<Real> wn_2 = Concatenate(wn_1, Ones(1-(Int)Rem((Int)n,2)));
+  Vector<Real> wn = Concatenate(wn_2, Zeros<Real>((n+odd)/2-1));
   
   // yhat(:) = real(ifft(exp(fft(wn.*xhat(:)))));
   return RealPart(Ifft(Exp(Fft(ComplexVector(Multiply(wn, RCeps(x))),n)),n));
 }
 
 
-std::vector<Complex> Rfft(const std::vector<Real>& input,
+std::vector<Complex> Rfft(const Vector<Real>& input,
                           Int n_point) noexcept {
   return Elements(Fft(ConvertToComplex(input), n_point), 0,
                   (Int) floor(1.0+((double)n_point)/2.0)-1);
@@ -115,16 +115,16 @@ std::vector<Complex> Rfft(const std::vector<Real>& input,
 
 
 std::vector<std::vector<Complex> >
-Rfft(const std::vector<std::vector<Real> >& input, Int n_point) noexcept {
+Rfft(const std::vector<Vector<Real> >& input, Int n_point) noexcept {
   std::vector<std::vector<Complex> > outputs;
-  for (Int i=0; i<(Int)input.size(); ++i) {
+  for (Int i=0; i<(Int)input.length(); ++i) {
     outputs.push_back(Rfft(input[i], n_point));
   }
   return outputs;
 }
 
 
-std::vector<Real> Irfft(const std::vector<Complex>& input,
+Vector<Real> Irfft(const std::vector<Complex>& input,
                         Int n_point) noexcept {
   // If n_point is even, then it includes the Nyquist term (the only
   // non-repeated term, together with DC) and is of dimension M=N/2 + 1
@@ -142,29 +142,29 @@ std::vector<Real> Irfft(const std::vector<Complex>& input,
                                                            1,
                                                            (n_point+1)/2-1))));
   }
-  ASSERT((Int)spectrum.size() == n_point);
+  ASSERT((Int)spectrum.length() == n_point);
   std::vector<Complex> output = Ifft(spectrum, n_point);
   ASSERT(IsReal(output));
   return RealPart(output);
 }
 
 
-std::vector<std::vector<Real> >
+std::vector<Vector<Real> >
 Irfft(const std::vector<std::vector<Complex> >& input, Int n_point) noexcept {
-  std::vector<std::vector<Real> > outputs;
-  for (Int i=0; i<(Int)input.size(); ++i) {
+  std::vector<Vector<Real> > outputs;
+  for (Int i=0; i<(Int)input.length(); ++i) {
     outputs.push_back(Irfft(input[i], n_point));
   }
   return outputs;
 }
   
   
-std::vector<Real> XCorr(const std::vector<Real>& vector_a,
-                        const std::vector<Real>& vector_b) {
+Vector<Real> XCorr(const Vector<Real>& vector_a,
+                        const Vector<Real>& vector_b) {
   // TODO: implement for different sizes
-  ASSERT(vector_a.size() == vector_b.size());
+  ASSERT(vector_a.length() == vector_b.length());
   
-  Int M = (Int)vector_a.size();
+  Int M = (Int)vector_a.length();
   
   Int n_fft = (UInt) pow(2.0, NextPow2(2*M-1));
   
@@ -174,9 +174,9 @@ std::vector<Real> XCorr(const std::vector<Real>& vector_a,
   std::vector<Complex> c = Ifft(Multiply(x, Conj(y)), n_fft);
   
   // Ignore residual imaginary part
-  std::vector<Real> c_real = RealPart(c);
-  std::vector<Real> output = Zeros<Real>(2*M-1);
-  Int end = c_real.size(); // Matlab's index of the last element of c
+  Vector<Real> c_real = RealPart(c);
+  Vector<Real> output = Zeros<Real>(2*M-1);
+  Int end = c_real.length(); // Matlab's index of the last element of c
   Int maxlag = M-1;
   // c = [c(end-maxlag+1:end,:);c(1:maxlag+1,:)];
   Int k = 0; // running index

@@ -16,10 +16,10 @@
 
 namespace mcl {
   
-void Save(const std::vector<Real>& vector,
+void Save(const Vector<Real>& vector,
           const std::string& file_name,
           const mcl::Int precision) {
-  mcl::Matrix<Real> matrix(vector.size(), 1);
+  mcl::Matrix<Real> matrix(vector.length(), 1);
   matrix.SetColumn(0, vector);
   matrix.Save(file_name, precision);
 }

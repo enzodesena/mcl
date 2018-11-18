@@ -47,7 +47,7 @@ bool TransformOpTest() {
   // Check that when n_points is larger than the size of the vector,
   // then the result is the fft of a zero padded version of the input vector.
   std::vector<Complex> fft_vector_a_4 = Fft(vector_a, 4);
-  ASSERT(fft_vector_a_4.size() == 4);
+  ASSERT(fft_vector_a_4.length() == 4);
   std::vector<Complex> fft_vector_a_4_cmp(4);
   fft_vector_a_4_cmp[0] = Complex(2.0000, 1.5000);
   fft_vector_a_4_cmp[1] = Complex(1.0000, -0.5000);
@@ -60,13 +60,13 @@ bool TransformOpTest() {
   ASSERT(IsEqual(Fft(vector_a, 2), Fft(Elements(vector_a, 0, 1), 2)));
   
   // Test real fft
-  std::vector<Real> vector_h = {-1.0, 2.0, 3.0};
+  Vector<Real> vector_h = {-1.0, 2.0, 3.0};
   ASSERT(IsEqual(Rfft(vector_h, 3),
                  Elements(Fft(ConvertToComplex(vector_h), 3), 0, 1)));
   ASSERT(IsEqual(Rfft(vector_h, 4),
                  Elements(Fft(ConvertToComplex(vector_h), 4), 0, 2)));
   
-  std::vector<Real> vector_i = {-1.0, 2.0, 3.0, 4.0};
+  Vector<Real> vector_i = {-1.0, 2.0, 3.0, 4.0};
   ASSERT(IsEqual(Rfft(vector_h, 4),
                  Elements(Fft(ConvertToComplex(vector_h), 4), 0, 2)));
   ASSERT(IsEqual(Rfft(vector_h, 5),
@@ -81,28 +81,28 @@ bool TransformOpTest() {
   vector_l[0] = Complex(1.0, 0.0);
   vector_l[1] = Complex(0.0, 1.0);
   vector_l[2] = Complex(2.0, 0.0);
-  std::vector<Real> vector_l_3_cmp = {0.333333333333333,
+  Vector<Real> vector_l_3_cmp = {0.333333333333333,
                                       -0.244016935856292,
                                       0.910683602522959};
   ASSERT(IsEqual(Irfft(vector_l, 3), vector_l_3_cmp));
-  std::vector<Real> vector_l_6_cmp = {0.833333333333333, -0.455341801261480,
+  Vector<Real> vector_l_6_cmp = {0.833333333333333, -0.455341801261480,
                                       -0.455341801261479, 0.833333333333333,
                                       0.122008467928146, 0.122008467928146};
   ASSERT(IsEqual(Irfft(vector_l, 6), vector_l_6_cmp));
   
   std::vector<Complex> vector_m(vector_l); // Try out with even input
   vector_m.push_back(Complex(3.0, 0.0));
-  std::vector<Real> vector_m_4_cmp = {0.75, -0.75, 0.75, 0.25};
+  Vector<Real> vector_m_4_cmp = {0.75, -0.75, 0.75, 0.25};
   ASSERT(IsEqual(Irfft(vector_m, 4), vector_m_4_cmp));
-  std::vector<Real> vector_m_3_cmp = {0.333333333333333, -0.244016935856292,
+  Vector<Real> vector_m_3_cmp = {0.333333333333333, -0.244016935856292,
                                       0.910683602522959};
   ASSERT(IsEqual(Irfft(vector_m, 3), vector_m_3_cmp));
-  std::vector<Real> vector_m_8_cmp = {1.375000000000000, -0.582106781186547,
+  Vector<Real> vector_m_8_cmp = {1.375000000000000, -0.582106781186547,
                                       -0.625000000000000, 0.478553390593274,
                                       -0.125000000000000, 0.832106781186547,
                                       -0.125000000000000, -0.228553390593274};
   ASSERT(IsEqual(Irfft(vector_m, 8), vector_m_8_cmp));
-  std::vector<Real> vector_m_9_cmp = {1.222222222222222, -0.287886945411706,
+  Vector<Real> vector_m_9_cmp = {1.222222222222222, -0.287886945411706,
                                       -0.858709554352006, 0.363105465825680,
                                       0.042237498424953, 0.194246451014139,
                                       0.748005645285431, -0.421017219679913,
@@ -111,7 +111,7 @@ bool TransformOpTest() {
   
   
   // Test hilbert transform
-  std::vector<Real> vector_c(3);
+  Vector<Real> vector_c(3);
   vector_c[0] = -0.3;
   vector_c[1] = 0.3;
   vector_c[2] = 2.4;
@@ -126,7 +126,7 @@ bool TransformOpTest() {
   ASSERT(IsEqual(hilbert_vector_c, hilbert_vector_cmp_c));
   
   
-  std::vector<Real> vector_d(4);
+  Vector<Real> vector_d(4);
   vector_d[0] = -0.3;
   vector_d[1] = 0.3;
   vector_d[2] = 2.4;
@@ -143,23 +143,23 @@ bool TransformOpTest() {
   ASSERT(IsEqual(hilbert_vector_d, hilbert_vector_cmp_d));
 
   
-  std::vector<Real> vector_f(4);
+  Vector<Real> vector_f(4);
   vector_f[0] = 2.5;
   vector_f[1] = 1.3;
   vector_f[2] = -2.4;
   vector_f[3] = -1.0;
   
   
-  std::vector<Real> rceps_vector_f = RCeps(vector_f);
-  std::vector<Real> rceps_vector_f_cmp(4);
+  Vector<Real> rceps_vector_f = RCeps(vector_f);
+  Vector<Real> rceps_vector_f_cmp(4);
   rceps_vector_f_cmp[0] = 2.129647179286916e-01;
   rceps_vector_f_cmp[1] = 1.732867951399864e-01;
   rceps_vector_f_cmp[2] = -1.475829040082819e+00;
   rceps_vector_f_cmp[3] = 1.732867951399864e-01;
   ASSERT(IsEqual(rceps_vector_f_cmp, rceps_vector_f));
   
-  std::vector<Real> mphase_vector_f = MinPhase(vector_f);
-  std::vector<Real> mphase_vector_f_cmp(4);
+  Vector<Real> mphase_vector_f = MinPhase(vector_f);
+  Vector<Real> mphase_vector_f_cmp(4);
   mphase_vector_f_cmp[0] = 2.695552489391163e+00;
   mphase_vector_f_cmp[1] = 9.693272125606057e-01;
   mphase_vector_f_cmp[2] = -2.395552489391163e+00;
@@ -167,41 +167,41 @@ bool TransformOpTest() {
   ASSERT(IsEqual(mphase_vector_f_cmp, mphase_vector_f));
   
   
-  std::vector<Real> vector_g(3);
+  Vector<Real> vector_g(3);
   vector_g[0] = 2.5;
   vector_g[1] = 0.0;
   vector_g[2] = -2.4;
   
-  std::vector<Real> rceps_vector_g = RCeps(vector_g);
-  std::vector<Real> rceps_vector_g_cmp(3);
+  Vector<Real> rceps_vector_g = RCeps(vector_g);
+  Vector<Real> rceps_vector_g_cmp(3);
   rceps_vector_g_cmp[0] = 1.961140220646066e-01;
   rceps_vector_g_cmp[1] = -1.249349557529326e+00;
   rceps_vector_g_cmp[2] = -1.249349557529326e+00;
   ASSERT(IsEqual(rceps_vector_g_cmp, rceps_vector_g));
   
-  std::vector<Real> mphase_vector_g = MinPhase(vector_g);
-  std::vector<Real> mphase_vector_g_cmp(3);
+  Vector<Real> mphase_vector_g = MinPhase(vector_g);
+  Vector<Real> mphase_vector_g_cmp(3);
   mphase_vector_g_cmp[0] = -1.548105780039157e+00;
   mphase_vector_g_cmp[1] = -1.207601874293259e+00;
   mphase_vector_g_cmp[2] = 2.855707654332416e+00;
   ASSERT(IsEqual(mphase_vector_g_cmp, mphase_vector_g));
 
   
-  std::vector<Real> vector_ef(4);
+  Vector<Real> vector_ef(4);
   vector_ef[0] = -0.3;
   vector_ef[1] = 30.3;
   vector_ef[2] = 2.4;
   vector_ef[3] = 12.4;
   
-  std::vector<Real> vector_ff(4);
+  Vector<Real> vector_ff(4);
   vector_ff[0] = 2.5;
   vector_ff[1] = 1.3;
   vector_ff[2] = -2.4;
   vector_ff[3] = -1.0;
   
   
-  std::vector<Real> xcorr_vector_f = XCorr(vector_ef, vector_ff);
-  std::vector<Real> xcorr_vector_f_cmp(7);
+  Vector<Real> xcorr_vector_f = XCorr(vector_ef, vector_ff);
+  Vector<Real> xcorr_vector_f_cmp(7);
   xcorr_vector_f_cmp[0] = 0.3;
   xcorr_vector_f_cmp[1] = -29.58;
   xcorr_vector_f_cmp[2] = -75.51;
@@ -212,19 +212,19 @@ bool TransformOpTest() {
   ASSERT(IsEqual(xcorr_vector_f, xcorr_vector_f_cmp));
   
   
-  std::vector<Real> vector_gf(3);
+  Vector<Real> vector_gf(3);
   vector_gf[0] = 2.5;
   vector_gf[1] = 0.0;
   vector_gf[2] = -2.4;
   
   
-  std::vector<Real> vector_hf(3);
+  Vector<Real> vector_hf(3);
   vector_hf[0] = -2.5;
   vector_hf[1] = 1.3;
   vector_hf[2] = 2.4;
   
-  std::vector<Real> xcorr_vector_g_h = XCorr(vector_gf, vector_hf);
-  std::vector<Real> xcorr_vector_g_h_cmp(5);
+  Vector<Real> xcorr_vector_g_h = XCorr(vector_gf, vector_hf);
+  Vector<Real> xcorr_vector_g_h_cmp(5);
   xcorr_vector_g_h_cmp[0] = 6.0;
   xcorr_vector_g_h_cmp[1] = 3.25;
   xcorr_vector_g_h_cmp[2] = -12.01;
@@ -232,8 +232,8 @@ bool TransformOpTest() {
   xcorr_vector_g_h_cmp[4] = 6.0;
   ASSERT(IsEqual(xcorr_vector_g_h, xcorr_vector_g_h_cmp));
   
-  std::vector<Real> xcorr_vector_h_g = XCorr(vector_hf, vector_gf);
-  std::vector<Real> xcorr_vector_h_g_cmp(5);
+  Vector<Real> xcorr_vector_h_g = XCorr(vector_hf, vector_gf);
+  Vector<Real> xcorr_vector_h_g_cmp(5);
   xcorr_vector_h_g_cmp[0] = 6.0;
   xcorr_vector_h_g_cmp[1] = -3.12;
   xcorr_vector_h_g_cmp[2] = -12.01;

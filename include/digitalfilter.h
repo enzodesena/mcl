@@ -38,9 +38,9 @@ public:
   virtual Real Filter(const Real input) noexcept = 0;
   
   /** Returns the output of the filter for an input signal equal to `input`. */
-  std::vector<Real> Filter(const std::vector<Real>& input) noexcept {
-    std::vector<Real> output(input.size(), 0.0);
-    Filter(input.data(), input.size(), output.data());
+  Vector<Real> Filter(const Vector<Real>& input) noexcept {
+    Vector<Real> output(input.length(), 0.0);
+    Filter(input.data(), input.length(), output.data());
     return output;
   }
   
@@ -54,11 +54,11 @@ public:
 class FilterBank {
 public:
   /** Returns the output of the filter bank for an input equal to `input`. Hello world! */
-  virtual std::vector<Real> Filter(const Real input) = 0;
+  virtual Vector<Real> Filter(const Real input) = 0;
   
   /** Returns the output of the filter bank for a given input. */
-  virtual std::vector<std::vector<Real> >
-  Filter(const std::vector<Real>& input) = 0;
+  virtual std::vector<Vector<Real> >
+  Filter(const Vector<Real>& input) = 0;
   
   /** Resets the state of the filter */
   virtual void Reset() = 0;

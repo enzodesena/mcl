@@ -20,10 +20,10 @@ bool RandomGenerator::Test() {
   
   RandomGenerator rand_gen;
 
-  std::vector<Real> rand_vector_a = rand_gen.Randn(5);
-  ASSERT(rand_vector_a.size() == 5);
+  Vector<Real> rand_vector_a = rand_gen.Randn(5);
+  ASSERT(rand_vector_a.length() == 5);
   // Check whether seeds are different:
-  std::vector<Real> rand_vector_b = rand_gen.Randn(5);
+  Vector<Real> rand_vector_b = rand_gen.Randn(5);
   ASSERT(!IsEqual(rand_vector_a, rand_vector_b));
   
   ASSERT(Abs(Mean(rand_gen.Randn(100000))) < 0.1);
@@ -40,7 +40,7 @@ bool RandomGenerator::Test() {
   ASSERT(Abs(rand_gen.Rand(1)[0]-0.5) < 0.5);
   ASSERT(Abs(rand_gen.Rand(1)[0]-0.5) < 0.5);
   
-  ASSERT(rand_gen.Rand(5).size() == 5);
+  ASSERT(rand_gen.Rand(5).length() == 5);
   ASSERT(Abs(Mean(rand_gen.Rand(100000))-0.5)<0.05);
   
   // Test integer generator

@@ -25,27 +25,27 @@ bool MatrixOpTest() {
 
   matrix_a.SetElement(0, 0, -0.3);
 
-  std::vector<Real> compare_row_0(2);
+  Vector<Real> compare_row_0(2);
   compare_row_0[0] = -0.3;
   compare_row_0[1] = 1.0;
   ASSERT(IsEqual(compare_row_0, matrix_a.GetRow(0)));
-  std::vector<Real> compare_row_1(2);
+  Vector<Real> compare_row_1(2);
   compare_row_1[0] = 0.0;
   compare_row_1[1] = 0.0;
   ASSERT(IsEqual(compare_row_1, matrix_a.GetRow(1)));
 
-  std::vector<Real> compare_column_0(3);
+  Vector<Real> compare_column_0(3);
   compare_column_0[0] = -0.3;
   compare_column_0[1] = 0.0;
   compare_column_0[2] = 0.0;
   ASSERT(IsEqual(compare_column_0, matrix_a.GetColumn(0)));
-  std::vector<Real> compare_column_1(3);
+  Vector<Real> compare_column_1(3);
   compare_column_1[0] = 1.0;
   compare_column_1[1] = 0.0;
   compare_column_1[2] = 0.5;
   ASSERT(IsEqual(compare_column_1, matrix_a.GetColumn(1)));
 
-  std::vector<Real> set_column_1(3);
+  Vector<Real> set_column_1(3);
   set_column_1[0] = 1.0;
   set_column_1[1] = -2.0;
   set_column_1[2] = 0.6;
@@ -53,7 +53,7 @@ bool MatrixOpTest() {
   ASSERT(IsEqual(set_column_1, matrix_a.GetColumn(1)));
   ASSERT(IsEqual(matrix_a.GetElement(1,1), -2.0));
 
-  std::vector<Real> set_row_0(2);
+  Vector<Real> set_row_0(2);
   set_row_0[0] = 0.7;
   set_row_0[1] = -1.0;
   matrix_a.SetRow(0, set_row_0);
@@ -99,10 +99,10 @@ bool MatrixOpTest() {
   ASSERT(IsEqual(mult_matrix_b_e.GetElement(2, 1), 6.0));
   
   // Testing matrix-vector multiplication
-  std::vector<Real> vector_a(2);
+  Vector<Real> vector_a(2);
   vector_a[0] = -3.0;
   vector_a[1] = 2.0;
-  std::vector<Real> mult_matrix_vector = Multiply(matrix_e, vector_a);
+  Vector<Real> mult_matrix_vector = Multiply(matrix_e, vector_a);
   ASSERT(IsEqual(mult_matrix_vector[0], 5.0));
   ASSERT(IsEqual(mult_matrix_vector[1], 0.0));
   
@@ -116,8 +116,8 @@ bool MatrixOpTest() {
 #if MCL_LOAD_EIGEN
   // Testing eigenvalues and eigenvectors
   EigOutput eig_e = Eig(matrix_e);
-  ASSERT(eig_e.eigen_values.size() == 2);
-  ASSERT(eig_e.eigen_vectors.size() == 2);
+  ASSERT(eig_e.eigen_values.length() == 2);
+  ASSERT(eig_e.eigen_vectors.length() == 2);
   
   ASSERT(IsEqual(eig_e.eigen_values[0], Complex(-1.449489742783179, 0.0)));
   ASSERT(IsEqual(eig_e.eigen_values[1], Complex(3.449489742783178, 0.0)));
@@ -149,9 +149,9 @@ bool MatrixOpTest() {
   Matrix<Real> matrix_g(3,2);
   matrix_g.SetElement(0, 1, 1.0);
   matrix_g.SetElement(2, 1, 1.5);
-  std::vector<Real> serial_g = matrix_g.Serial();
-  ASSERT(serial_g.size() == 6);
-  std::vector<Real> serial_g_cmp(6, 0.0);
+  Vector<Real> serial_g = matrix_g.Serial();
+  ASSERT(serial_g.length() == 6);
+  Vector<Real> serial_g_cmp(6, 0.0);
   serial_g_cmp[3] = 1.0;
   serial_g_cmp[5] = 1.5;
   ASSERT(IsEqual(serial_g, serial_g_cmp));
