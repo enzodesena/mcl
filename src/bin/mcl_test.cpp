@@ -26,7 +26,7 @@ int main (int argc, char * const argv[]) {
 //  FirFilter::Test();
 //  Quaternion::Test();
   ElementaryOpTest();
-//  BasicOpTest();
+  BasicOpTest();
   VectorOpTest();
 //  PointWiseOpTest();
 //  TransformOpTest();
