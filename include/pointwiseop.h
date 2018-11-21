@@ -216,7 +216,7 @@ ComplexVector(const Vector<T>& input) noexcept
 //}
 //
 //
-/** 
+/**
  Returns the point-wise poser to exponent.
  Equivalent to Matlab's vector.^exponent
  */
@@ -263,18 +263,41 @@ Vector<T> Pow(
 ///** Equivalent to Matlab's sin(vector) */
 //Vector<Real> Sin(const Vector<Real>& vector) noexcept;
 //  
-///** 
-// Returns the natural logarithm of the elements of vector.
-// Equivalent to Matlab's log(vector).
-// */
-//Vector<Real> Log(const Vector<Real>& vector) noexcept;
-//  
-///**
-// Returns the 10-base logarithm of the elements of vector.
-// Equivalent to Matlab's log10(vector).
-// */
-//Vector<Real> Log10(const Vector<Real>& vector) noexcept;
-//
+/**
+ Returns the natural logarithm of the elements of vector.
+ Equivalent to Matlab's log(vector).
+ */
+template<typename T>
+inline Vector<T> Log(
+  const Vector<T>& vector) noexcept
+{
+  size_t n(vector.length());
+  Vector<Real> output(vector.length());
+  for (size_t i=0; i<n; ++i)
+  {
+    output[i] = log(vector[i]);
+  }
+  return output;
+}
+  
+  
+/**
+ Returns the 10-base logarithm of the elements of vector.
+ Equivalent to Matlab's log10(vector).
+ */
+template<typename T>
+inline Vector<T> Log10(
+  const Vector<T>& vector) noexcept
+{
+  size_t n(vector.length());
+  Vector<T> output(vector.length());
+  for (size_t i=0; i<n; ++i)
+  {
+    output[i] = log10(vector[i]);
+  }
+  return output;
+}
+
 template<typename TOrigin, typename TDestination>
 Vector<TDestination> Convert(
   const Vector<TOrigin>& vector) noexcept

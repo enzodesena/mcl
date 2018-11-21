@@ -21,7 +21,7 @@ namespace mcl {
  the index of the first one is returned.
  */
 template<class T>
-Int MinIndex(
+inline Int MinIndex(
   const Vector<T>& input) noexcept
 {
   T min_value = std::numeric_limits<T>::max();
@@ -39,7 +39,7 @@ Int MinIndex(
   
 /** Returns the maximum value of the vector. */
 template<class T>  
-T Min(
+inline T Min(
   const Vector<T>& input)
 {
   return input[MinIndex(input)];
@@ -52,20 +52,20 @@ T Min(
  the index of the first one is returned.
  */
 template<class T>
-Int MaxIndex(
+inline size_t MaxIndex(
   const Vector<T>& input) noexcept
 {
   return MinIndex(Opposite(input));
 }
   
 template<>
-Int MaxIndex<UInt>(const Vector<UInt>& input) noexcept {
+inline size_t MaxIndex<UInt>(const Vector<UInt>& input) noexcept {
   return MinIndex(Opposite(Convert<UInt,Int>(input)));
 }
   
 /** Returns the maximum value of the vector. */
 template<class T>
-T Max(
+inline T Max(
   const Vector<T>& input) noexcept
 {
   return input[MaxIndex(input)];
@@ -77,7 +77,7 @@ T Max(
  Equivalent to Matlab's findpeaks.
  */
 template<typename T>
-Vector<size_t> FindPeaksIndexes(
+inline Vector<size_t> FindPeaksIndexes(
   const Vector<T>& vector,
   const T min_peak_height = std::numeric_limits<T>::min())
 {
@@ -101,7 +101,7 @@ Vector<size_t> FindPeaksIndexes(
  Equivalent to Matlab's findpeaks.
  */
 template<typename T>
-Vector<T> FindPeaks(
+inline Vector<T> FindPeaks(
   const Vector<T>& vector,
   const T min_peak_height = std::numeric_limits<T>::min())
 {

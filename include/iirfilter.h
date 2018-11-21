@@ -6,8 +6,7 @@
  Authors: Enzo De Sena, enzodesena@gmail.com
  */
 
-#ifndef MCL_IIRFILTER_H
-#define MCL_IIRFILTER_H
+#pragma once
 
 #include "digitalfilter.h"
 #include "vectorop.h"
@@ -190,5 +189,3 @@ IirFilter WallFilter(WallType wall_type, Real sampling_frequency);
 IirFilter PinkifierFilter();
   
 } // namespace mcl
-
-#endif

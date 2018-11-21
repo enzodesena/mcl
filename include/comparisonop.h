@@ -31,9 +31,22 @@
 namespace mcl {
 
 
+inline bool IsEqual(
+  const double num_a,
+  const double num_b)
+{
+  return num_a == num_b;
+}
+
+inline bool IsEqual(
+  const float num_a,
+  const float num_b)
+{
+  return num_a == num_b;
+}
 
 template<typename T, size_t length_a, size_t length_b>
-bool IsEqual(
+inline bool IsEqual(
   const Vector<T,length_a>& vector_a,
   const Vector<T,length_b>& vector_b)
 {
@@ -55,7 +68,7 @@ template<
   size_t length_vector_a,
   size_t length_vector_b,
   typename PrecisionT>
-bool ConditonCheckerWithPrecision(
+inline bool ConditonCheckerWithPrecision(
   const Vector<VectorT,length_vector_a>& vector_a,
   const Vector<VectorT,length_vector_b>& vector_b,
   bool (*condition_checker)(VectorT, VectorT, PrecisionT),
@@ -75,25 +88,21 @@ bool ConditonCheckerWithPrecision(
 }
 
 
-bool IsApproximatelyEqual(
-  const double num_a,
-  const double num_b,
-  const double precision = VERY_SMALL);
   
-bool IsApproximatelyEqual(
+inline bool IsApproximatelyEqual(
   const double num_a,
   const double num_b,
-  const double precision)
+  const double precision = VERY_SMALL)
 {
   return std::fabs(num_a - num_b) < precision;
 }
 
-bool IsApproximatelyEqual(
+inline bool IsApproximatelyEqual(
   const float num_a,
   const float num_b,
   const float precision = VERY_SMALL);
 
-bool IsApproximatelyEqual(
+inline bool IsApproximatelyEqual(
   const float num_a,
   const float num_b,
   const float precision)
@@ -102,7 +111,7 @@ bool IsApproximatelyEqual(
 }
 
 template<typename T>
-bool IsApproximatelyEqual(
+inline bool IsApproximatelyEqual(
   const Complex<T> num_a,
   const Complex<T> num_b,
   const T precision = VERY_SMALL)
@@ -116,7 +125,7 @@ template<
   size_t length_vector_a,
   size_t length_vector_b,
   typename PrecisionT>
-bool IsApproximatelyEqual(
+inline bool IsApproximatelyEqual(
   const Vector<VectorT,length_vector_a>& vector_a,
   const Vector<VectorT,length_vector_b>& vector_b,
   const PrecisionT precision = VERY_SMALL)
@@ -163,7 +172,7 @@ bool IsLargerOrEqual(const Real num_a, const Real num_b,
 
 
 template<typename T, size_t length_a, size_t length_b>
-bool ConditonChecker(
+inline bool ConditonChecker(
   const Vector<T,length_a>& vector_a,
   const Vector<T,length_b>& vector_b,
   bool (*condition_checker)(T, T))
@@ -190,7 +199,7 @@ bool ConditonChecker(
 //}
 
 template<typename T>
-bool IsEqual(
+inline bool IsEqual(
   const Quaternion<T>& q_a,
   const Quaternion<T>& q_b)
 {
@@ -200,7 +209,7 @@ bool IsEqual(
 
 
 template<typename T>
-bool IsEqual(
+inline bool IsEqual(
   const Point<T>& point_a,
   const Point<T>& point_b,
   const T precision = VERY_SMALL)
@@ -211,7 +220,7 @@ bool IsEqual(
 }
 
 template<typename T>
-bool IsEqual(
+inline bool IsEqual(
   const Vector<Point<T>>& points_a,
   const Vector<Point<T>>& points_b)
 {
@@ -225,14 +234,14 @@ bool IsEqual(
   
 /** Returns true if num is nan */
 template<typename T>
-bool IsNan(T num)
+inline bool IsNan(T num)
 {
   return isnan(num);
 }
 
 /** Returns true if num is nan */
 template<typename T>
-Vector<bool> IsNan(Vector<T> input)
+inline Vector<bool> IsNan(Vector<T> input)
  {
   Vector<bool> output(input.length());
   for (Int i=0; i<input.length(); ++i)
@@ -256,7 +265,7 @@ Vector<bool> IsNan(Vector<T> input)
 
 /** Returns true if num is +inf or -inf */
 template<typename T>
-bool IsInf(T num)
+inline bool IsInf(T num)
 {
   return std::isinf(num);
 }

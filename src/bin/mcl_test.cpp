@@ -11,7 +11,7 @@
 //#include "matrixop.h"
 //#include "vectorop.h"
 #include "vector.h"
-//#include "transformop.h"
+#include "elementaryop.h"
 //#include "statisticsop.h"
 //#include "firfilter.h"
 //#include "randomop.h"
@@ -25,7 +25,7 @@ int main (int argc, char * const argv[]) {
 #ifndef NDEBUG
 //  FirFilter::Test();
 //  Quaternion::Test();
-//  ElementaryOpTest();
+  ElementaryOpTest();
 //  BasicOpTest();
   VectorOpTest();
 //  PointWiseOpTest();

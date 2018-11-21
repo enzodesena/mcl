@@ -7,8 +7,7 @@
  */
 
 
-#ifndef MCL_MAXGRADIENTFILTER_H
-#define MCL_MAXGRADIENTFILTER_H
+#pragma once
 
 #include "elementaryop.h"
 #include "digitalfilter.h"
@@ -43,4 +42,3 @@ private:
 };
 
 } // namespace mcl
-#endif

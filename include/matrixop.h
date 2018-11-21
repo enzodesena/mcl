@@ -8,9 +8,7 @@
 
 // This file contains definitions of matrix operations and classes
 
-#ifndef MCL_MATRIXOP_H
-#define MCL_MATRIXOP_H
-
+#pragma once
 #include <fstream>
 #include <iostream>
 #include <iomanip>
@@ -26,8 +24,9 @@
 namespace mcl {
 
 // Forward declaration
-Vector<std::string> Split(const std::string& string,
-                                       char delim) noexcept;
+Vector<std::string> Split(
+  const std::string& string,
+  char delim) noexcept;
   
 /** Matrix class */
 template<class T>
@@ -429,5 +428,3 @@ bool MatrixOpTest();
   
   
 } // namespace mcl
-
-#endif

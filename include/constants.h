@@ -1,8 +1,15 @@
-#ifndef CONSTANTS_H
-#define CONSTANTS_H
+/*
+ MCL
+ Copyright (c) 2012-18, Enzo De Sena
+ All rights reserved.
+ 
+ Authors: Enzo De Sena, enzodesena@gmail.com
+ */
+ 
+#pragma once
 
-
-namespace mcl {
+namespace mcl
+{
   
 
 
@@ -35,4 +42,3 @@ enum WallType {
 };
 
 }
-#endif /* CONSTANTS_H */

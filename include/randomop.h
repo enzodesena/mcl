@@ -6,9 +6,7 @@
  Authors: Enzo De Sena, enzodesena@gmail.com
  */
 
-#ifndef MCL_RANDOMGENERATOR_H
-#define MCL_RANDOMGENERATOR_H
-
+#pragma once
 
 // Using TR1 and old c++ library
 
@@ -68,5 +66,3 @@ private:
 } // namespace mcl
 
 
-
-#endif

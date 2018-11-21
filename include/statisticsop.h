@@ -6,8 +6,7 @@
  Authors: Enzo De Sena, enzodesena@gmail.com
  */
 
-#ifndef MCL_STATISTICSOP_H
-#define MCL_STATISTICSOP_H
+#pragma once
 
 #include "mcltypes.h"
 #include "pointwiseop.h"

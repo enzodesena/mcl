@@ -6,8 +6,7 @@
  Authors: Enzo De Sena, enzodesena@gmail.com
  */
 
-#ifndef MCL_TRANSFORMOP_H
-#define MCL_TRANSFORMOP_H
+#pragma once
 
 #include "mcltypes.h"
 #include <vector>
@@ -92,4 +91,3 @@ bool TransformOpTest();
 
 } /**< namespace mcl */
 
-#endif

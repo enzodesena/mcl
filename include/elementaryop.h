@@ -10,11 +10,12 @@
 
 #include "mcltypes.h"
 #include "comparisonop.h"
+#include "vectorop.h"
 
 namespace mcl {
   
 template<class T>
-T Max(
+inline T Max(
   const T scalar_a,
   const T scalar_b) noexcept
 {
@@ -29,7 +30,7 @@ T Max(
 }
   
 template<class T>
-T Min(
+inline T Min(
   const T scalar_a,
   const T scalar_b) noexcept
 {
@@ -46,7 +47,7 @@ T Min(
 
 /** Equivalent to Matlab's fix(scalar) */
 template<typename T>
-Int Fix(const T scalar)
+inline Int Fix(const T scalar)
 {
   if (scalar >= 0.0)
   {
@@ -63,7 +64,7 @@ Int Fix(const T scalar)
  is greater than zero, 0 if it equals zero and -1 if it is less than zero.
  */
 template<typename T>
-Int Sign(const T scalar)
+inline Int Sign(const T scalar)
 {
   if (IsApproximatelyEqual(scalar, 0.0, std::numeric_limits<T>::epsilon()))
   {
@@ -82,13 +83,13 @@ Int Sign(const T scalar)
 
 /** Equivalent to Matlab's rem(scalar_a,scalar_b) */
 template<typename T>
-T Rem(
+inline T Rem(
   const T x,
   const T y)
 {
   if (IsApproximatelyEqual(y, (T) 0.0, std::numeric_limits<T>::epsilon()))
   {
-    return x;
+    return std::numeric_limits<T>::quiet_NaN();
   }
   if (IsApproximatelyEqual(x, y, std::numeric_limits<T>::epsilon()))
   {
@@ -100,7 +101,7 @@ T Rem(
 
 
 template<typename T>
-T Floor(const T input)
+inline T Floor(const T input)
 {
   // TODO: verify for all types.
   return std::floor(input);
@@ -109,7 +110,7 @@ T Floor(const T input)
 
 /** Equivalent to Matlab's mod(scalar_a,scalar_b) */
 template<typename T>
-T Mod(
+inline T Mod(
   const T x,
   const T y)
 {
@@ -129,12 +130,12 @@ T Mod(
   }
   else
   {
-    return Rem(x, y);
+    return Rem(x, y) + y;
   }
 }
 
 template<>
-int Mod<int>(
+inline int Mod<int>(
   const int x,
   const int y)
 {
@@ -145,8 +146,8 @@ int Mod<int>(
   if (x == y || x == -y) {
     return 0;
   }
-  int n(static_cast<int>(Fix(((Real) x)/((Real) y))));
-  int signum(static_cast<int>(Sign(((Real) x)/((Real) y))));
+  int n(static_cast<int>(Fix(((double) x)/((double) y))));
+  int signum(static_cast<int>(Sign(((double) x)/((double) y))));
   if (signum == 1 || signum == 0) {
     return x - n*y;
   }
@@ -156,7 +157,7 @@ int Mod<int>(
 }
 
 template<>
-Int Mod<Int>(
+inline Int Mod<Int>(
   const Int x,
   const Int y)
 {
@@ -167,8 +168,8 @@ Int Mod<Int>(
   if (x == y || x == -y) {
     return 0;
   }
-  Int n = Fix(((Real) x)/((Real) y));
-  Int signum(Sign(((Real) x)/((Real) y)));
+  Int n = Fix(((double) x)/((double) y));
+  Int signum(Sign(((double) x)/((double) y)));
   if (signum == 1 || signum == 0) {
     return x - n*y;
   }
@@ -179,14 +180,30 @@ Int Mod<Int>(
 
 
 /** Equivalent to Matlab's abs(scalar) */
-Real Abs(Real input);
+inline double Abs(double input)
+{
+  return std::fabs(input);
+}
+  
   
 /** Equivalent to Matlab's abs(scalar) */
-Real Abs(Complex<Real> input);
+inline float Abs(float input)
+{
+  return std::abs(input);
+}
+
+
+/** Equivalent to Matlab's abs(scalar) */
+template<typename T>
+inline T Abs(Complex<T> input)
+{
+  return static_cast<T>(std::abs(input));
+}
+  
   
 /** Power function. Equivalent to Matlab's input^exponent. */
 template<typename T>
-T Pow(
+inline T Pow(
   T input,
   T exponent)
 {
@@ -195,71 +212,150 @@ T Pow(
 
 /** Square root function. Equivalent to Matlab's sqrt(input) */
 template<typename T>
-Real Sqrt(
-  Real input)
+inline T Sqrt(
+  T input)
 {
-  return (Real) sqrt((double) input);
+  return (T) sqrt((double) input);
 }
   
   
 /** Equivalent to Matlab's round(input). This is faster than the standard
  C++ round function, especially on Windows. Returns an integer. */
-inline Int RoundToInt(Real input) {
-  Int output = static_cast<int>(input);
+template<typename T>
+inline Int RoundToInt(
+  T input) noexcept
+{
+  Int output = static_cast<Int>(input);
   output += (input-output >= 0.5) - (input-output <= -0.5);
   return output;
 }
   
 /** Returns the conjugate of the element. Equivalent to Matlab's conj(scalar). */
-Complex<Real> Conj(Complex<Real> scalar);
+template<typename T>
+inline Complex<T> Conj(
+  const Complex<T> scalar) noexcept
+{
+  return Complex(scalar.real(), -scalar.imag());
+}
 
 /** Returns the real part of a complex scalar. Equivalent to Matlab's 
- real(scalar). I am calling it `RealPart' since `Real' denotes the number type */
-Real RealPart(Complex<Real> scalar);
-  
+ real(scalar). I am calling it `RealPart' since `T' denotes the number type */
+template<typename T>
+inline T RealPart(
+  const Complex<T> scalar) noexcept
+{
+  return scalar.real();
+}
+
 /** Returns the imaginary part of a complex scalar. Equivalent to Matlab's
  imag(scalar). I am calling it `ImagPart' for consistency with `RealPart' */
-Real ImagPart(Complex<Real> scalar);
+template<typename T>
+inline T ImagPart(
+  const Complex<T> scalar) noexcept
+{
+  return scalar.imag();
+}
   
 /** Equivalent to Matlab's nextpow2(input) */
-Int NextPow2(Real input);
+template<typename T>
+inline Int NextPow2(
+  T input) noexcept
+{
+  return static_cast<int>(std::ceil(log2(std::fabs((double) input))));
+}
   
 /** This returns the next power of 2. For instance 5=>8, 12=>16, 16=>16. */
-Int Next2(Int input);
+//template<typename T>
+inline Int Next2(
+  Int input) noexcept
+{
+  return pow(2, NextPow2(input));
+}
   
 /** Converts a string to a double */
-double StringToDouble(const std::string& s);
+inline double StringToDouble(
+  const std::string& s) noexcept
+{
+  std::istringstream i(s);
+  double x;
+  if (!(i >> x))
+  {
+    return 0;
+  }
+  else
+  {
+    return x;
+  }
+}
   
 /** Equivalent to Matlab's factorial(input) */
-Int Factorial(const Int input);
+template<typename T>
+inline T Factorial(const T input) // TODO: inlining this is a bit dangerous
+{
+  if(input <= 1)
+  {
+    return 1;
+  }
+  else
+  {
+    return input * Factorial(input - 1);
+  }
+}
   
 /** Linear interpolation between two values */
-Real LinearInterpolation(Real x1, Real y1, Real x2, Real y2, Real x);
+template<typename T>
+inline T LinearInterpolation(
+  T x0,
+  T y0,
+  T x1,
+  T y1,
+  T x) noexcept
+{
+  T m = (y1-y0)/(x1-x0);
+  return y0+(x-x0)*m;
+}
   
 /** 
  Returns true if the imaginary part is approximately zero. The precision used
  is VERY_SMALL in equality operations, hence use only for testing.
  */
-bool IsReal(const Vector<Complex<Real>>& input);
+//template<typename T>
+//inline bool IsReal(const Vector<Complex<T>>& input);
   
 /** 
  Calculates the entropy of a discreate random variable with given `pdf'.
  It normalises the pdf if its sum is not 1.
  Note: this function is identical to Matlab's only for uint8 values.
  */
-Real Entropy(Vector<Real> pdf, Real base);
+template<typename T, size_t length>
+T Entropy(Vector<T,length> pdf, T base) {
+  pdf = Multiply(pdf, 1.0/Sum(pdf));
+  return -Sum(Multiply(pdf, Log(pdf)))/log(base);
+}
   
-bool ElementaryOpTest();
+
   
-#ifdef MCL_LOAD_BOOST
-/** 
+  
+
+#if MCL_LOAD_BOOST
+/**
  Returns the value of the associated Legendre polynomial of degree `n' and
  order `m' of the values x. Equivalent to the m-th value of the vector
- returned by Matlab's legendre(n, x) 
+ returned by Matlab's legendre(n, x)
  */
-Real AssociatedLegendreP(Int n, Int m, Real x);
+template<typename T>
+inline T AssociatedLegendreP(
+  Int n,
+  Int m,
+  T x)
+{
+  ASSERT(n >= 0); // As in Matlab we don't accept n<0
+  ASSERT(m >= 0); // As in Matlab we don't accept m<0
+  ASSERT(n >= m); // As in Matlab we don't accept n<m
+  return boost::math::legendre_p<T>((int) n, (int) m, x);
+}
   
-/** 
+/**
  Returns the value of the spherical harmonic of degree n and order m,
  and where theta is elevation, measured as the angle formed with the z-axis,
  and phi is the aximuth, measured as the angle formed with the x-axis.
@@ -269,8 +365,19 @@ Real AssociatedLegendreP(Int n, Int m, Real x);
  P_\ell^m ( \cos{\theta} ) \, e^{i m \varphi }
  which are orthonormal
  */
-Complex<Real> SphericalHarmonic(Int n, Int m, Real theta, Real phi);
+template<typename T>
+inline Complex<T> SphericalHarmonic(
+  Int n,
+  Int m,
+  T theta,
+  T phi)
+{
+  return boost::math::spherical_harmonic<T,T>((int) n, (int) m, theta, phi);
+}
 #endif
+  
+  
+bool ElementaryOpTest();
   
   
 } /**< namespace mcl  */

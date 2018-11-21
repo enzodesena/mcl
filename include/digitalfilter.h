@@ -6,8 +6,7 @@
  Authors: Enzo De Sena, enzodesena@gmail.com
  */
 
-#ifndef MCL_DIGITALFILTER_H
-#define MCL_DIGITALFILTER_H
+#pragma once
 
 #include <vector>
 
@@ -70,5 +69,3 @@ public:
   
   
 } // namespace mcl
-
-#endif

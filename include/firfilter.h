@@ -6,9 +6,7 @@
  Authors: Enzo De Sena, enzodesena@gmail.com
  */
 
-#ifndef MCL_FIRFILTER_H
-#define MCL_FIRFILTER_H
-
+#pragma once
 #include <vector>
 
 #include "mcltypes.h"
@@ -163,5 +161,3 @@ public:
   
 } // namespace mcl
 
-
-#endif

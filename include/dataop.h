@@ -7,8 +7,7 @@
  */
 
 
-#ifndef MCL_DATAOP_H
-#define MCL_DATAOP_H
+#pragma once
 
 #include <vector>
 #include "mcltypes.h"
@@ -17,7 +16,7 @@ namespace mcl {
   
 /** Writes the vector to a file. The separator is endline. */
 template<typename T>
-void Save(
+inline void Save(
   const Vector<T>& vector,
   const std::string& file_name,
   const mcl::Int precision = 5)
@@ -29,6 +28,3 @@ void Save(
 
 } // namespace mcl
 
-
-
-#endif

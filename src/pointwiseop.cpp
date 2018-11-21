@@ -18,10 +18,10 @@
 namespace mcl {
 
   
-void Multiply(const Real* input_data_a,
-              const Real* input_data_b,
+void Multiply(const T* input_data_a,
+              const T* input_data_b,
               Int num_samples,
-              Real* output_data) noexcept {
+              T* output_data) noexcept {
 #ifdef MCL_APPLE_ACCELERATE
   #if MCL_DATA_TYPE_DOUBLE
   vDSP_vmulD(input_data_a, 1,
@@ -41,10 +41,10 @@ void Multiply(const Real* input_data_a,
 #endif
 }
   
-void Add(const Real* input_data_a,
-                 const Real* input_data_b,
+void Add(const T* input_data_a,
+                 const T* input_data_b,
                  Int num_samples,
-                 Real* output_data) noexcept {
+                 T* output_data) noexcept {
 #ifdef MCL_APPLE_ACCELERATE
   #if MCL_DATA_TYPE_DOUBLE
     vDSP_vaddD(input_data_a, 1,
@@ -65,16 +65,16 @@ void Add(const Real* input_data_a,
 }
   
 
-Vector<Real> Inverse(const Vector<Real>& vector) noexcept {
-  Vector<Real> output(vector.length());
+Vector<T> Inverse(const Vector<T>& vector) noexcept {
+  Vector<T> output(vector.length());
   for (Int i=0; i<(Int)vector.length(); ++i) { output[i] = 1.0/vector[i]; }
   return output;
 }
 
 
 
-Vector<Real> HalfWave(const Vector<Real>& input) noexcept {
-  Vector<Real> output = Zeros<Real>(input.length());
+Vector<T> HalfWave(const Vector<T>& input) noexcept {
+  Vector<T> output = Zeros<T>(input.length());
   for (Int i=0; i<(Int)input.length(); ++i) {
     if (input[i] > 0.0)
       output[i] = input[i];
@@ -84,8 +84,8 @@ Vector<Real> HalfWave(const Vector<Real>& input) noexcept {
 
 
 
-Vector<Real> Abs(const Vector<Complex>& input) noexcept {
-  Vector<Real> output(input.length());
+Vector<T> Abs(const Vector<Complex>& input) noexcept {
+  Vector<T> output(input.length());
   for (Int i=0; i<(Int)input.length(); ++i) { 
     output[i] = std::abs(input[i]);
   }
@@ -93,30 +93,17 @@ Vector<Real> Abs(const Vector<Complex>& input) noexcept {
 }
 
 
-Vector<Real> Log(const Vector<Real>& vector) noexcept {
-  Int n(vector.length());
-  Vector<Real> output(vector.length());
-  for (Int i=0; i<n; ++i) { output[i] = log(vector[i]); }
-  return output;
-}
-  
-Vector<Real> Log10(const Vector<Real>& vector) noexcept {
-  Int n(vector.length());
-  Vector<Real> output(vector.length());
-  for (Int i=0; i<n; ++i) { output[i] = log10(vector[i]); }
-  return output;
-}
 
-Vector<Real> Cos(const Vector<Real>& vector) noexcept {
+Vector<T> Cos(const Vector<T>& vector) noexcept {
   Int n(vector.length());
-  Vector<Real> output(vector.length());
+  Vector<T> output(vector.length());
   for (Int i=0; i<n; ++i) { output[i] = cos(vector[i]); }
   return output;
 }
   
-Vector<Real> Sin(const Vector<Real>& vector) noexcept {
+Vector<T> Sin(const Vector<T>& vector) noexcept {
   Int n(vector.length());
-  Vector<Real> output(vector.length());
+  Vector<T> output(vector.length());
   for (Int i=0; i<n; ++i) { output[i] = sin(vector[i]); }
   return output;
 }
