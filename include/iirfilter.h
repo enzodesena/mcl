@@ -99,10 +99,10 @@ private:
 /** Filter bank abstract class */
 class IirFilterBank : public FilterBank {
 private:
-  std::vector<IirFilter> filters_;
+  Vector<IirFilter> filters_;
   
 public:
-  IirFilterBank(const std::vector<IirFilter>& filters) noexcept :
+  IirFilterBank(const Vector<IirFilter>& filters) noexcept :
         filters_(filters) {}
   
   virtual Int num_filters() noexcept { return filters_.length(); }
@@ -111,7 +111,7 @@ public:
   virtual Vector<Real> Filter(const Real input);
   
   /** Returns the output of the filter bank for a given input. */
-  virtual std::vector<Vector<Real> >
+  virtual Vector<Vector<Real> >
   Filter(const Vector<Real>& input);
   
   /** Resets the state of the filter */

@@ -21,8 +21,8 @@ namespace mcl {
   
   
 IirFilter Butter(const Int order, const Real w_low, const Real w_high) {
-  std::vector<double> DenC = ComputeDenCoeffs((int) order, w_low, w_high);
-  std::vector<double> NumC = ComputeNumCoeffs((int) order, w_low, w_high, DenC);
+  Vector<double> DenC = ComputeDenCoeffs((int) order, w_low, w_high);
+  Vector<double> NumC = ComputeNumCoeffs((int) order, w_low, w_high, DenC);
   Vector<Real> denominator(DenC.begin(), DenC.end());
   Vector<Real> numerator(NumC.begin(), NumC.end());
   
@@ -52,7 +52,7 @@ IirFilterBank OctaveFilterBank(const Int order,
                                const Real starting_frequency,
                                const Real sampling_frequency) {
   Real current_frequency = starting_frequency;
-  std::vector<IirFilter> filters;
+  Vector<IirFilter> filters;
   for (Int i=0; i<num_bands; ++i) {
     
     mcl::IirFilter
@@ -64,11 +64,11 @@ IirFilterBank OctaveFilterBank(const Int order,
   return IirFilterBank(filters);
 }
   
-std::vector<double> ComputeLP(int FilterOrder) {
+Vector<double> ComputeLP(int FilterOrder) {
   int m;
   int i;
   
-  std::vector<double> NumCoeffs(FilterOrder+1);
+  Vector<double> NumCoeffs(FilterOrder+1);
   
   NumCoeffs.at(0) = 1;
   NumCoeffs.at(1) = FilterOrder;
@@ -84,11 +84,11 @@ std::vector<double> ComputeLP(int FilterOrder) {
   return NumCoeffs;
 }
 
-std::vector<double> ComputeHP( int FilterOrder )
+Vector<double> ComputeHP( int FilterOrder )
 {
   int i;
   
-  std::vector<double> NumCoeffs = ComputeLP(FilterOrder);
+  Vector<double> NumCoeffs = ComputeLP(FilterOrder);
   //if(NumCoeffs == NULL ) return( NULL );
   
   for( i = 0; i <= FilterOrder; ++i)
@@ -97,12 +97,12 @@ std::vector<double> ComputeHP( int FilterOrder )
   return NumCoeffs;
 }
 
-std::vector<double> TrinomialMultiply(int FilterOrder,
-                                      std::vector<double> b,
-                                      std::vector<double> c) {
+Vector<double> TrinomialMultiply(int FilterOrder,
+                                      Vector<double> b,
+                                      Vector<double> c) {
   int i, j;
   
-  std::vector<double> RetVal(4 * FilterOrder);
+  Vector<double> RetVal(4 * FilterOrder);
   //if( RetVal == NULL ) return( NULL );
   
   RetVal.at(2) = c.at(0);
@@ -132,20 +132,20 @@ std::vector<double> TrinomialMultiply(int FilterOrder,
   return RetVal;
 }
 
-std::vector<double> ComputeNumCoeffs(int FilterOrder,
+Vector<double> ComputeNumCoeffs(int FilterOrder,
                                      double Lcutoff,
                                      double Ucutoff,
-                                     std::vector<double> DenC) {
+                                     Vector<double> DenC) {
   ASSERT(std::isgreaterequal(Lcutoff, 0.0) && std::isless(Ucutoff, 1.0));
   
   int i;
   
-  std::vector<double> NumCoeffs(2*FilterOrder+1);
+  Vector<double> NumCoeffs(2*FilterOrder+1);
   
-  std::vector<std::complex<double> > NormalizedKernel(2*FilterOrder+1);
+  Vector<std::complex<double> > NormalizedKernel(2*FilterOrder+1);
   // if( NormalizedKernel == NULL ) return( NULL );
   
-  std::vector<double> TCoeffs = ComputeHP(FilterOrder);
+  Vector<double> TCoeffs = ComputeHP(FilterOrder);
   // if( TCoeffs == NULL ) return( NULL );
   
   for( i = 0; i < FilterOrder; ++i)
@@ -154,7 +154,7 @@ std::vector<double> ComputeNumCoeffs(int FilterOrder,
     NumCoeffs.at(2*i+1) = 0.0;
   }
   NumCoeffs.at(2*FilterOrder) = TCoeffs.at(FilterOrder);
-  std::vector<double> cp(2);
+  Vector<double> cp(2);
   double Bw, Wn;
   cp.at(0) = 2*2.0*tan(PI * Lcutoff/ 2.0);
   cp.at(1) = 2*2.0*tan(PI * Ucutoff / 2.0);
@@ -185,7 +185,7 @@ std::vector<double> ComputeNumCoeffs(int FilterOrder,
   return NumCoeffs;
 }
 
-std::vector<double> ComputeDenCoeffs(int FilterOrder,
+Vector<double> ComputeDenCoeffs(int FilterOrder,
                                      double Lcutoff,
                                      double Ucutoff ) {
   if ((Lcutoff < 0.0) | (Ucutoff > 1.0)) { ASSERT(false); }
@@ -209,8 +209,8 @@ std::vector<double> ComputeDenCoeffs(int FilterOrder,
   s2t = 2.0*st*ct;        // sine of 2*theta
   c2t = 2.0*ct*ct - 1.0;  // cosine of 2*theta
   
-  std::vector<double> RCoeffs(2 * FilterOrder); // z^-2 coefficients
-  std::vector<double> TCoeffs(2 * FilterOrder); // z^-1 coefficients
+  Vector<double> RCoeffs(2 * FilterOrder); // z^-2 coefficients
+  Vector<double> TCoeffs(2 * FilterOrder); // z^-1 coefficients
   
   for( k = 0; k < FilterOrder; ++k )
   {
@@ -224,10 +224,10 @@ std::vector<double> ComputeDenCoeffs(int FilterOrder,
     TCoeffs.at(2*k+1) = -2.0*cp*st*CosPoleAngle/a;
   }
   
-  std::vector<double>
+  Vector<double>
   DenomCoeffsTemp = TrinomialMultiply(FilterOrder, TCoeffs, RCoeffs);
   
-  std::vector<double> DenomCoeffs(2*FilterOrder+1);
+  Vector<double> DenomCoeffs(2*FilterOrder+1);
   
   DenomCoeffs.at(0) = 1.0;
   DenomCoeffs.at(1) = DenomCoeffsTemp.at(0);

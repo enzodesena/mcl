@@ -17,10 +17,10 @@ namespace mcl
 /** Test function for the functions in this file */
 bool VectorOpTest();
 
-constexpr int kDynamicLength = -1;
-constexpr int kReferenced = -2;
+constexpr size_t kDynamicLength = std::numeric_limits<size_t>::max();
+constexpr size_t kReferenced = std::numeric_limits<size_t>::max()-1;
 
-template<typename T = double, int vector_length = kDynamicLength>
+template<typename T = double, size_t vector_length = kDynamicLength>
 class Vector : private std::array<T, vector_length>
 {
 public:
@@ -35,24 +35,28 @@ public:
   }
   
   Vector(
-    int length,
+    size_t length,
     T value = T()) noexcept
   {
     ASSERT(length == vector_length);
+    for (auto iter = begin(); iter != end(); ++iter)
+    {
+      *iter = value;
+    }
   }
   
-  inline int length() const noexcept
+  inline size_t length() const noexcept
   {
     return static_cast<int>(vector_length);
   }
   
-  inline T& operator[](const int index) noexcept
+  inline T& operator[](const size_t index) noexcept
   {
     ASSERT(index>=0 && index < length());
     return data()[index];
   }
   
-  inline const T& operator[](const int index) const noexcept
+  inline const T& operator[](const size_t index) const noexcept
   {
     ASSERT(index>=0 && index < length());
     return data()[index];
@@ -64,75 +68,69 @@ template<typename T>
 class Vector<T, kDynamicLength> : private std::vector<T>
 {
 public:
+  using Iterator = typename std::vector<T>::iterator;
+  using ConstIterator = typename std::vector<T>::const_iterator;
+  using std::vector<T>::begin;
+  using std::vector<T>::end;
+//  using std::vector<T>::data;
+  
   Vector() noexcept : std::vector<T>()
   {
   }
   
   Vector(
-    int initial_length,
+    size_t initial_length,
     T value = T()) noexcept
     : std::vector<T>(initial_length, value)
   {
   }
-  
-  
-  using std::vector<T>::operator[];
-  using Iterator = typename std::vector<T>::iterator;
-  using std::vector<T>::begin;
-  using std::vector<T>::end;
-  using std::vector<T>::data;
 
-  inline int length() const noexcept
+  Vector(
+    ConstIterator iter_begin,
+    ConstIterator iter_end) noexcept
+    : std::vector<T>(iter_begin, iter_end)
+  {
+  }
+
+  inline size_t length() const noexcept
   {
     return static_cast<int>(this->size());
   }
   
-  inline T& operator[](const int index) noexcept
+  inline T& operator[](const size_t index) noexcept
   {
     ASSERT(index>=0 && index < length());
-    return data()[index];
+    return std::vector<T>::data()[index];
   }
   
-  inline const T& operator[](const int index) const noexcept
+  inline const T& operator[](const size_t index) const noexcept
   {
     ASSERT(index>=0 && index < length());
-    return data()[index];
+    return std::vector<T>::data()[index];
   }
   
   inline void PushBack(const T& element) noexcept
   {
     std::vector<T>::push_back(element);
   }
-  
-//  inline void SetElements(
-//    const Iterator&
-//    const Iterator& new_elements_begin,
-//    const Iterator& new_elements_end) noexcept
-//  {
-//    auto iter =
-//    for (auto iter = begin()+index;
-//         iter < end() && new_elements_begin < new_elements_end;
-//         iter++)
-//    {
-//      *iter = *(new_elements_begin++);
-//    }
-//  }
 };
 
 
-//template<typename T>
-//class Vector<T,kReferenced> {
-//public:
-//  Vector(Vector<T,kReferenced>)
-//  inline int length() {
-//    return this->size();
-//  }
-//  
-//  inline T At(int index) {
-//    ASSERT(index>=0 & index<this->size());
-//    return this[index];
-//  }
-//};
+template<typename T>
+class Vector<T,kReferenced> {
+public:
+  Vector(Vector<T,kReferenced>& other_vector) : other_vector_(other_vector)
+  {
+  }
+  
+  inline size_t length()
+  {
+    return other_vector_.length();
+  }
+  
+private:
+  Vector<T,kReferenced>& other_vector_;
+};
 
 
 

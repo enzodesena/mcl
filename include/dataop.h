@@ -16,9 +16,16 @@
 namespace mcl {
   
 /** Writes the vector to a file. The separator is endline. */
-void Save(const Vector<Real>& vector,
-                  const std::string& file_name,
-                  const mcl::Int precision = 5);
+template<typename T>
+void Save(
+  const Vector<T>& vector,
+  const std::string& file_name,
+  const mcl::Int precision = 5)
+{
+  mcl::Matrix<Real> matrix(vector.length(), 1);
+  matrix.SetColumn(0, vector);
+  matrix.Save(file_name, precision);
+}
 
 } // namespace mcl
 

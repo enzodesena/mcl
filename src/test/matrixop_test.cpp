@@ -122,11 +122,11 @@ bool MatrixOpTest() {
   ASSERT(IsEqual(eig_e.eigen_values[0], Complex(-1.449489742783179, 0.0)));
   ASSERT(IsEqual(eig_e.eigen_values[1], Complex(3.449489742783178, 0.0)));
   
-  std::vector<Complex> eig_e_vector_0(2);
+  Vector<Complex> eig_e_vector_0(2);
   eig_e_vector_0[0] = Complex(-0.912095586463013, 0.0);
   eig_e_vector_0[1] = Complex(0.409977610552932, 0.0);
   ASSERT(IsEqual(eig_e.eigen_vectors[0], eig_e_vector_0));
-  std::vector<Complex> eig_e_vector_1(2);
+  Vector<Complex> eig_e_vector_1(2);
   eig_e_vector_1[0] = Complex(-0.219275263435463, 0.0);
   eig_e_vector_1[1] = Complex(-0.975663035502170, 0.0);
   ASSERT(IsEqual(eig_e.eigen_vectors[1], eig_e_vector_1));

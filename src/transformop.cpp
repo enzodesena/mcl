@@ -20,22 +20,22 @@ namespace mcl {
 
   
   
-std::vector<Complex> Fft(const std::vector<Complex>& input,
+Vector<Complex> Fft(const Vector<Complex>& input,
                          Int n_point) noexcept {
-  std::vector<Complex> padded = ZeroPad(input, n_point);
+  Vector<Complex> padded = ZeroPad(input, n_point);
   kissfft<Real> fft((int) n_point, false);
-  std::vector<Complex> outbuf(n_point);
+  Vector<Complex> outbuf(n_point);
   
   fft.transform(&padded[0], &outbuf[0]);
   
   return outbuf;
 }
 
-std::vector<Complex> Ifft(const std::vector<Complex>& input,
+Vector<Complex> Ifft(const Vector<Complex>& input,
                           Int n_point) noexcept {
-  std::vector<Complex> padded = ZeroPad(input, n_point);
+  Vector<Complex> padded = ZeroPad(input, n_point);
   kissfft<Real> fft((int) n_point, true);
-  std::vector<Complex> outbuf(n_point);
+  Vector<Complex> outbuf(n_point);
   
   fft.transform(&padded[0], &outbuf[0]);
   
@@ -44,12 +44,12 @@ std::vector<Complex> Ifft(const std::vector<Complex>& input,
 
 
 
-std::vector<Complex> Hilbert(const Vector<Real>& input) noexcept {
+Vector<Complex> Hilbert(const Vector<Real>& input) noexcept {
   Int n = input.length();
   
-  std::vector<Complex> x = Fft(ComplexVector(input), n);
+  Vector<Complex> x = Fft(ComplexVector(input), n);
   
-  std::vector<Complex> h = Zeros<Complex>(n);
+  Vector<Complex> h = Zeros<Complex>(n);
   
   // if (n > 0 && 2*fix(n/2)) == n
   if (n > 0 && 2*floor(n/2) == n) {
@@ -106,7 +106,7 @@ Vector<Real> MinPhase(const Vector<Real>& x) noexcept {
 }
 
 
-std::vector<Complex> Rfft(const Vector<Real>& input,
+Vector<Complex> Rfft(const Vector<Real>& input,
                           Int n_point) noexcept {
   return Elements(Fft(ConvertToComplex(input), n_point), 0,
                   (Int) floor(1.0+((double)n_point)/2.0)-1);
@@ -114,9 +114,9 @@ std::vector<Complex> Rfft(const Vector<Real>& input,
 
 
 
-std::vector<std::vector<Complex> >
-Rfft(const std::vector<Vector<Real> >& input, Int n_point) noexcept {
-  std::vector<std::vector<Complex> > outputs;
+std::vector<Vector<Complex> >
+Rfft(const Vector<Vector<Real> >& input, Int n_point) noexcept {
+  std::vector<Vector<Complex> > outputs;
   for (Int i=0; i<(Int)input.length(); ++i) {
     outputs.push_back(Rfft(input[i], n_point));
   }
@@ -124,15 +124,15 @@ Rfft(const std::vector<Vector<Real> >& input, Int n_point) noexcept {
 }
 
 
-Vector<Real> Irfft(const std::vector<Complex>& input,
+Vector<Real> Irfft(const Vector<Complex>& input,
                         Int n_point) noexcept {
   // If n_point is even, then it includes the Nyquist term (the only
   // non-repeated term, together with DC) and is of dimension M=N/2 + 1
   // whereas if N is odd then there is no Nyquist term
   // and the input is of dimension M=(N+1)/2.
   Int M = (Rem(n_point, 2) == 0) ? (n_point/2 + 1) : (n_point+1)/2;
-  const std::vector<Complex> zero_padded = ZeroPad(input, M);
-  std::vector<Complex> spectrum;
+  const Vector<Complex> zero_padded = ZeroPad(input, M);
+  Vector<Complex> spectrum;
   if (Rem(n_point, 2) == 0) { // If n_point is even
     spectrum = Concatenate(zero_padded, Flip(Conj(Elements(zero_padded,
                                                            1,
@@ -143,15 +143,15 @@ Vector<Real> Irfft(const std::vector<Complex>& input,
                                                            (n_point+1)/2-1))));
   }
   ASSERT((Int)spectrum.length() == n_point);
-  std::vector<Complex> output = Ifft(spectrum, n_point);
+  Vector<Complex> output = Ifft(spectrum, n_point);
   ASSERT(IsReal(output));
   return RealPart(output);
 }
 
 
-std::vector<Vector<Real> >
-Irfft(const std::vector<std::vector<Complex> >& input, Int n_point) noexcept {
-  std::vector<Vector<Real> > outputs;
+Vector<Vector<Real> >
+Irfft(const std::vector<Vector<Complex> >& input, Int n_point) noexcept {
+  Vector<Vector<Real> > outputs;
   for (Int i=0; i<(Int)input.length(); ++i) {
     outputs.push_back(Irfft(input[i], n_point));
   }
@@ -168,10 +168,10 @@ Vector<Real> XCorr(const Vector<Real>& vector_a,
   
   Int n_fft = (UInt) pow(2.0, NextPow2(2*M-1));
   
-  std::vector<Complex> x = Fft(ComplexVector(vector_a), n_fft);
-  std::vector<Complex> y = Fft(ComplexVector(vector_b), n_fft);
+  Vector<Complex> x = Fft(ComplexVector(vector_a), n_fft);
+  Vector<Complex> y = Fft(ComplexVector(vector_b), n_fft);
   
-  std::vector<Complex> c = Ifft(Multiply(x, Conj(y)), n_fft);
+  Vector<Complex> c = Ifft(Multiply(x, Conj(y)), n_fft);
   
   // Ignore residual imaginary part
   Vector<Real> c_real = RealPart(c);

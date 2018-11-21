@@ -50,12 +50,12 @@ bool ComparisonOpTest() {
   Vector<Real> input;
   input.push_back(1.0);
   input.push_back(NAN);
-  std::vector<bool> output_a = IsNan(input);
+  Vector<bool> output_a = IsNan(input);
   ASSERT(!output_a[0]);
   ASSERT(output_a[1]);
   
   /* Returns opposite bool as input */
-  std::vector<bool> output_b = Not(output_a);
+  Vector<bool> output_b = Not(output_a);
   ASSERT(output_b[0]);
   ASSERT(!output_b[1]);
   
@@ -67,7 +67,7 @@ bool ComparisonOpTest() {
   ASSERT(Any(output_b));
   ASSERT(!Any(Not(output_b)));
   
-  std::vector<bool> output_c;
+  Vector<bool> output_c;
   output_c.push_back(false);
   output_c.push_back(false);
   output_c.push_back(false);
@@ -88,7 +88,7 @@ bool ComparisonOpTest() {
   input_d.push_back(-INFINITY);
   input_d.push_back(0.1);
   
-  std::vector<bool> output_d = IsInf(input_d);
+  Vector<bool> output_d = IsInf(input_d);
   ASSERT(output_d[0] == true);
   ASSERT(output_d[1] == true);
   ASSERT(output_d[2] == false);

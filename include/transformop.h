@@ -20,14 +20,14 @@ namespace mcl {
  Performs the fft of the input signal.
  Equivalent to Matlab's fft(input, n_point)
  */
-std::vector<Complex> Fft(const std::vector<Complex>& input,
+Vector<Complex> Fft(const Vector<Complex>& input,
                                  Int n_point) noexcept;
 
 /**
  Performs the fft of the real input signal.
  Equivalent to Voice Box's rfft(input, n_point)
  */
-std::vector<Complex> Rfft(const Vector<Real>& input,
+Vector<Complex> Rfft(const Vector<Real>& input,
                                   Int n_point) noexcept;
 
   
@@ -35,15 +35,15 @@ std::vector<Complex> Rfft(const Vector<Real>& input,
  Performs the fft of real vectors.
  Equivalent to Voice Box's rfft(input, n_point)
  */
-std::vector<std::vector<Complex> >
-Rfft(const std::vector<Vector<Real> >& input, Int n_point) noexcept;
+std::vector<Vector<Complex> >
+Rfft(const Vector<Vector<Real> >& input, Int n_point) noexcept;
   
   
 /**
  Performs the inverse fft of conjugate symmetric spectrum.
  Equivalent to Voice Box's rfft(input, n_point)
  */
-Vector<Real> Irfft(const std::vector<Complex>& input,
+Vector<Real> Irfft(const Vector<Complex>& input,
                                 Int n_point) noexcept;
 
 
@@ -51,22 +51,22 @@ Vector<Real> Irfft(const std::vector<Complex>& input,
  Performs the inverse fft of conjugate symmetric spectra.
  Equivalent to Voice Box's rfft(input, n_point)
  */
-std::vector<Vector<Real> >
-Irfft(const std::vector<std::vector<Complex> >& input, Int n_point) noexcept;
+Vector<Vector<Real> >
+Irfft(const std::vector<Vector<Complex> >& input, Int n_point) noexcept;
   
 /** 
  Performs the ifft of the input signal.
  Equivalent to Matlab's ifft(input, n_point)
  */
-std::vector<Complex> Ifft(
-  const std::vector<Complex>& input,
+Vector<Complex> Ifft(
+  const Vector<Complex>& input,
   Int n_point) noexcept;
 
 /** 
  Performs the equivalent of Matlab's Hilbert (i.e. computes the so-called
  discrete-time analytic signal).
  */
-std::vector<Complex> Hilbert(const Vector<Real>& input) noexcept;
+Vector<Complex> Hilbert(const Vector<Real>& input) noexcept;
 
 /** 
  Returns the real cepstrum of the real sequence X.

@@ -35,18 +35,18 @@ IirFilterBank OctaveFilterBank(const Int order,
                                const Real starting_frequency,
                                const Real sampling_frequency);
   
-std::vector<double> ComputeLP(int FilterOrder);
-std::vector<double> ComputeHP(int FilterOrder);
-std::vector<double> TrinomialMultiply(int FilterOrder,
-                                      std::vector<double> b,
-                                      std::vector<double> c);
+Vector<double> ComputeLP(int FilterOrder);
+Vector<double> ComputeHP(int FilterOrder);
+Vector<double> TrinomialMultiply(int FilterOrder,
+                                      Vector<double> b,
+                                      Vector<double> c);
 
-std::vector<double> ComputeNumCoeffs(int FilterOrder,
+Vector<double> ComputeNumCoeffs(int FilterOrder,
                                      double Lcutoff,
                                      double Ucutoff,
-                                     std::vector<double> DenC);
+                                     Vector<double> DenC);
 
-std::vector<double> ComputeDenCoeffs(int FilterOrder,
+Vector<double> ComputeDenCoeffs(int FilterOrder,
                                      double Lcutoff,
                                      double Ucutoff );
   

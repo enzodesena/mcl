@@ -268,8 +268,8 @@ IirFilter PinkifierFilter() {
   zeros[3] = 0.6128445;
   zeros[4] = -0.0324723;
   
-  std::vector<Complex> num = Poly(zeros);
-  std::vector<Complex> den = Poly(poles);
+  Vector<Complex> num = Poly(zeros);
+  Vector<Complex> den = Poly(poles);
   
   return IirFilter(RealPart(num),RealPart(den));
 }
@@ -285,10 +285,10 @@ Vector<Real> IirFilterBank::Filter(const Real input) {
 }
 
   
-std::vector<Vector<Real> >
+Vector<Vector<Real> >
 IirFilterBank::Filter(const Vector<Real>& input) {
   const Int N = filters_.length();
-  std::vector<Vector<Real> > outputs(N);
+  Vector<Vector<Real> > outputs(N);
   for (Int i=0; i<N; ++i) {
     outputs[i] = filters_[i].Filter(input);
   }

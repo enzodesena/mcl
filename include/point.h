@@ -6,126 +6,391 @@
  Authors: Enzo De Sena, enzodesena@gmail.com
  */
 
-#ifndef MCL_POINT_H
-#define MCL_POINT_H
+#pragma once
 
 #include "mcltypes.h"
 
 namespace mcl {
 
-class Triplet {
+template<typename T>
+class Triplet
+{
 public:
   /** Constructs a `Point` with all coordinates set to zero. */
-  Triplet() noexcept;
+  Triplet() noexcept
+  {
+  }
   
   /** Constructor with explicit definition of all coordinates. */
-  Triplet(Real x, Real y, Real z) noexcept;
+  Triplet(
+    const T x,
+    const T y,
+    const T z) noexcept : x_(x), y_(y), z_(z)
+  {
+  }
   
-  bool Equals(const Triplet& other_point) const noexcept;
+  bool Equals(const Triplet& other_point) const noexcept
+  {
+    return IsEqual(*this, other_point);
+  }
   
   // Getter methods.
-  Real x() const noexcept { return x_; }
-  Real y() const noexcept { return y_; }
-  Real z() const noexcept { return z_; }
+  T x() const noexcept
+  {
+    return x_;
+  }
+  
+  T y() const noexcept
+  {
+    return y_;
+  }
+  
+  T z() const noexcept
+  {
+    return z_;
+  }
 
-  void SetX(const Real value) noexcept { x_ = value; }
-  void SetY(const Real value) noexcept { y_ = value; }
-  void SetZ(const Real value) noexcept { z_ = value; }
+  void SetX(
+    const T value) noexcept
+  {
+    x_ = value;
+  }
+  
+  void SetY(
+    const T value) noexcept
+  {
+    y_ = value;
+  }
+  
+  void SetZ(
+    const T value) noexcept
+  {
+    z_ = value;
+  }
 
   /** Returns the norm of the vector, or, in other words, the distance
    of the point from the origin (0,0,0) */
-  Real norm() const noexcept;
+  T norm() const noexcept
+  {
+    return sqrt(pow(x(),2) + pow(y(),2) + pow(z(),2));
+  }
   
   /** Returns the angle formed with the z-axis */
-  Real theta() const noexcept;
+  T theta() const noexcept
+  {
+    return (T) acos(z()/norm());
+  }
   
   /** Returns the angle formed between the projection on the x-y axis and
    the x-axis */
-  Real phi() const noexcept;
+  T phi() const noexcept
+  {
+    return (Real) atan2(y(), x());
+  }
   
   /** Modifies the point (i.e. vector) such that its norm is equal to 1. */
-  void Normalize() noexcept;
+  void Normalize() noexcept
+  {
+    T vector_norm = norm();
+    x_ = x_/vector_norm;
+    y_ = y_/vector_norm;
+    z_ = z_/vector_norm;
+  }
 
 private:
-  Real x_;
-  Real y_;
-  Real z_;
+  T x_;
+  T y_;
+  T z_;
 };
   
+template<typename T>
+struct Point : public Triplet<T>
+{
+  Point() noexcept
+  {
+  }
   
-  
-typedef Triplet Point;
+  /** Constructor with explicit definition of all coordinates. */
+  Point(
+    const T x,
+    const T y,
+    const T z) noexcept : Triplet<T>(x,y,z)
+  {
+  }
+};
   
 /**
  Rotates the reference system about the x-axis with the right-hand rule.
  e.g. RotateAboutX(Point(0.0,1.0,0.0), pi/2) == Point(0.0,0.0,1.0)
  */
-Point RotateAboutX(const Point&, Real) noexcept;
+template<typename T>
+Point<T> RotateAboutX(
+  const Point<T>& point,
+  const T angle) noexcept
+{
+  T cos_angle = cos(angle);
+  T sin_angle = sin(angle);
+  
+  return Point(point.x(),
+               point.y()*cos_angle + point.z()*(-sin_angle),
+               point.y()*(sin_angle) + point.z()*cos_angle);
+}
 
 /**
  Rotates the reference system about the y-axis with the right-hand rule.
  e.g. RotateAboutY(Point(1.0,0.0,0.0), pi/2) == Point(0.0,0.0,-1.0)
  */
-Point RotateAboutY(const Point&, Real) noexcept;
+template<typename T>
+Point<T> RotateAboutY(
+  const Point<T>& point,
+  const T angle) noexcept
+{
+  T cos_angle = cos(angle);
+  T sin_angle = sin(angle);
+  
+  return Point(point.x()*cos_angle+point.z()*sin_angle,
+               point.y(),
+               point.x()*(-sin_angle) + point.z()*cos_angle);
+}
+
 
 /**
  Rotates the reference system about the z-axis with the right-hand rule.
  e.g. RotateAboutZ(Point(0.0,1.0,0.0), pi/2) == Point(-1.0,0.0,0.0)
  */
-Point RotateAboutZ(const Point&, Real) noexcept;
+template<typename T>
+Point<T> RotateAboutZ(
+  const Point<T>& point,
+  const T angle) noexcept
+{
+  T cos_angle = cos(angle);
+  T sin_angle = sin(angle);
+  return Point(point.x()*cos_angle + point.y()*(-sin_angle),
+               point.x()*sin_angle + point.y()*cos_angle,
+               point.z());
+}
 
 /**
  Rotates the reference system with euler angles. Convention is ZYX with
  angles phi, theta and psi, respectively.
  */
-Point Rotate(const Point&, Real phi,
-                     Real theta, Real psi) noexcept;
+template<typename T>
+Point<T> Rotate(
+  const Point<T>& point,
+  const T theta_1,
+  const T theta_2,
+  const T theta_3) noexcept
+{
+  Point rotated_about_z = RotateAboutZ(point, theta_1);
+  Point rotated_about_y = RotateAboutY(rotated_about_z, theta_2);
+  Point rotated_about_x = RotateAboutX(rotated_about_y, theta_3);
+  return rotated_about_x;
+}
 
-Real DotProduct(Point, Point) noexcept;
-Real Distance(Point, Point) noexcept;
-Real Theta(Point, Point) noexcept;
-Real Phi(Point, Point) noexcept;
-Real AngleBetweenDirections(Real theta_a, Real phi_a,
-                                   Real theta_b, Real phi_b) noexcept;
-Real AngleBetweenPoints(Point, Point) noexcept;
+template<typename T>
+T DotProduct(
+  const Point<T>& point_a,
+  const Point<T>& point_b) noexcept
+{
+  return point_a.x()*point_b.x()+point_a.y()*point_b.y()+point_a.z()*point_b.z();
+}
+
+template<typename T>
+T Distance(
+  const Point<T>& point_a,
+  const Point<T>& point_b) noexcept
+{
+  Point point(
+    point_a.x() - point_b.x(),
+    point_a.y() - point_b.y(),
+    point_a.z() - point_b.z());
+  return point.norm();
+}
+
+template<typename T>
+T Theta(
+  const Point<T>& point_a,
+  const Point<T>& point_b) noexcept
+{
+  // point_a is taken as the new centre of the reference system
+  Point point(
+    point_b.x()-point_a.x(),
+    point_b.y()-point_a.y(),
+    point_b.z()-point_a.z());
+  return point.theta();
+}
+
+template<typename T>
+T Phi(
+  const Point<T>& point_a,
+  const Point<T>& point_b) noexcept
+{
+// point_a is taken as the new centre of the reference system
+  Point point(
+    point_b.x()-point_a.x(),
+    point_b.y()-point_a.y(),
+    point_b.z()-point_a.z());
+  return point.phi();
+}
+
+template<typename T>
+T AngleBetweenDirections(
+  T theta_a,
+  T phi_a,
+  T theta_b,
+  T phi_b) noexcept
+{
+  Point point_a(sin(theta_a)*cos(phi_a), sin(theta_a)*sin(phi_a), cos(theta_a));
+  Point point_b(sin(theta_b)*cos(phi_b), sin(theta_b)*sin(phi_b), cos(theta_b));
+  return acos(DotProduct(point_a, point_b));
+}
+  
+template<typename T>
+T AngleBetweenPoints(
+  const Point<T>& point_a,
+  const Point<T>& point_b) noexcept
+{
+  point_a.Normalize();
+  point_b.Normalize();
+  return acos(DotProduct(point_a, point_b));
+}
 
 /**
  This returns the point on the line between `point_a` and `point_b` which
  has a distance of `distance` from `point_a`
  */
-Point PointOnLine(const Point point_a, const Point point_b,
-                          const Real distance) noexcept;
+template<typename T>
+Point<T> PointOnLine(
+  const Point<T> point_a,
+  const Point<T> point_b,
+  const T distance) noexcept
+{
+  Point point_centered = Subtract(point_b, point_a);
+  Point out_point_centered = PointSpherical(distance, point_centered.theta(),
+                                                   point_centered.phi());
+  
+  return Sum(out_point_centered, point_a);
+}
 
 /** Sums the coordinates of `point_a` and `point_b` */
-Point Sum(const Point point_a, const Point point_b) noexcept;
+template<typename T>
+Point<T> Sum(
+  const Point<T> point_a,
+  const Point<T> point_b) noexcept
+{
+  return Point(
+    point_a.x()+point_b.x(),
+    point_a.y()+point_b.y(),
+    point_a.z()+point_b.z());
+}
 
 /** Subtracts the coordinates of `point_a` from `point_b` (point_a-point_b) */
-Point Subtract(const Point point_a, const Point point_b) noexcept;
+template<typename T>
+Point<T> Subtract(
+  const Point<T> point_a,
+  const Point<T> point_b) noexcept
+{
+  return Point(
+    point_a.x()-point_b.x(),
+    point_a.y()-point_b.y(),
+    point_a.z()-point_b.z());
+}
 
 /**
  Multiplies all coordinates by given constant. Has the effect of changing
  of changing the length of the vector.
  */
-Point Multiply(const Point point, const Real constant) noexcept;
+template<typename T>
+Point<T> Multiply(
+  const Point<T> point,
+  const T constant) noexcept
+{
+  return Point(
+    point.x() * constant,
+    point.y() * constant,
+    point.z() * constant);
+}
 
 /**
  Contructs a point from spherical coordinates, with (r, 0, 0) corresponding
  to the z-axis, and (r, pi/2, 0) corresponding to x-axis. Right-hand rule.
  */
-Point PointSpherical(Real r, Real theta, Real phi) noexcept;
+template<typename T>
+Point<T> PointSpherical(
+  const T r,
+  const T theta,
+  const T phi) noexcept
+{
+  T x = r * cos(phi) * sin(theta);
+  T y = r * sin(phi) * sin(theta);
+  T z = r * cos(theta);
+  return Point(x, y, z);
+}
 
 /**
  Constructs a vector that is the the projection of the input `vector`
  on the plane (passing through the origin) identified by the vector
  normal to the plane `plane_normal_vector`.
  */
-Point Projection(const Point& vector,
-                         const Point& plane_normal_vector) noexcept;
+template<typename T>
+Point<T> Projection(
+  const Point<T>& vector,
+  const Point<T>& plane_normal_vector) noexcept
+{
+  Point normalised_plane_normal_vector = Normalized(plane_normal_vector);
+  return Subtract(vector, Multiply(
+    normalised_plane_normal_vector,
+    DotProduct(vector, normalised_plane_normal_vector)));
+}
 
 /**
  Returns a new point that is a normalized (norm == 1) version of `point`.
  */
-Point Normalized(Point point) noexcept;
+template<typename T>
+Point<T> Normalized(
+  Point<T> point) noexcept
+{
+  point.Normalize();
+  return point;
+}
+
+
+/**
+ Returns whther or not an intersection between a plane and a line exists. 
+ The line is identified by a point on a line, line_point, 
+ and the direction of the line,
+ line_direction (every point on the line can be expressed as
+ p=d line_point+line_direction, with d any scalar).
+ The plane is identified as any point on the plane, plane_point, and
+ the normal to the plane, plane_normal (every point on the plane can be
+ expressed as (p-plane_point, plane_normal)=0 where (x,y) is scalar product).
+ */
+template<typename T>
+bool IntersectionPlaneLineExists(
+  const Point<T>& line_point,
+  const Point<T>& line_direction,
+  const Point<T>& plane_point,
+  const Point<T>& plane_normal) noexcept
+{
+  // TODO: find a way to avoid rewriting this calculation in the next function
+  T numerator = DotProduct(Subtract(plane_point, line_point),
+                              plane_normal);
+  T denominator = DotProduct(line_direction, plane_normal);
+  
+  bool zero_numerator = IsEqual(numerator, 0.0);
+  bool zero_denominator = IsEqual(denominator, 0.0);
+  
+  // If denominator = 0 then the line and plane are parallel.
+  // There will be two cases:
+  // if numerator = 0 then the line is contained in the plane, that is, the line
+  // intersects the plane at each point of the line (and thus an intersection
+  // still exists).
+  // Otherwise, the line and plane have no intersection.
+  // So, the case of no intersection is when the denominator = 0 and the
+  // numerator is not = 0.
+  return ! (zero_denominator & ! zero_numerator);
+}
+  
 
 /**
  Returns the intersection point between a plane and a line. The line is
@@ -140,29 +405,31 @@ Point Normalized(Point point) noexcept;
  The user should first check whether an intersection exists using
  IntersectionPlaneLineExists.
  */
-Point IntersectionPlaneLine(const Point& line_point,
-                            const Point& line_direction,
-                            const Point& plane_point,
-                            const Point& plane_normal) noexcept;
-
-/**
- Returns whther or not an intersection between a plane and a line exists. 
- The line is identified by a point on a line, line_point, 
- and the direction of the line,
- line_direction (every point on the line can be expressed as
- p=d line_point+line_direction, with d any scalar).
- The plane is identified as any point on the plane, plane_point, and
- the normal to the plane, plane_normal (every point on the plane can be
- expressed as (p-plane_point, plane_normal)=0 where (x,y) is scalar product).
- */
-bool IntersectionPlaneLineExists(const Point& line_point,
-                                 const Point& line_direction,
-                                 const Point& plane_point,
-                                 const Point& plane_normal) noexcept;
+template<typename T>
+Point<T> IntersectionPlaneLine(
+  const Point<T>& line_point,
+  const Point<T>& line_direction,
+  const Point<T>& plane_point,
+  const Point<T>& plane_normal) noexcept
+ {
+  if (! IntersectionPlaneLineExists(line_point, line_direction,
+                                    plane_point, plane_normal)) {
+    return Point<double>(NAN, NAN, NAN);
+  }
   
+  T d = DotProduct(Subtract(plane_point, line_point),
+                      plane_normal) /
+           DotProduct(line_direction, plane_normal);
+  
+  // if line and plane are parallel, and line is contained in plane
+  if (IsNan(d)) {
+    return line_point;
+  } else {
+    return Sum(Multiply(line_direction, d), line_point);
+  }
+}
+
 bool PointTest();
   
   
 } // namespace mcl
-
-#endif

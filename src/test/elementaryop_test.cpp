@@ -132,6 +132,11 @@ bool ElementaryOpTest() {
   ASSERT(RoundToInt(-0.2) == 0);
   ASSERT(RoundToInt(-3.6) == -4);
   
+  ASSERT(IsApproximatelyEqual(Floor(1.2), 1.0, VERY_SMALL));
+  ASSERT(IsApproximatelyEqual(Floor(1.7), 1.0, VERY_SMALL));
+  ASSERT(IsApproximatelyEqual(Floor(-1.2), -2.0, VERY_SMALL));
+  ASSERT(IsApproximatelyEqual(Floor(-1.7), -2.0, VERY_SMALL));
+  
 #if MCL_LOAD_BOOST  
   ASSERT(IsEqual(AssociatedLegendreP(3, 0, 0.8), 0.08));
   ASSERT(IsEqual(AssociatedLegendreP(3, 1, 0.8), -1.980000000000001));

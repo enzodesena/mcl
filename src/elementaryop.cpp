@@ -62,7 +62,7 @@ Int Next2(Int input) {
   return (UInt) pow(2, NextPow2(input));
 }
   
-template<typename T, int length>
+template<typename T, size_t length>
 T Entropy(Vector<T, length> pdf, Real base) {
   pdf = Multiply(pdf, 1.0/Sum(pdf));
   return -Sum(Multiply(pdf, Log(pdf)))/log(base);

@@ -16,26 +16,26 @@
 namespace mcl {
   
 bool TransformOpTest() {
-  std::vector<Complex> vector_a(3);
+  Vector<Complex> vector_a(3);
   vector_a[0] = Complex(1.0, 0.0);
   vector_a[1] = Complex(0.0, 1.0);
   vector_a[2] = Complex(1.0, 0.5);
   
-  std::vector<Complex> vector_b(3);
+  Vector<Complex> vector_b(3);
   vector_b[0] = Complex(0.5, 1.0);
   vector_b[1] = Complex(0.2, -1.0);
   vector_b[2] = Complex(-1.0, -0.5);
   
-  std::vector<Complex> fft_vector_a = Fft(vector_a, 3);
-  std::vector<Complex> fft_vector_cmp_a(3);
+  Vector<Complex> fft_vector_a = Fft(vector_a, 3);
+  Vector<Complex> fft_vector_cmp_a(3);
   fft_vector_cmp_a[0] = Complex(2.0, 1.5);
   fft_vector_cmp_a[1] = Complex(0.933012701892219, 0.116025403784439);
   fft_vector_cmp_a[2] = Complex(0.066987298107781, -1.616025403784439);
   
   ASSERT(IsEqual(fft_vector_a, fft_vector_cmp_a));
   
-  std::vector<Complex> fft_vector_b = Fft(vector_b, 3);
-  std::vector<Complex> fft_vector_cmp_b(3);
+  Vector<Complex> fft_vector_b = Fft(vector_b, 3);
+  Vector<Complex> fft_vector_cmp_b(3);
   fft_vector_cmp_b[0] = Complex(-0.300000000000000, -0.500000000000000);
   fft_vector_cmp_b[1] = Complex(0.466987298107781, 0.710769515458674);
   fft_vector_cmp_b[2] = Complex(1.333012701892219, 2.789230484541326);
@@ -46,9 +46,9 @@ bool TransformOpTest() {
   
   // Check that when n_points is larger than the size of the vector,
   // then the result is the fft of a zero padded version of the input vector.
-  std::vector<Complex> fft_vector_a_4 = Fft(vector_a, 4);
+  Vector<Complex> fft_vector_a_4 = Fft(vector_a, 4);
   ASSERT(fft_vector_a_4.length() == 4);
-  std::vector<Complex> fft_vector_a_4_cmp(4);
+  Vector<Complex> fft_vector_a_4_cmp(4);
   fft_vector_a_4_cmp[0] = Complex(2.0000, 1.5000);
   fft_vector_a_4_cmp[1] = Complex(1.0000, -0.5000);
   fft_vector_a_4_cmp[2] = Complex(2.0000, -0.5000);
@@ -77,7 +77,7 @@ bool TransformOpTest() {
   ASSERT(IsEqual(Irfft(Rfft(vector_i, 4), 4), vector_i));
   
   // Test Irfft in strange cases
-  std::vector<Complex> vector_l(3);
+  Vector<Complex> vector_l(3);
   vector_l[0] = Complex(1.0, 0.0);
   vector_l[1] = Complex(0.0, 1.0);
   vector_l[2] = Complex(2.0, 0.0);
@@ -90,7 +90,7 @@ bool TransformOpTest() {
                                       0.122008467928146, 0.122008467928146};
   ASSERT(IsEqual(Irfft(vector_l, 6), vector_l_6_cmp));
   
-  std::vector<Complex> vector_m(vector_l); // Try out with even input
+  Vector<Complex> vector_m(vector_l); // Try out with even input
   vector_m.push_back(Complex(3.0, 0.0));
   Vector<Real> vector_m_4_cmp = {0.75, -0.75, 0.75, 0.25};
   ASSERT(IsEqual(Irfft(vector_m, 4), vector_m_4_cmp));
@@ -117,8 +117,8 @@ bool TransformOpTest() {
   vector_c[2] = 2.4;
   
   
-  std::vector<Complex> hilbert_vector_c = Hilbert(vector_c);
-  std::vector<Complex> hilbert_vector_cmp_c(3);
+  Vector<Complex> hilbert_vector_c = Hilbert(vector_c);
+  Vector<Complex> hilbert_vector_cmp_c(3);
   hilbert_vector_cmp_c[0] = Complex(-0.3000000000000000, 1.212435565298214);
   hilbert_vector_cmp_c[1] = Complex(0.300000000000000, -1.558845726811989);
   hilbert_vector_cmp_c[2] = Complex(2.400000000000000, 0.346410161513775);
@@ -133,8 +133,8 @@ bool TransformOpTest() {
   vector_d[3] = -12.4;
   
   
-  std::vector<Complex> hilbert_vector_d = Hilbert(vector_d);
-  std::vector<Complex> hilbert_vector_cmp_d(4);
+  Vector<Complex> hilbert_vector_d = Hilbert(vector_d);
+  Vector<Complex> hilbert_vector_cmp_d(4);
   hilbert_vector_cmp_d[0] = Complex(-0.300000000000000, -6.350000000000001);
   hilbert_vector_cmp_d[1] = Complex(0.300000000000001, -1.350000000000000);
   hilbert_vector_cmp_d[2] = Complex(2.399999999999999, 6.350000000000001);

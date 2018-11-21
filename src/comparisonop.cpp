@@ -25,39 +25,33 @@ bool IsEqual(Real num_a, Real num_b, Real precision) {
 }
   
 
-bool IsNan(Real num) {
-  return isnan(num);
-}
 
-std::vector<bool> IsNan(Vector<Real> input) {
-  std::vector<bool> output;
+Vector<bool> IsNan(Vector<Real> input) {
+  Vector<bool> output;
   for (Int i=0; i<(Int)input.length(); ++i) {
     output.push_back(IsNan(input[i]));
   }
   return output;
 }
 
-bool IsInf(Real num) {
-  return std::isinf(num);
-}
 
-std::vector<bool> IsInf(Vector<Real> input) {
-  std::vector<bool> output;
+Vector<bool> IsInf(Vector<Real> input) {
+  Vector<bool> output;
   for (Int i=0; i<(Int)input.length(); ++i) {
     output.push_back(IsInf(input[i]));
   }
   return output;
 }
 
-std::vector<bool> Not(std::vector<bool> input) {
-  std::vector<bool> output;
+Vector<bool> Not(Vector<bool> input) {
+  Vector<bool> output;
   for (Int i=0; i<(Int)input.length(); ++i) {
     output.push_back(!input[i]);
   }
   return output;
 }
 
-bool All(std::vector<bool> input) {
+bool All(Vector<bool> input) {
   for (Int i=0; i<(Int)input.length(); ++i) {
     if (input[i] == false) {
       return false;
@@ -66,11 +60,11 @@ bool All(std::vector<bool> input) {
   return true;
 }
 
-bool None(std::vector<bool> input) {
+bool None(Vector<bool> input) {
   return All(Not(input));
 }
 
-bool Any(std::vector<bool> input) {
+bool Any(Vector<bool> input) {
   for (Int i=0; i<(Int)input.length(); ++i) {
     if (input[i] == true) {
       return true;
@@ -104,15 +98,10 @@ bool IsEqual(Complex num_a, Complex num_b, Real precision) {
   (std::fabs(num_a.imag() - num_b.imag()) < precision);
 }
 
-bool IsEqual(const Quaternion& q_a, const Quaternion& q_b) {
-  return IsEqual(q_a.w(), q_b.w()) & IsEqual(q_a.x(), q_b.x()) &
-  IsEqual(q_a.y(), q_b.y()) & IsEqual(q_a.z(), q_b.z());
-}
 
 
-
-bool IsEqual(const std::vector<Int>& vector_a,
-             const std::vector<Int>& vector_b) {
+bool IsEqual(const Vector<Int>& vector_a,
+             const Vector<Int>& vector_b) {
   if ((Int)vector_a.length() != (Int)vector_b.length())
     return false;
   
@@ -122,7 +111,7 @@ bool IsEqual(const std::vector<Int>& vector_a,
   return true;
 }
 
-bool IsReal(const std::vector<Complex>& input) {
+bool IsReal(const Vector<Complex>& input) {
   const Int size = input.length();
   for (Int i=0; i<size; ++i) {
     if (! IsEqual(input[i].imag(), 0.0)) { return false; }
@@ -130,24 +119,6 @@ bool IsReal(const std::vector<Complex>& input) {
   return true;
 }
 
-
-
-bool IsEqual(std::vector<Point> points_a, std::vector<Point> points_b) {
-  const Int num_points = (Int)points_a.length();
-  if (num_points != (Int)points_b.length()) { return false; }
-  for (Int i=0; i<num_points; ++i) {
-    if (! IsEqual(points_a[i], points_b[i])) { return false; }
-  }
-  return true;
-}
-
-
-bool IsEqual(const Point& point_a, const Point& point_b,
-             const Real precision) {
-  return mcl::IsEqual(point_a.x(), point_b.x(), precision) &&
-  mcl::IsEqual(point_a.y(), point_b.y(), precision) &&
-  mcl::IsEqual(point_a.z(), point_b.z(), precision);
-}
 
   
 bool IsEqual(const Real* input_data_a,

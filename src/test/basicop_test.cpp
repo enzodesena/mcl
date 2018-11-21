@@ -56,12 +56,12 @@ bool BasicOpTest() {
   ASSERT(MinIndex(vector_h) == 3);
   ASSERT(MaxIndex(vector_h) == 4);
   
-  std::vector<Int> vector_i = Zeros<Int>(2);
+  Vector<Int> vector_i = Zeros<Int>(2);
   vector_i[0] = 38;
   vector_i[1] = 6;
   ASSERT(MinIndex(vector_i) == 1);
   
-  std::vector<UInt> vector_z(4);
+  Vector<UInt> vector_z(4);
   vector_z[0] = 64286;
   vector_z[1] = 64286;
   vector_z[2] = 0;
@@ -75,14 +75,14 @@ bool BasicOpTest() {
   vector_l[2] = 2.4;
   vector_l[3] = 12.4;
   vector_l[4] = 12;
-  std::vector<UInt> vector_l_peaks = FindPeaksIndexes(vector_l);
-  std::vector<UInt> vector_l_peaks_cmp(2);
+  Vector<UInt> vector_l_peaks = FindPeaksIndexes(vector_l);
+  Vector<UInt> vector_l_peaks_cmp(2);
   vector_l_peaks_cmp[0] = 1;
   vector_l_peaks_cmp[1] = 3;
   ASSERT(IsEqual(vector_l_peaks, vector_l_peaks_cmp));
   
-  std::vector<UInt> vector_l_peaks_2 = FindPeaksIndexes(vector_l, 20.0);
-  std::vector<UInt> vector_l_peaks_2_cmp(1);
+  Vector<UInt> vector_l_peaks_2 = FindPeaksIndexes(vector_l, 20.0);
+  Vector<UInt> vector_l_peaks_2_cmp(1);
   vector_l_peaks_2_cmp[0] = 1;
   ASSERT(IsEqual(vector_l_peaks_2, vector_l_peaks_2_cmp));
   
@@ -91,7 +91,7 @@ bool BasicOpTest() {
   ASSERT(FindPeaksIndexes(Zeros<Real>(3)).length() == 0);
   
   
-  std::vector<UInt> vector_m(4);
+  Vector<UInt> vector_m(4);
   vector_m[0] = 3;
   vector_m[1] = 2;
   vector_m[2] = 1;

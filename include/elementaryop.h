@@ -98,6 +98,15 @@ T Rem(
   return x - ((T) n)*y;
 }
 
+
+template<typename T>
+T Floor(const T input)
+{
+  // TODO: verify for all types.
+  return std::floor(input);
+}
+
+
 /** Equivalent to Matlab's mod(scalar_a,scalar_b) */
 template<typename T>
 T Mod(
@@ -219,7 +228,7 @@ Real LinearInterpolation(Real x1, Real y1, Real x2, Real y2, Real x);
  Returns true if the imaginary part is approximately zero. The precision used
  is VERY_SMALL in equality operations, hence use only for testing.
  */
-bool IsReal(const std::vector<Complex<Real>>& input);
+bool IsReal(const Vector<Complex<Real>>& input);
   
 /** 
  Calculates the entropy of a discreate random variable with given `pdf'.

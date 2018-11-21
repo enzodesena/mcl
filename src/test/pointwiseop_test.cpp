@@ -17,7 +17,7 @@ namespace mcl {
   
 bool PointWiseOpTest() {
   
-  std::vector<Complex> vector_a(3);
+  Vector<Complex> vector_a(3);
   vector_a[0] = Complex(1.0, 0.0);
   vector_a[1] = Complex(0.0, 1.0);
   vector_a[2] = Complex(1.0, 0.5);
@@ -34,30 +34,30 @@ bool PointWiseOpTest() {
   ASSERT(IsEqual(abs_vector_a, abs_vector_a_cmp));
   
   
-  std::vector<Complex> vector_b(3);
+  Vector<Complex> vector_b(3);
   vector_b[0] = Complex(0.5, 1.0);
   vector_b[1] = Complex(0.2, -1.0);
   vector_b[2] = Complex(-1.0, -0.5);
   
   
-  std::vector<Complex> mult_vector = Multiply(vector_a, vector_b);
-  std::vector<Complex> mult_vector_cmp(3);
+  Vector<Complex> mult_vector = Multiply(vector_a, vector_b);
+  Vector<Complex> mult_vector_cmp(3);
   mult_vector_cmp[0] = Complex(0.5, 1.0);
   mult_vector_cmp[1] = Complex(1.0, 0.2);
   mult_vector_cmp[2] = Complex(-0.75, -1.0);
   
   ASSERT(IsEqual(mult_vector, mult_vector_cmp));
   
-  std::vector<Complex> add_vector = Add(vector_a, vector_b);
-  std::vector<Complex> add_vector_cmp(3);
+  Vector<Complex> add_vector = Add(vector_a, vector_b);
+  Vector<Complex> add_vector_cmp(3);
   add_vector_cmp[0] = Complex(1.5, 1.0);
   add_vector_cmp[1] = Complex(0.2, 0.0);
   add_vector_cmp[2] = Complex(0.0, 0.0);
   
   ASSERT(IsEqual(add_vector, add_vector_cmp));
   
-  std::vector<Complex> sub_vector = Subtract(vector_a, vector_b);
-  std::vector<Complex> sub_vector_cmp(3);
+  Vector<Complex> sub_vector = Subtract(vector_a, vector_b);
+  Vector<Complex> sub_vector_cmp(3);
   sub_vector_cmp[0] = Complex(0.5, -1.0);
   sub_vector_cmp[1] = Complex(-0.2, +2.0);
   sub_vector_cmp[2] = Complex(2.0, 1.0);
@@ -79,8 +79,8 @@ bool PointWiseOpTest() {
   ASSERT(IsEqual(vector_c_inv, vector_c_inv_cmp));
   
   
-  std::vector<Complex> vector_cc = ComplexVector(vector_c);
-  std::vector<Complex> vector_cc_cmp(3);
+  Vector<Complex> vector_cc = ComplexVector(vector_c);
+  Vector<Complex> vector_cc_cmp(3);
   vector_cc_cmp[0] = Complex(-0.3, 0.0);
   vector_cc_cmp[1] = Complex(0.3, 0.0);
   vector_cc_cmp[2] = Complex(2.4, 0.0);
@@ -160,8 +160,8 @@ bool PointWiseOpTest() {
   log10_vector_o_cmp[2] = 0.623249290397900;
   ASSERT(IsEqual(log10_vector_o_cmp, log10_vector_o));
   
-  std::vector<Complex> exp_vector_a = Exp(vector_a);
-  std::vector<Complex> exp_vector_a_cmp(3);
+  Vector<Complex> exp_vector_a = Exp(vector_a);
+  Vector<Complex> exp_vector_a_cmp(3);
   exp_vector_a_cmp[0] = Complex(2.718281828459046, 0.0);
   exp_vector_a_cmp[1] = Complex(0.5403023058681398, 0.8414709848078965);
   exp_vector_a_cmp[2] = Complex(2.385516730959136, 1.303213729686996);

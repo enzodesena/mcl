@@ -64,24 +64,6 @@ void Add(const Real* input_data_a,
 #endif
 }
   
-std::vector<Complex> ComplexVector(const Vector<Real>& input) noexcept {
-  std::vector<Complex> output(input.length());
-  for (Int i=0; i<(Int)input.length(); ++i) { output[i] = Complex(input[i], 0.0); }
-  return output;
-}
-
-Vector<Real> RealPart(const std::vector<Complex>& input) noexcept {
-  Vector<Real> output(input.length());
-  for (Int i=0; i<(Int)input.length(); ++i) { output[i] = input[i].real(); }
-  return output;
-}
-
-Vector<Real> Imag(const std::vector<Complex>& input) noexcept {
-  Vector<Real> output(input.length());
-  for (Int i=0; i<(Int)input.length(); ++i) { output[i] = input[i].imag(); }
-  return output;
-}
-
 
 Vector<Real> Inverse(const Vector<Real>& vector) noexcept {
   Vector<Real> output(vector.length());
@@ -89,24 +71,6 @@ Vector<Real> Inverse(const Vector<Real>& vector) noexcept {
   return output;
 }
 
-
-std::vector<Complex> Conj(const std::vector<Complex>& vector) noexcept {
-  std::vector<Complex> output(vector.length());
-  for (Int i=0; i<(Int)vector.length(); ++i) { 
-    output[i] = Conj(vector[i]); 
-  }
-  return output;
-}
-
-
-
-Vector<Real> Pow(const Vector<Real>& vector, Real exponent) noexcept {
-  Vector<Real> output(vector.length());
-  for (Int i=0; i<(Int)vector.length(); ++i) { 
-    output[i] = Pow(vector[i], exponent);
-  }
-  return output;
-}
 
 
 Vector<Real> HalfWave(const Vector<Real>& input) noexcept {
@@ -119,16 +83,8 @@ Vector<Real> HalfWave(const Vector<Real>& input) noexcept {
 }
 
 
-Vector<Real> Abs(const Vector<Real>& input) noexcept {
-  Vector<Real> output(input.length());
-  for (Int i=0; i<(Int)input.length(); ++i) { 
-    output[i] = std::fabs(input[i]);
-  }
-  return output;
-}
 
-
-Vector<Real> Abs(const std::vector<Complex>& input) noexcept {
+Vector<Real> Abs(const Vector<Complex>& input) noexcept {
   Vector<Real> output(input.length());
   for (Int i=0; i<(Int)input.length(); ++i) { 
     output[i] = std::abs(input[i]);
@@ -165,12 +121,6 @@ Vector<Real> Sin(const Vector<Real>& vector) noexcept {
   return output;
 }
 
-std::vector<Int> ConvertToInt(const std::vector<UInt>& vector) noexcept {
-  const Int length = vector.length();
-  std::vector<Int> output(length);
-  for (Int i=0; i<length; ++i) { output[i] = (Int) vector[i]; }
-  return output;
-}
   
 } // namespace mcl
 

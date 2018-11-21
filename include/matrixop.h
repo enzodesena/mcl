@@ -26,7 +26,7 @@
 namespace mcl {
 
 // Forward declaration
-std::vector<std::string> Split(const std::string& string,
+Vector<std::string> Split(const std::string& string,
                                        char delim) noexcept;
   
 /** Matrix class */
@@ -49,7 +49,7 @@ public:
   /**
    Constructs a matrix from a vector of vectors (outer vector represents rows)
    */
-  Matrix(const std::vector<Vector<T> > vectors) noexcept {
+  Matrix(const Vector<Vector<T> > vectors) noexcept {
     num_rows_ = vectors.length();
     if (num_rows_ > 0) {
       num_columns_ = vectors[0].length();
@@ -147,7 +147,7 @@ public:
   }
   
   /** Returns the raw data */
-  std::vector<Vector<T> > data() noexcept { return data_; }
+  Vector<Vector<T> > data() noexcept { return data_; }
   
   /**
    Reads a matrix. Elements have to be separated by tabs and there
@@ -162,7 +162,7 @@ public:
     Int number_of_rows = 0;
     Int number_of_columns = 0;
     while (std::getline(in_file, line)) {
-      std::vector<std::string> elements = Split(line, '\t');
+      Vector<std::string> elements = Split(line, '\t');
       if (number_of_columns == 0) { number_of_columns = (Int) elements.length(); }
       else {
         ASSERT(number_of_columns == (Int)elements.length());
@@ -180,7 +180,7 @@ public:
     Matrix<T> matrix(number_of_rows, number_of_columns);
     for(Int row=0; row<number_of_rows; ++row) {
       std::getline(in_file, line);
-      std::vector<std::string> elements = Split(line, '\t');
+      Vector<std::string> elements = Split(line, '\t');
       for (Int column=0; column<(Int)elements.length(); ++column) {
         matrix.SetElement(row, column, (T) StringToDouble(elements[column]));
       }
@@ -212,7 +212,7 @@ public:
   
 private:
   // Outer is rows, inner is columns. Hence, data_[0] is the first column.
-  std::vector<Vector<T> > data_;
+  Vector<Vector<T> > data_;
   Int num_rows_;
   Int num_columns_;
 };
@@ -303,17 +303,70 @@ T Max(const Matrix<T>& matrix) noexcept {
   
 /** Contains eigenvalues and eigenvectors */
 struct EigOutput {
-  std::vector<Complex> eigen_values; /**< Eigenvalues */
-  std::vector<std::vector<Complex> > eigen_vectors; /**< Eigenvectors */
+  Vector<Complex> eigen_values; /**< Eigenvalues */
+  std::vector<Vector<Complex> > eigen_vectors; /**< Eigenvectors */
 };
   
-EigOutput Eig(const Matrix<Real>& matrix) noexcept;
-
-Matrix<Real> RealPart(const Matrix<Complex>& input) noexcept;
+template<typename T>
+Matrix<T> RealPart(const Matrix<Complex<T>>& input) noexcept;
+{
+  Matrix<Real> output(input.num_rows(), input.num_columns());
+  for (Int i=0; i<input.num_rows(); ++i)
+  {
+    for (Int j=0; j<input.num_columns(); ++j)
+    {
+      output.SetElement(i, j, input.GetElement(i, j).real());
+    }
+  }
+  return output;
+}
   
 #if MCL_LOAD_EIGEN
-Eigen::MatrixXd ConvertToEigen(const Matrix<Real>& input);
+template<typename T>
+Eigen::MatrixXd ConvertToEigen(
+  const Matrix<T>& input)
+{
+  Eigen::MatrixXd output(input.num_rows(), input.num_columns());
+  for (Int i=0; i<input.num_rows(); ++i)
+  {
+    for (Int j=0; j<input.num_columns(); ++j)
+    {
+      output(i, j) = input.element(i, j);
+    }
+  }
+  return output;
+}
+
+  
+
+template<typename T>
+EigOutput Eig(
+  const Matrix<T>& matrix)
+{
+  ASSERT(matrix.num_columns() == matrix.num_rows());
+  
+  const Int N = matrix.num_columns();
+  EigOutput output;
+  output.eigen_values = Vector<Complex>(N);
+  output.eigen_vectors = std::vector<Vector<Complex> >(N);
+  
+  // The following constructor triggers compute()
+  Eigen::EigenSolver<Eigen::MatrixXd> es(ConvertToEigen(matrix));
+  
+  for (Int value_i=0; value_i<N; ++value_i)
+  {
+    output.eigen_values[value_i] = es.eigenvalues()[value_i];
+    Vector<Complex<T>> eigen_vector(N);
+    for (Int i=0; i<N; ++i)
+    {
+      eigen_vector[i] = es.eigenvectors()(i, value_i);
+    }
+    output.eigen_vectors[value_i] = eigen_vector;
+  }
+  return output;
+}
 #endif
+  
   
 template<class T>
 bool IsEqual(const Matrix<T>& matrix_a, const Matrix<T>& matrix_b) noexcept {
