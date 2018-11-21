@@ -568,63 +568,41 @@ bool VectorOpTest() {
   ASSERT(IsApproximatelyEqual(Norm(vector_ba, 2.0), 6.579513659838392));
   ASSERT(IsApproximatelyEqual(Norm(vector_ba, 1.0), 11.899999999999999));
   ASSERT(IsApproximatelyEqual(Norm(vector_ba, 2.4), 6.056130782634900));
-//
-//
-//  Vector<Real> vector_bc(4);
-//  vector_bc[0] = 0.0;
-//  vector_bc[1] = 1.0;
-//  vector_bc[2] = -0.5;
-//  vector_bc[3] = -0.0;
-//  Vector<Real> vector_bb_result(4);
-//  MultiplyAdd(vector_ba.data(), 0.5, vector_bc.data(), 4,
-//              vector_bb_result.data());
-//  Vector<Real> vector_bb_result_cmp(4);
-//  vector_bb_result_cmp[0] = -1.2*0.5+0.0;
-//  vector_bb_result_cmp[1] = 2.3*0.5+1.0;
-//  vector_bb_result_cmp[2] = 3.4*0.5-0.5;
-//  vector_bb_result_cmp[3] = -5.0*0.5+0.0;
-//  ASSERT(IsEqual(vector_bb_result, vector_bb_result_cmp));
-//
-//  Vector<Real> weights_uniform_a = Multiply<Real>(Ones<Real>(4), 1.0/4.0);
-//  ASSERT(IsEqual(Mean(vector_ba), Mean(vector_ba, weights_uniform_a)));
-//  Vector<Real> weights_uniform_b = Multiply<Real>(Ones<Real>(4), 1.0);
-//  ASSERT(IsEqual(Mean(vector_ba), Mean(vector_ba, weights_uniform_b)));
-//  Vector<Real> weights_uniform_c = Zeros<Real>(4);
-//  weights_uniform_c[0] = 0.5;
-//  weights_uniform_c[2] = 0.5;
-//  ASSERT(IsEqual(Mean(vector_ba, weights_uniform_c), 1.1));
-//
-//
-//  ASSERT(! IsNonNegative(vector_ba));
-//  Vector<Real> weights_ba_var = Zeros<Real>(4);
-//  weights_ba_var[0] = 0.2;
-//  weights_ba_var[1] = 0.3;
-//  weights_ba_var[2] = 0.6;
-//  weights_ba_var[3] = 0.5;
-//  ASSERT(IsEqual(Var(vector_ba, weights_ba_var), 13.319335937500000));
-//
-//  // Testing covariance matrix
-//
-////  Vector<Real> vector_e(4);
-////  vector_e[0] = -0.3;
-////  vector_e[1] = 30.3;
-////  vector_e[2] = 2.4;
-////  vector_e[3] = 12.4;
-////
-////  Vector<Real> vector_f(4);
-////  vector_f[0] = 2.5;
-////  vector_f[1] = 1.3;
-////  vector_f[2] = -2.4;
-////  vector_f[3] = -1.0;
-//  ASSERT(! IsEqual(Cov(vector_e, vector_f), Cov(vector_f, vector_e)));
-//  Matrix<Real> cov_e_f = Cov(vector_e, vector_f);
-//  ASSERT(IsEqual(cov_e_f.GetElement(0,0), Var(vector_e)));
-//  ASSERT(IsEqual(cov_e_f.GetElement(0,0), 191.9800000000000));
-//  ASSERT(IsEqual(cov_e_f.GetElement(1,1), 4.886666666666667));
-//  ASSERT(IsEqual(cov_e_f.GetElement(1,1), Var(vector_f)));
-//  ASSERT(IsEqual(cov_e_f.GetElement(0,0), Var(vector_e)));
-//  ASSERT(IsEqual(cov_e_f.GetElement(0,1), cov_e_f.GetElement(1,0)));
-//  ASSERT(IsEqual(cov_e_f.GetElement(0,1), 5.333333333333333));
+
+
+  Vector<Real> vector_bc(4);
+  vector_bc[0] = 0.0;
+  vector_bc[1] = 1.0;
+  vector_bc[2] = -0.5;
+  vector_bc[3] = -0.0;
+  Vector<Real> vector_bb_result(4);
+  MultiplyAdd(vector_ba, 0.5, vector_bc, vector_bb_result);
+  Vector<Real> vector_bb_result_cmp(4);
+  vector_bb_result_cmp[0] = -1.2*0.5+0.0;
+  vector_bb_result_cmp[1] = 2.3*0.5+1.0;
+  vector_bb_result_cmp[2] = 3.4*0.5-0.5;
+  vector_bb_result_cmp[3] = -5.0*0.5+0.0;
+  ASSERT(IsEqual(vector_bb_result, vector_bb_result_cmp));
+
+  Vector<Real> weights_uniform_a = Multiply<Real>(Ones<Real>(4), 1.0/4.0);
+  ASSERT(Mean(vector_ba) == Mean(vector_ba, weights_uniform_a));
+  Vector<Real> weights_uniform_b = Multiply<Real>(Ones<Real>(4), 1.0);
+  ASSERT(Mean(vector_ba) == Mean(vector_ba, weights_uniform_b));
+  Vector<Real> weights_uniform_c = Zeros<Real>(4);
+  weights_uniform_c[0] = 0.5;
+  weights_uniform_c[2] = 0.5;
+  ASSERT(Mean(vector_ba, weights_uniform_c) == 1.1);
+
+
+  ASSERT(! IsNonNegative(vector_ba));
+  Vector<Real> weights_ba_var = Zeros<Real>(4);
+  weights_ba_var[0] = 0.2;
+  weights_ba_var[1] = 0.3;
+  weights_ba_var[2] = 0.6;
+  weights_ba_var[3] = 0.5;
+  ASSERT(IsApproximatelyEqual(Var(vector_ba, weights_ba_var), 13.319335937500000));
+
+
 //
 //  // Cumsum
 //  //  Vector<Real> vector_e(4);

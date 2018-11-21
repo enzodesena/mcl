@@ -216,22 +216,22 @@ ComplexVector(const Vector<T>& input) noexcept
 //}
 //
 //
-///** 
-// Returns the point-wise poser to exponent.
-// Equivalent to Matlab's vector.^exponent
-// */
-//template<typename T>
-//Vector<T> Pow(
-//  const Vector<T>& input,
-//  T exponent) noexcept
-//{
-//  Vector<T> output(input.length());
-//  for (size_t i=0; i<input.length(); ++i)
-//  {
-//    output[i] = Pow(input[i], exponent);
-//  }
-//  return std::move(output);
-//}
+/** 
+ Returns the point-wise poser to exponent.
+ Equivalent to Matlab's vector.^exponent
+ */
+template<typename T>
+Vector<T> Pow(
+  const Vector<T>& input,
+  T exponent) noexcept
+{
+  Vector<T> output(input.length());
+  for (size_t i=0; i<input.length(); ++i)
+  {
+    output[i] = Pow(input[i], exponent);
+  }
+  return std::move(output);
+}
 //
 //
 ///** Equivalent to Matlab's abs(vector) */

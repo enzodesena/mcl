@@ -20,7 +20,20 @@
 
 namespace mcl {
 
-  
+
+template<typename T>
+bool IsNonNegative(
+  const Vector<T>& vector) noexcept
+{
+  for (auto& element : vector)
+  {
+    if (element < 0.0)
+    {
+      return false;
+    }
+  }
+  return true;
+}
   
 /** Equivalent to Matlab's length(input). */
 template<class T, size_t length>
@@ -65,7 +78,8 @@ void ZeroPad(
 
 /** Returns a vector of zeros */
 template <class T, size_t length>
-Vector<T, length> Zeros() noexcept {
+Vector<T, length> Zeros() noexcept
+{
   Vector<T, length> vector(length);
   SetToZero(vector);
   return std::move(vector);
@@ -73,69 +87,191 @@ Vector<T, length> Zeros() noexcept {
 
 
 template <class T>
-Vector<T, kDynamicLength> Zeros(size_t length) noexcept {
+Vector<T, kDynamicLength> Zeros(
+  size_t length) noexcept
+{
   Vector<T, kDynamicLength> vector(length);
   SetToZero(vector);
   return std::move(vector);
 }
 
 template <class T>
-  Vector<T, kDynamicLength> EmptyVector() noexcept {
+  Vector<T, kDynamicLength> EmptyVector() noexcept
+{
   return Vector<T, kDynamicLength>(0);
 }
-//
-//
-//template<typename T, size_t length>
-//void Multiply(
-//    const Vector<T, length>& input,
-//    const T gain,
-//    Vector<T, length>& output) noexcept {
-//  ASSERT(input.length() == output.length());
-//  for (Int i=0; i<output.length(); ++i) {
-//    output.At(i) = input.At(i)*gain;
-//  }
-//}
-//
-///**
-// Returns the point by point multiplication of the vector with the gain.
-// Equivalent to Matlab's vector_a.*gain.
-// */
-//template<typename T, size_t length>
-//Vector<T, length> Multiply(
-//    const Vector<T, length>& vector,
-//    const T gain) noexcept {
-//  Vector<T,length> output;
-//  Multiply(vector, gain, output);
-//  return std::move(output);
-//}
-//
-//
-//void Multiply(
-//    const double* input_data,
-//    const size_t num_samples,
-//    const double gain,
-//    double* output_data) noexcept;
-//
-//template<size_t length>
-//Vector<double, length> Multiply(
-//    const Vector<double, length>& input,
-//    const double gain) noexcept {
-//  Vector<double,length> output;
-//  Multiply(input.data(), input.length(), gain, output.data());
-//  return std::move(output);
-//}
-//
-///** This calculates the multiplication of a vector (`input_data_mult`)
-// by a constant (`gain`), and then adds the resulting vector to
-// another vector (`input_data_add'). */
-//void MultiplyAdd(
-//    const double* input_data_mult,
-//    const double gain,
-//    const double* input_data_add,
-//    const size_t num_samples,
-//    double* output_data) noexcept;
-//
-//
+
+/** Fall-back multiply by a constant in case of no available optimisations. */
+template<typename T, size_t length>
+inline void MultiplySerial(
+  const Vector<T,length>& input,
+  const T gain,
+  Vector<T,length>& output) noexcept
+{
+  ASSERT(input.length() == output.length());
+  for (size_t i=0; i<output.length(); ++i)
+  {
+    output[i] = input[i]*gain;
+  }
+}
+
+template<typename T, size_t length>
+void MultiplyAddSerial(
+  const Vector<T,length>& input_to_multiply,
+  const T gain,
+  const Vector<T,length>& input_to_add,
+  Vector<T,length>& output) noexcept
+{
+  ASSERT(input_to_multiply.length() == input_to_add.length());
+  ASSERT(input_to_add.length() == output.length());
+  for (size_t i=0; i<input_to_multiply.length(); ++i)
+  {
+    output[i] = input_to_multiply[i]*gain + input_to_add[i];
+  }
+}
+
+////// Intrinsics
+
+
+
+template<typename T, size_t length>
+struct MathIntrinsics
+{
+};
+
+template<size_t length>
+struct MathIntrinsics<double,length>
+{
+  static void Multiply(
+    const Vector<double>& input,
+    const double gain,
+    Vector<double>& output) noexcept {
+#if defined(MCL_APPLE_ACCELERATE_MMA) && MCL_APPLE_ACCELERATE_MMA
+    vDSP_vmulD(input_data, 1,
+               &gain, 0,
+               output_data, 1,
+               num_samples);
+#else
+    MultiplySerial(input, gain, output);
+#endif
+  }
+  
+  static void MultiplyAdd(
+    const Vector<double,length>& input_to_multiply,
+    const double gain,
+    const Vector<double,length>& input_to_add,
+    Vector<double,length>& output) noexcept
+  {
+#if defined(MCL_APPLE_ACCELERATE_MMA) && MCL_APPLE_ACCELERATE_MMA
+    vDSP_vmaD(
+      input_data_mult, 1,
+      &gain, 0,
+      input_data_add, 1,
+      output_data, 1,
+      num_samples);
+#else
+    MultiplyAddSerial(input_to_multiply, gain, input_to_add, output);
+#endif
+  }
+};
+
+
+template<size_t length>
+struct MathIntrinsics<float,length>
+{
+  static void Multiply(
+    const Vector<float>& input,
+    const float gain,
+    Vector<float>& output) noexcept
+  {
+#if defined(MCL_APPLE_ACCELERATE_MMA) && MCL_APPLE_ACCELERATE_MMA
+    vDSP_vmul(
+      input_data, 1,
+      &gain, 0,
+      output_data, 1,
+      num_samples);
+#else
+    MultiplySerial(input, gain, output);
+#endif
+  }
+  
+  static void MultiplyAdd(
+    const Vector<float,length>& input_to_multiply,
+    const float gain,
+    const Vector<float,length>& input_to_add,
+    Vector<float,length>& output) noexcept
+  {
+#if defined(MCL_APPLE_ACCELERATE_MMA) && MCL_APPLE_ACCELERATE_MMA
+    vDSP_vma(
+      input_data_mult, 1,
+      &gain, 0,
+      input_data_add, 1,
+      output_data, 1,
+      num_samples);
+#else
+    MultiplyAddSerial(input_to_multiply, gain, input_to_add, output);
+#endif
+  }
+};
+
+
+
+
+
+
+
+
+
+  
+template<typename T, size_t length>
+void Multiply(
+  const Vector<T>& input,
+  const T gain,
+  Vector<T>& output) noexcept
+{
+  MathIntrinsics<T,length>::Multiply(
+    input,
+    gain,
+    output);
+}
+
+template<typename T, size_t length>
+void MultiplyAdd(
+  const Vector<T,length>& input_to_multiply,
+  const T gain,
+  const Vector<T,length>& input_to_add,
+  Vector<T,length>& output) noexcept
+{
+  MathIntrinsics<T,length>::MultiplyAdd(
+    input_to_multiply,
+    gain,
+    input_to_add,
+    output);
+}
+
+
+
+
+/**
+ Returns the point by point multiplication of the vector with the gain.
+ Equivalent to Matlab's vector_a.*gain.
+ */
+template<typename T, size_t length>
+Vector<T, length> Multiply(
+  const Vector<T,length>& input,
+  const T gain) noexcept
+{
+  Vector<T,length> output(input.length());
+  MathIntrinsics<T,length>::Multiply(
+    input,
+    gain,
+    output);
+  return std::move(output);
+}
+  
+  
+
+
 /**
  Returns the point by point addition of the two vectors.
  Equivalent to Matlab's vector_a+vector_b.
@@ -169,14 +305,14 @@ Vector<T, length> Add(
  different indexes convention between here and Matlab.
  */
 template<class T>
-Vector<T,kDynamicLength> Subset(
+Vector<T> Subset(
     const Vector<T>& input,
     const size_t from_index,
     const size_t to_index) noexcept {
   ASSERT(from_index < input.length());
   ASSERT(to_index < input.length());
   ASSERT(from_index <= to_index);
-  Vector<T,kDynamicLength> output(to_index-from_index+1);
+  Vector<T> output(to_index-from_index+1);
   for (size_t i = from_index; i<=to_index; ++i) {
     output[i-from_index] = input[i];
   }
@@ -189,11 +325,11 @@ Vector<T,kDynamicLength> Subset(
  [vector_a; vector_b].
  */
 template<class T>
-Vector<T,kDynamicLength> Concatenate(
+Vector<T> Concatenate(
   const Vector<T>& vector_a,
   const Vector<T>& vector_b) noexcept
 {
-  Vector<T,kDynamicLength> output(vector_a.length() + vector_b.length());
+  Vector<T> output(vector_a.length() + vector_b.length());
   auto output_iter = output.begin();
   for (auto& element : vector_a)
   {
@@ -209,10 +345,10 @@ Vector<T,kDynamicLength> Concatenate(
 
 /** Returns a vector with only one element. */
 template<class T>
-Vector<T,kDynamicLength> UnaryVector(
+Vector<T> UnaryVector(
   const T& element) noexcept
 {
-  Vector<T,kDynamicLength> output(1);
+  Vector<T> output(1);
   output[0] = element;
   return std::move(output);
 }
@@ -538,7 +674,7 @@ Vector<T> Ones(size_t length) noexcept {
 
 /** Equivalent to Matlab's linspace(min, max, num_elements); */
 template<typename T>
-Vector<T,kDynamicLength> LinSpace(
+Vector<T> LinSpace(
   T min,
   T max,
   size_t num_elements) noexcept
@@ -546,7 +682,7 @@ Vector<T,kDynamicLength> LinSpace(
   if (num_elements <= 1) { return UnaryVector(max); }
   T interval = max-min;
   T slot = interval / ((T) (num_elements-1));
-  Vector<T,kDynamicLength> output(num_elements);
+  Vector<T> output(num_elements);
   for (size_t i=0; i<num_elements; ++i)
   {
     output[i] = min + slot*((T) i);
@@ -560,7 +696,7 @@ Vector<T> Hann(
 {
   Vector<T> w = Ones<T>(length);
   for (size_t i=0; i<length; ++i) {
-    w[i] = (1.0-cos(2.0*PI*((Real)i)/((Real)(length-1))))/2.0;
+    w[i] = (1.0-cos(2.0*PI*((T)i)/((T)(length-1))))/2.0;
   }
   return w;
 }
@@ -813,5 +949,30 @@ Vector<Complex<T>,length> ConvertToComplex(
 }
 
 
+template<typename T>
+Vector<T> CumSum(
+  const Vector<T>& input) noexcept
+{
+  const size_t N = input.length();
+  Vector<T> output(input.length());
+  output[N-1] = Sum(input);
+  for (size_t i=N-2; i>=0; --i)
+  {
+    output[i] = output[i+1]-input[i+1];
+  }
+  return output;
+}
+
+
+Vector<std::string> Split(const std::string &s, char delim) noexcept {
+  Vector<std::string> elems;
+  std::stringstream ss(s);
+  std::string item;
+  while(std::getline(ss, item, delim)) {
+    elems.PushBack(item);
+  }
+  return elems;
+}
+  
 
 } /**< namespace mcl */

@@ -163,6 +163,18 @@ bool MatrixOpTest() {
   matrix_h.SetElement(2, 1, -5);
   ASSERT(Max(matrix_h) == 2);
   
+  
+  // Testing covariance matrix
+  ASSERT(! IsEqual(Cov(vector_e, vector_f), Cov(vector_f, vector_e)));
+  Matrix<Real> cov_e_f = Cov(vector_e, vector_f);
+  ASSERT(IsEqual(cov_e_f.GetElement(0,0), Var(vector_e)));
+  ASSERT(IsEqual(cov_e_f.GetElement(0,0), 191.9800000000000));
+  ASSERT(IsEqual(cov_e_f.GetElement(1,1), 4.886666666666667));
+  ASSERT(IsEqual(cov_e_f.GetElement(1,1), Var(vector_f)));
+  ASSERT(IsEqual(cov_e_f.GetElement(0,0), Var(vector_e)));
+  ASSERT(IsEqual(cov_e_f.GetElement(0,1), cov_e_f.GetElement(1,0)));
+  ASSERT(IsEqual(cov_e_f.GetElement(0,1), 5.333333333333333));
+  
   return true;
 }
 

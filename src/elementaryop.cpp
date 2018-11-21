@@ -18,13 +18,7 @@
 
 namespace mcl {
 
-Real Pow(Real input, Real exponent) {
-  return (Real) pow((double) input, (double) exponent);
-}
-  
-Real Sqrt(Real input) {
-  return (Real) sqrt((double) input);
-}
+
 
   
 Complex Conj(Complex scalar) {

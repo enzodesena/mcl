@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		571F9A5817955B160059A90D /* statisticsop.h in Headers */ = {isa = PBXBuildFile; fileRef = 571F9A5717955B160059A90D /* statisticsop.h */; };
 		572A876A19C070ED00F62F8F /* pointwiseop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57BA6FFF15B42297002F077F /* pointwiseop.cpp */; };
-		572A876B19C070ED00F62F8F /* vectorop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57BA700B15B42BBD002F077F /* vectorop.cpp */; };
 		572A876C19C070ED00F62F8F /* elementaryop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57BA700F15B43B64002F077F /* elementaryop.cpp */; };
 		572A876D19C070ED00F62F8F /* comparisonop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57BA701315B43C60002F077F /* comparisonop.cpp */; };
 		572A876E19C070ED00F62F8F /* transformop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57BA701715B4915E002F077F /* transformop.cpp */; };
@@ -29,7 +28,6 @@
 		578BDE692149BEFB001D89B9 /* digitalfilter_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57B4EF701CD8177900134991 /* digitalfilter_test.cpp */; };
 		57B71D15162DD231003411BA /* randomop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57B71D13162DD231003411BA /* randomop.cpp */; };
 		57BA700115B42297002F077F /* pointwiseop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57BA6FFF15B42297002F077F /* pointwiseop.cpp */; };
-		57BA700D15B42BBD002F077F /* vectorop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57BA700B15B42BBD002F077F /* vectorop.cpp */; };
 		57BA701115B43B64002F077F /* elementaryop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57BA700F15B43B64002F077F /* elementaryop.cpp */; };
 		57BA701515B43C61002F077F /* comparisonop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57BA701315B43C60002F077F /* comparisonop.cpp */; };
 		57BA701915B4915E002F077F /* transformop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57BA701715B4915E002F077F /* transformop.cpp */; };
@@ -89,7 +87,6 @@
 		57BA6FFF15B42297002F077F /* pointwiseop.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = pointwiseop.cpp; path = src/pointwiseop.cpp; sourceTree = "<group>"; };
 		57BA700215B4263D002F077F /* mcltypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = mcltypes.h; path = include/mcltypes.h; sourceTree = "<group>"; };
 		57BA700315B4274D002F077F /* vectorop.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = vectorop.h; path = include/vectorop.h; sourceTree = "<group>"; };
-		57BA700B15B42BBD002F077F /* vectorop.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = vectorop.cpp; path = src/vectorop.cpp; sourceTree = "<group>"; };
 		57BA700E15B43B07002F077F /* elementaryop.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = elementaryop.h; path = include/elementaryop.h; sourceTree = "<group>"; };
 		57BA700F15B43B64002F077F /* elementaryop.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = elementaryop.cpp; path = src/elementaryop.cpp; sourceTree = "<group>"; };
 		57BA701215B43BC9002F077F /* comparisonop.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = comparisonop.h; path = include/comparisonop.h; sourceTree = "<group>"; };
@@ -267,7 +264,6 @@
 				57BA6FFF15B42297002F077F /* pointwiseop.cpp */,
 				57B71D13162DD231003411BA /* randomop.cpp */,
 				57BA701715B4915E002F077F /* transformop.cpp */,
-				57BA700B15B42BBD002F077F /* vectorop.cpp */,
 				57A1566015933C5200AA6445 /* bin */,
 				57A1565315933B9500AA6445 /* test */,
 			);
@@ -393,7 +389,6 @@
 			files = (
 				578BDE692149BEFB001D89B9 /* digitalfilter_test.cpp in Sources */,
 				572A876A19C070ED00F62F8F /* pointwiseop.cpp in Sources */,
-				572A876B19C070ED00F62F8F /* vectorop.cpp in Sources */,
 				572A876C19C070ED00F62F8F /* elementaryop.cpp in Sources */,
 				572A876D19C070ED00F62F8F /* comparisonop.cpp in Sources */,
 				57301BD01D6B01A800D6F5B0 /* kiss_fft.c in Sources */,
@@ -410,7 +405,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				57BA700115B42297002F077F /* pointwiseop.cpp in Sources */,
-				57BA700D15B42BBD002F077F /* vectorop.cpp in Sources */,
 				57BA701115B43B64002F077F /* elementaryop.cpp in Sources */,
 				57BA701515B43C61002F077F /* comparisonop.cpp in Sources */,
 				57301BCF1D6B01A800D6F5B0 /* kiss_fft.c in Sources */,

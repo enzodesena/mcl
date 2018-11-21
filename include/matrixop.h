@@ -383,6 +383,48 @@ bool IsEqual(const Matrix<T>& matrix_a, const Matrix<T>& matrix_b) noexcept {
   return true;
 }
 
+
+template<typename T>
+Matrix<T> Cov(
+  const Vector<T>& x,
+  const Vector<T>& y) noexcept
+{
+  Vector<Vector<T>> input(2);
+  input[0] = x;
+  input[1] = y;
+  return Cov(input);
+}
+
+template<typename T>
+Matrix<T> Cov(
+  const Vector<Vector<T> >& input) noexcept
+{
+  const size_t N = input.length();
+  Matrix<T> output(N, N);
+  for (size_t i=0; i<N; ++i)
+  {
+    for (size_t j=0; j<N; ++j)
+    {
+      output.SetElement(i, j, CovElement(input[i], input[j]));
+    }
+  }
+  return output;
+}
+  
+template<typename T>
+T CovElement(
+  const Vector<T>& x,
+  const Vector<T>& y) noexcept
+{
+  const size_t N = x.length();
+  ASSERT(N == (Int)y.length());
+  
+  T output = Sum(Multiply(Add(x, -Mean(x)), Add(y, -Mean(y))));
+  // In case N>1 use the unbiased estimator of covariance.
+  output = (N > 1) ? output/((T) (N-1)) : output/((T) (N));
+  return output;
+}
+
 bool MatrixOpTest();
   
   

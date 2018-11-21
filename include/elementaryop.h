@@ -185,10 +185,22 @@ Real Abs(Real input);
 Real Abs(Complex<Real> input);
   
 /** Power function. Equivalent to Matlab's input^exponent. */
-Real Pow(Real input, Real exponent);
-  
+template<typename T>
+T Pow(
+  T input,
+  T exponent)
+{
+  return (T) pow((double) input, (double) exponent);
+}
+
 /** Square root function. Equivalent to Matlab's sqrt(input) */
-Real Sqrt(Real input);
+template<typename T>
+Real Sqrt(
+  Real input)
+{
+  return (Real) sqrt((double) input);
+}
+  
   
 /** Equivalent to Matlab's round(input). This is faster than the standard
  C++ round function, especially on Windows. Returns an integer. */
