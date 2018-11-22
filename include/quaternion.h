@@ -18,6 +18,10 @@
 
 namespace mcl {
   
+// Forward declarations
+template<typename T>
+struct Point;
+// End of forward declarations
   
 /** Enum describing the angles ordering convention for Euler angles */
 enum EulerOrder {

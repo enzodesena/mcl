@@ -35,7 +35,7 @@ int main (int argc, char * const argv[]) {
   MatrixOpTest();
   StatisticsOpTest();
   ComparisonOpTest();
-//  PointTest();
+  PointTest();
 //  IirFilter::Test();
 //  RandomGenerator::Test();
   std::cout<<"All tests succeded!\n";

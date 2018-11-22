@@ -38,6 +38,8 @@ namespace mcl {
 // Forward declarations
 template<typename T>
 class Quaternion;
+template<typename T>
+struct Point;
 
 //template<typename T, typename U, size_t length>
 //inline void ForEach(
@@ -327,6 +329,18 @@ inline bool IsApproximatelyEqual(
     mcl::IsApproximatelyEqual(point_a.y(), point_b.y(), precision) &&
     mcl::IsApproximatelyEqual(point_a.z(), point_b.z(), precision);
 }
+
+template<typename T>
+inline bool IsEqual(
+  const Point<T>& point_a,
+  const Point<T>& point_b)
+{
+  return
+    point_a.x() == point_b.x() &&
+    point_a.y() == point_b.y() &&
+    point_a.z() == point_b.z();
+}
+
 
 template<typename T>
 inline bool IsEqual(

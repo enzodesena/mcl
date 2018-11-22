@@ -9,8 +9,10 @@
 #pragma once
 
 #include "mcltypes.h"
+#include "comparisonop.h"
 
 namespace mcl {
+
 
 template<typename T>
 class Triplet
@@ -27,11 +29,6 @@ public:
     const T y,
     const T z) noexcept : x_(x), y_(y), z_(z)
   {
-  }
-  
-  bool Equals(const Triplet& other_point) const noexcept
-  {
-    return IsEqual(*this, other_point);
   }
   
   // Getter methods.
@@ -256,6 +253,22 @@ T AngleBetweenPoints(
 }
 
 /**
+ Contructs a point from spherical coordinates, with (r, 0, 0) corresponding
+ to the z-axis, and (r, pi/2, 0) corresponding to x-axis. Right-hand rule.
+ */
+template<typename T>
+Point<T> PointSpherical(
+  const T r,
+  const T theta,
+  const T phi) noexcept
+{
+  T x = r * cos(phi) * sin(theta);
+  T y = r * sin(phi) * sin(theta);
+  T z = r * cos(theta);
+  return Point(x, y, z);
+}
+
+/**
  This returns the point on the line between `point_a` and `point_b` which
  has a distance of `distance` from `point_a`
  */
@@ -266,9 +279,7 @@ Point<T> PointOnLine(
   const T distance) noexcept
 {
   Point point_centered = Subtract(point_b, point_a);
-  Point out_point_centered = PointSpherical(distance, point_centered.theta(),
-                                                   point_centered.phi());
-  
+  Point out_point_centered = PointSpherical(distance, point_centered.theta(), point_centered.phi());
   return Sum(out_point_centered, point_a);
 }
 
@@ -311,21 +322,6 @@ Point<T> Multiply(
     point.z() * constant);
 }
 
-/**
- Contructs a point from spherical coordinates, with (r, 0, 0) corresponding
- to the z-axis, and (r, pi/2, 0) corresponding to x-axis. Right-hand rule.
- */
-template<typename T>
-Point<T> PointSpherical(
-  const T r,
-  const T theta,
-  const T phi) noexcept
-{
-  T x = r * cos(phi) * sin(theta);
-  T y = r * sin(phi) * sin(theta);
-  T z = r * cos(theta);
-  return Point(x, y, z);
-}
 
 /**
  Constructs a vector that is the the projection of the input `vector`
