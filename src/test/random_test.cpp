@@ -51,12 +51,12 @@ bool RandomGenerator::Test() {
   Vector<Int> num_occurrances(max_value-min_value+1, 0);
   for (Int i=0; i<num_samples; ++i) {
     Int output = rand_gen.RandInt(min_value, max_value);
-    rand_int_vector.push_back(output);
-    num_occurrances.at(output-min_value)++;
+    rand_int_vector.PushBack(output);
+    num_occurrances[output-min_value]++;
   }
   ASSERT(mcl::Min(rand_int_vector) >= min_value);
   ASSERT(mcl::Max(rand_int_vector) <= max_value);
-  ASSERT(mcl::IsEqual(((Real) mcl::Min(num_occurrances)) / ((Real) num_samples),
+  ASSERT(mcl::IsApproximatelyEqual(((Real) mcl::Min(num_occurrances)) / ((Real) num_samples),
                       ((Real) mcl::Max(num_occurrances)) / ((Real) num_samples),
                       1.0E-2));
   
@@ -68,12 +68,12 @@ bool RandomGenerator::Test() {
   Vector<Int> num_occurrances_b(max_value_b-min_value_b+1, 0);
   for (Int i=0; i<num_samples_b; ++i) {
     Int output = rand_gen.RandInt(min_value_b, max_value_b);
-    rand_int_vector_b.push_back(output);
-    num_occurrances_b.at(output-min_value_b)++;
+    rand_int_vector_b.PushBack(output);
+    num_occurrances_b[output-min_value_b]++;
   }
   ASSERT(mcl::Min(rand_int_vector_b) >= min_value_b);
   ASSERT(mcl::Max(rand_int_vector_b) <= max_value_b);
-  ASSERT(mcl::IsEqual(((Real) mcl::Min(num_occurrances_b)) / ((Real) num_samples_b),
+  ASSERT(mcl::IsApproximatelyEqual(((Real) mcl::Min(num_occurrances_b)) / ((Real) num_samples_b),
                       ((Real) mcl::Max(num_occurrances_b)) / ((Real) num_samples_b),
                       1.0E-2));
   
