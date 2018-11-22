@@ -14,7 +14,7 @@
 #include "vector.h"
 #include "basicop.h"
 #include "elementaryop.h"
-//#include <limits>
+#include <functional>
 
 namespace mcl
 {
@@ -33,23 +33,13 @@ inline T Pow(
   T exponent) noexcept;
 // End of forward declaration
   
-template<typename T, size_t length>
-inline void ForEach(
-  Vector<T,length>& vector,
-  T (*operation)(T)) noexcept
-{
-  for (auto& element : vector)
-  {
-    element = operation(element);
-  }
-}
 
 
 template<typename T, typename U, size_t length>
 inline void ForEach(
   const Vector<T,length>& input_vector,
-  U (*operation)(T),
-  Vector<U,length>& output_vector)
+  std::function<U(T)> operation,
+  Vector<U,length>& output_vector) noexcept
 {
   ASSERT(input_vector.length() == output_vector.length());
   auto input_iter = input_vector.begin();
@@ -60,13 +50,21 @@ inline void ForEach(
   }
 }
 
+template<typename T, size_t length>
+inline void ForEach(
+  Vector<T,length>& vector,
+  std::function<T(T)> operation) noexcept
+{
+  ForEach(vector, operation, vector);
+}
+
 
 template<typename T, size_t length>
 inline void ForEach(
   const Vector<T,length>& input_a,
   const Vector<T,length>& input_b,
-  T (*pointwise_operation)(T,T),
-  Vector<T,length>& output)
+  std::function<T(T,T)> pointwise_operation,
+  Vector<T,length>& output) noexcept
 {
   ASSERT(input_a.length() == input_a.length());
   ASSERT(input_a.length() == output.length());
@@ -313,14 +311,20 @@ ComplexVector(const Vector<T>& input) noexcept
   return std::move(output);
 }
 
+//template<typename T, typename U, size_t length>
+//inline void ForEach(
+//  const Vector<T,length>& input_vector,
+//  std::function<U(T)> operation,
+//  Vector<U,length>& output_vector) noexcept
+
 /** Equivalent to Matlab's real(input). */
-template<typename T>
-Vector<T> RealPart(
-  const Vector<Complex<T>>& input) noexcept
+template<typename T, size_t length>
+Vector<T,length> RealPart(
+  const Vector<Complex<T>,length>& input) noexcept
 {
-  Vector<T> output(input.length());
+  Vector<T,length> output(input.length());
   T (*operation) (Complex<T>) = [] (Complex<T> value) { return value.real(); };
-  ForEach(input, operation, output);
+  ForEach<Complex<T>,T,length>(input, operation, output);
   return std::move(output);
 }
 
@@ -380,7 +384,7 @@ inline Vector<double> Abs(
 {
   Vector<T,length> output(input.length());
   T (*operation) (Complex<T>) = [] (Complex<T> value) { return mcl::Abs(value); };
-  ForEach(input, operation, output);
+  ForEach<Complex<T>,T,length>(input, operation, output);
   return std::move(output);
 }
 //

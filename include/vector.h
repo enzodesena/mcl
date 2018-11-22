@@ -48,8 +48,14 @@ public:
   
   inline size_t length() const noexcept
   {
-    return static_cast<int>(vector_length);
+    return vector_length;
   }
+  
+//  Vector(
+//    std::initializer_list<T> list)
+//    : std::array<T>(list)
+//  {
+//  }
   
   inline T& operator[](const size_t index) noexcept
   {
@@ -101,7 +107,7 @@ public:
   
   inline size_t length() const noexcept
   {
-    return static_cast<int>(this->size());
+    return this->size();
   }
   
   inline T& operator[](const size_t index) noexcept

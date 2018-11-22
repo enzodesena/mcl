@@ -46,52 +46,52 @@ bool ComparisonOpTest() {
   ASSERT(!IsNan(1.0));
   ASSERT(!IsNan(-1.0));
   
-  /* Returns true if num is nan */
-  Vector<Real> input;
-  input.push_back(1.0);
-  input.push_back(NAN);
-  Vector<bool> output_a = IsNan(input);
-  ASSERT(!output_a[0]);
-  ASSERT(output_a[1]);
-  
-  /* Returns opposite bool as input */
-  Vector<bool> output_b = Not(output_a);
-  ASSERT(output_b[0]);
-  ASSERT(!output_b[1]);
-  
-  /* Returns true if all bools are true */
-  ASSERT(!All(output_b));
-  ASSERT(Any(output_b));
-  output_b[1] = true;
-  ASSERT(All(output_b));
-  ASSERT(Any(output_b));
-  ASSERT(!Any(Not(output_b)));
-  
-  Vector<bool> output_c;
-  output_c.push_back(false);
-  output_c.push_back(false);
-  output_c.push_back(false);
-  ASSERT(None(output_c));
-  
-  output_c[0] = true;
-  ASSERT(!None(output_c));
-  output_c[1] = true;
-  output_c[2] = true;
-  ASSERT(!None(output_c));
-  
-  // Testing infs
-  ASSERT(IsInf(INFINITY));
-  ASSERT(IsInf(-INFINITY));
-  
-  Vector<Real> input_d;
-  input_d.push_back(INFINITY);
-  input_d.push_back(-INFINITY);
-  input_d.push_back(0.1);
-  
-  Vector<bool> output_d = IsInf(input_d);
-  ASSERT(output_d[0] == true);
-  ASSERT(output_d[1] == true);
-  ASSERT(output_d[2] == false);
+//  /* Returns true if num is nan */
+//  Vector<Real> input;
+//  input.PushBack(1.0);
+//  input.PushBack(NAN);
+//  Vector<bool> output_a = IsNan(input);
+//  ASSERT(!output_a[0]);
+//  ASSERT(output_a[1]);
+//  
+//  /* Returns opposite bool as input */
+//  Vector<bool> output_b = Not(output_a);
+//  ASSERT(output_b[0]);
+//  ASSERT(!output_b[1]);
+//  
+//  /* Returns true if all bools are true */
+//  ASSERT(!AreAllTrue(output_b));
+//  ASSERT(Any(output_b));
+//  output_b[1] = true;
+//  ASSERT(AreAllTrue(output_b));
+//  ASSERT(Any(output_b));
+//  ASSERT(!Any(Not(output_b)));
+//  
+//  Vector<bool> output_c;
+//  output_c.PushBack(false);
+//  output_c.PushBack(false);
+//  output_c.PushBack(false);
+//  ASSERT(None(output_c));
+//  
+//  output_c[0] = true;
+//  ASSERT(!None(output_c));
+//  output_c[1] = true;
+//  output_c[2] = true;
+//  ASSERT(!None(output_c));
+//  
+//  // Testing infs
+//  ASSERT(IsInf(INFINITY));
+//  ASSERT(IsInf(-INFINITY));
+//  
+//  Vector<Real> input_d;
+//  input_d.PushBack(INFINITY);
+//  input_d.PushBack(-INFINITY);
+//  input_d.PushBack(0.1);
+//  
+//  Vector<bool> output_d = IsInf(input_d);
+//  ASSERT(output_d[0] == true);
+//  ASSERT(output_d[1] == true);
+//  ASSERT(output_d[2] == false);
   
   
   return true;

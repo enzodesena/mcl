@@ -31,13 +31,24 @@
 #include "quaternion.h"
 #include "vector.h"
 #include <vector>
+#include <functional>
 
 namespace mcl {
 
-// Forward declaration
+// Forward declarations
 template<typename T>
 class Quaternion;
 
+//template<typename T, typename U, size_t length>
+//inline void ForEach(
+//  const Vector<T,length>& input_vector,
+//  std::function<T(T)> operation,
+//  Vector<U,length>& output_vector) noexcept;
+// End of formard declarations
+
+////////////////////////////////////////////////////////////////////////////////
+// Comparisons on trivial types
+////////////////////////////////////////////////////////////////////////////////
 
 inline bool IsEqual(
   const double num_a,
@@ -51,48 +62,6 @@ inline bool IsEqual(
   const float num_b)
 {
   return num_a == num_b;
-}
-
-template<typename T, size_t length_a, size_t length_b>
-inline bool IsEqual(
-  const Vector<T,length_a>& vector_a,
-  const Vector<T,length_b>& vector_b)
-{
-  if (vector_a.length() != vector_b.length())
-  {
-    return false;
-  }
-  auto iter_a(vector_a.begin());
-  auto iter_b(vector_b.begin());
-  while (iter_a != vector_a.end())
-  {
-    if (*(iter_a++) != *(iter_b++)) return false;
-  }
-  return true;
-}
-
-template<
-  typename VectorT,
-  size_t length_vector_a,
-  size_t length_vector_b,
-  typename PrecisionT>
-inline bool ConditonCheckerWithPrecision(
-  const Vector<VectorT,length_vector_a>& vector_a,
-  const Vector<VectorT,length_vector_b>& vector_b,
-  bool (*condition_checker)(VectorT, VectorT, PrecisionT),
-  PrecisionT precision)
-{
-  if (vector_a.length() != vector_b.length()) return false;
-  auto iter_a(vector_a.begin());
-  auto iter_b(vector_b.begin());
-  while (iter_a != vector_a.end())
-  {
-    if (! condition_checker(*(iter_a++), *(iter_b++), precision))
-    {
-      return false;
-    }
-  }
-  return true;
 }
   
 inline bool IsApproximatelyEqual(
@@ -122,7 +91,7 @@ inline bool IsApproximatelyEqual(
 inline bool IsApproximatelyEqual(
   const Int num_a,
   const Int num_b,
-  const Int /*precision*/)
+  const Int /*precision*/) noexcept
 {
   return num_a == num_b;
 }
@@ -130,7 +99,7 @@ inline bool IsApproximatelyEqual(
 inline bool IsApproximatelyEqual(
   const UInt num_a,
   const UInt num_b,
-  const UInt /*precision*/)
+  const UInt /*precision*/) noexcept
 {
   return num_a == num_b;
 }
@@ -139,59 +108,95 @@ template<typename T>
 inline bool IsApproximatelyEqual(
   const Complex<T> num_a,
   const Complex<T> num_b,
-  const T precision = VERY_SMALL)
+  const T precision = VERY_SMALL) noexcept
 {
   return std::abs(num_a - num_b) < precision;
 }
 
-
-template<
-  typename VectorT,
-  size_t length,
-  typename PrecisionT>
-inline bool IsApproximatelyEqual(
-  const Vector<VectorT,length>& vector_a,
-  const Vector<VectorT,length>& vector_b,
-  const PrecisionT precision = VERY_SMALL)
+template<typename T>
+inline bool IsSmallerOrEqual(
+  const T num_a,
+  const T num_b) noexcept
 {
-  return ConditonCheckerWithPrecision(
-    vector_a,
-    vector_b,
-    &IsApproximatelyEqual,
-    precision);
+  return std::islessequal(num_a, num_b);
 }
 
+template<typename T>
+inline bool IsLargerOrEqual(
+  const T num_a,
+  const T num_b) noexcept
+{
+  return std::isgreaterequal(num_a, num_b);
+}
 
-
-
-//bool IsSmallerOrEqual(const Real num_a, const Real num_b,
-//                      const Real precision = VERY_SMALL);
+//bool IsSmallerOrEqual(const Real num_a, const Real num_b, const Real precision) {
+//  return num_a <= (num_b + precision);
+//}
 //
-//bool IsLargerOrEqual(const Real num_a, const Real num_b,
-//                     const Real precision = VERY_SMALL);
-
-//bool AreAllSmallerOrEqual(const Vector<Real>& vector_a,
-//                          const Vector<Real>& vector_b);
-
-//template<class T>
-//bool IsEqual(const Vector<T>& vector_a, const Vector<T>& vector_b,
-//             Real precision = VERY_SMALL) noexcept {
-//  if ((Int)vector_a.length() != (Int)vector_b.length())
-//    return false;
-//
-//  for (Int i=0; i<(Int)(Int)vector_a.length(); ++i) {
-//    if (! IsEqual(vector_a[i], vector_b[i], precision))
-//      return false;
-//  }
-//  return true;
+//bool IsLargerOrEqual(const Real num_a, const Real num_b, const Real precision) {
+//  return num_a >= (num_b - precision);
 //}
 
 
+/** Returns true if num is +inf or -inf */
+template<typename T>
+inline bool IsInf(T num)
+{
+  return std::isinf(num);
+}
+
+/** Returns true if num is nan */
+template<typename T>
+inline bool IsNan(
+  T num) noexcept
+{
+  return isnan(num);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Vector checks
+////////////////////////////////////////////////////////////////////////////////
+
+/** Checks a condition on all the elements of the vector. Returns true
+ if all the conditions are true. False otherwise. */
 template<typename T, size_t length_a, size_t length_b>
-inline bool ConditonChecker(
+inline bool IsAnyConditionTrue(
+  const Vector<T,length_a>& vector,
+  std::function<bool(T,T)> condition_checker) noexcept
+{
+  for (auto& element : vector)
+  {
+    if (condition_checker(element))
+    {
+      return true;
+    }
+  }
+  return false;
+}
+
+
+/** Checks a condition on all the elements of the vector. Returns true
+ if all the conditions are true. False otherwise. */
+template<typename T, size_t length>
+inline bool AreAllConditionsTrue(
+  const Vector<T,length>& vector,
+  std::function<bool(T,T)> condition_checker) noexcept
+{
+  for (auto& element : vector)
+  {
+    if (! condition_checker(element))
+    {
+      return false;
+    }
+  }
+  return true;
+}
+
+template<typename T, size_t length_a, size_t length_b>
+inline bool AreAllConditionsTrue(
   const Vector<T,length_a>& vector_a,
   const Vector<T,length_b>& vector_b,
-  bool (*condition_checker)(T, T))
+  std::function<bool(T,T)> condition_checker) noexcept
 {
   if (vector_a.length() != vector_b.length()) return false;
   auto iter_a(vector_a.begin());
@@ -206,18 +211,105 @@ inline bool ConditonChecker(
   return true;
 }
 
-//template<typename T, size_t length_a, size_t length_b>
-//bool IsEqual(
-//  const Vector<T,length_a>& vector_a,
-//  const Vector<T,length_b>& vector_b)
-//{
-//  return ConditonChecker(vector_a, vector_b, [](auto a, auto b){ return a == b; });
-//}
+
+template<typename T, size_t length_a, size_t length_b>
+inline bool IsEqual(
+  const Vector<T,length_a>& vector_a,
+  const Vector<T,length_b>& vector_b) noexcept
+{
+  return AreAllConditionsTrue<T,length_a,length_b>(
+    vector_a,
+    vector_b,
+    [] (T a, T b) { return a == b; });
+}
+
+
+template<typename TVector, size_t length, typename TPrecision>
+inline bool IsApproximatelyEqual(
+  const Vector<TVector,length>& vector_a,
+  const Vector<TVector,length>& vector_b,
+  const TPrecision precision = VERY_SMALL) noexcept
+{
+  return AreAllConditionsTrue<TVector,length,length>(
+    vector_a,
+    vector_b,
+    [precision] (TVector a, TVector b) { return IsApproximatelyEqual(a, b, precision); });
+}
+
+
+template<typename T, size_t length>
+inline Vector<bool> IsNan(
+  const Vector<T,length>& input) noexcept
+{
+  Vector<T,length> output(input.length());
+  ForEach(input, [] (T element) { return IsNan(element); }, output);
+  return std::move(output);
+}
+
+/** Returns opposite bool as input */
+template<size_t length>
+inline Vector<bool,length> Not(
+  const Vector<bool,length>& input) noexcept
+{
+  Vector<bool,length> output(input.length());
+  ForEach(input, [] (bool value) { return !value; }, output);
+  return std::move(output);
+}
+
+
+/** Returns true if all bools are true */
+template<size_t length>
+inline bool AreAllTrue(
+  const Vector<bool,length>& input) noexcept
+{
+  return AreAllConditionsTrue<bool,length>(
+    input,
+    [] (bool element) { return element; });
+}
+
+
+template<size_t length>
+inline bool None(
+  Vector<bool,length> input) noexcept
+{
+  return AreAllTrue(Not(input));
+}
+
+
+template<size_t length>
+inline bool Any(
+  const Vector<bool>& input) noexcept
+{
+  return IsAnyConditionTrue(input, [] (bool element) { return element; });
+}
+
+
+template<typename T, size_t length>
+inline Vector<bool> IsInf(
+  const Vector<T,length>& input) noexcept
+{
+  Vector<T,length> output(input.length());
+  ForEach(input, [] (T element) { return IsInf(element); }, output);
+  return std::move(output);
+}
+
+template<typename T, size_t length>
+bool AreAllSmallerOrEqual(
+  const Vector<T,length>& vector_a,
+  const Vector<T,length>& vector_b)
+{
+  return AreAllConditionsTrue<T,length,length>(
+    vector_a,
+    vector_b,
+    [] (T a, T b) { return IsSmallerOrEqual(a, b); });
+}
+
+
 
 template<typename T>
 inline bool IsEqual(
   const Quaternion<T>& q_a,
-  const Quaternion<T>& q_b)
+  const Quaternion<T>& q_b) noexcept
 {
   return q_a.w() == q_b.w() && q_a.x() == q_b.x() &
     q_a.y() == q_b.y() && q_a.z() == q_b.z();
@@ -228,7 +320,7 @@ template<typename T>
 inline bool IsApproximatelyEqual(
   const Point<T>& point_a,
   const Point<T>& point_b,
-  const T precision = VERY_SMALL)
+  const T precision = VERY_SMALL) noexcept
 {
   return
     mcl::IsApproximatelyEqual(point_a.x(), point_b.x(), precision) &&
@@ -239,7 +331,7 @@ inline bool IsApproximatelyEqual(
 template<typename T>
 inline bool IsEqual(
   const Vector<Point<T>>& points_a,
-  const Vector<Point<T>>& points_b)
+  const Vector<Point<T>>& points_b) noexcept
 {
   const Int num_points = (Int)points_a.length();
   if (num_points != (Int)points_b.length()) { return false; }
@@ -249,43 +341,34 @@ inline bool IsEqual(
   return true;
 }
   
-/** Returns true if num is nan */
-template<typename T>
-inline bool IsNan(T num)
-{
-  return isnan(num);
-}
 
 /** Returns true if num is nan */
 template<typename T>
-inline Vector<bool> IsNan(Vector<T> input)
+inline Vector<bool> IsNan(Vector<T> input) noexcept
  {
   Vector<bool> output(input.length());
-  for (Int i=0; i<input.length(); ++i)
+  for (size_t i=0; i<input.length(); ++i)
   {
     output[i] = IsNan(input[i]);
   }
   return output;
 }
 
-///** Returns opposite bool as input */
-//Vector<bool> Not(Vector<bool> input);
-//
-///** Returns true if all bools are true */
-//bool All(Vector<bool> input);
-//
-///** Returns true if any one of the bools is true */
-//bool Any(Vector<bool> input);
-//
+
+
+
+
+/** Returns true if any one of the bools is true */
+template<size_t length>
+inline bool Any(
+  Vector<bool,length> input) noexcept
+{
+  return AreAllConditionsTrue(input, [] (bool element) { return !element; });
+}
+
 ///** Opposite of All: returns true if none of the inputs are true */
 //bool None(Vector<bool> input);
 
-/** Returns true if num is +inf or -inf */
-template<typename T>
-inline bool IsInf(T num)
-{
-  return std::isinf(num);
-}
 
 ///** Returns true if num is +inf or -inf */
 //Vector<bool> IsInf(Vector<Real> input);

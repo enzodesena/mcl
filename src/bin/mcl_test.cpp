@@ -34,7 +34,7 @@ int main (int argc, char * const argv[]) {
   TransformOpTest();
   MatrixOpTest();
   StatisticsOpTest();
-//  ComparisonOpTest();
+  ComparisonOpTest();
 //  PointTest();
 //  IirFilter::Test();
 //  RandomGenerator::Test();
