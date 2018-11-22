@@ -15,13 +15,19 @@
 
 namespace mcl {
 /** FIR Filter */
+template<typename T>
 class FirFilter : public DigitalFilter {
 public:
   /** Constructs a default FIR filter, i.e. identical filter */
-  FirFilter() noexcept;
+  FirFilter() noexcept
+  {
+  }
   
   /** Constructs an FIR filter with impulse response B. */
-  FirFilter(const Vector<Real> B) noexcept;
+  FirFilter(
+    const Vector<T>& B) noexcept
+  {
+  }
   
   /** 
    Returns the output of the filter for an input equal to `input`.
@@ -30,10 +36,8 @@ public:
    (1) Filter(0.5)==0 and then
    (2) Filter(0.0)==0.5
    */
-  virtual Real Filter(const Real input_sample) noexcept;
-  
-  virtual void Filter(const Real* __restrict input_data, const Int num_samples,
-                      Real* __restrict output_data) noexcept;
+  virtual T Filter(
+    const T input_sample) noexcept;
   
   using DigitalFilter::Filter;
   
@@ -45,37 +49,43 @@ public:
    off to avoid audible artifacts.
    @param[in] update_length How many calls to Filter it takes to update the
    coefficients. A value of 0 means that the update is instantaneous. A call
-   to Filter(const Real input) counts one, just like
-   Filter(const Vector<Real>& input).
+   to Filter(const T input) counts one, just like
+   Filter(const Vector<T>& input).
    */
-  void SetImpulseResponse(const Vector<Real>& impulse_response,
-                          const Int update_length = 0) noexcept;
+  void SetImpulseResponse(
+    const Vector<T>& impulse_response,
+    const Int update_length = 0) noexcept
+  {
+  
+  }
   
   /** Resets the state of the filter */
-  void Reset() noexcept;
+  void Reset() noexcept
+  {
+  
+  }
   
   /** Returns the impulse response of the filter */
-  Vector<Real> impulse_response() noexcept;
+  Vector<T> impulse_response() noexcept
+  {
+  
+  }
   
   /** Constructs a filter for which output==gain*input always. */
-  static FirFilter GainFilter(const Real gain) noexcept;
+  static FirFilter GainFilter(const T gain) noexcept;
   
-  /** Tests */
-  static bool Test();
-  
-  static void SpeedTests();
   
   virtual ~FirFilter() {}
   
 private:
 #ifdef MCL_APPLE_ACCELERATE
-  Real FilterAppleDsp(Real input_sample) noexcept;
-  void FilterAppleDsp(const Real* __restrict input_data, const Int num_samples,
-                      Real* __restrict output_data) noexcept;
+  T FilterAppleDsp(T input_sample) noexcept;
+  void FilterAppleDsp(const T* __restrict input_data, const Int num_samples,
+                      T* __restrict output_data) noexcept;
 #endif
   
   template<class T>
-  void GetExtendedInput(const Real* __restrict input_data, const Int num_samples,
+  void GetExtendedInput(const T* __restrict input_data, const Int num_samples,
                         T* __restrict extended_input_data) {
     
     // Stage 1
@@ -97,9 +107,9 @@ private:
     }
   }
   
-  Real FilterStraight(Real input_sample) noexcept;
+  T FilterStraight(T input_sample) noexcept;
   
-  Vector<Real> FilterSequential(const Vector<Real>& input) noexcept;
+  Vector<T> FilterSequential(const Vector<T>& input) noexcept;
   
   /** Method called to slowly update the filter coefficients. It is called
    every time one of the Filter method is called and is activated only
@@ -107,8 +117,8 @@ private:
    batch. */
   void UpdateCoefficients() noexcept;
   
-  Vector<Real> impulse_response_;
-  Vector<Real> impulse_response_old_;
+  Vector<T> impulse_response_;
+  Vector<T> impulse_response_old_;
   Int update_index_;
   Int update_length_;
   
@@ -116,8 +126,8 @@ private:
   
   /* This is the current vector of coefficients. When the filter is updating
    this will in general be different from impulse_response_. */
-  Vector<Real> coefficients_;
-  Vector<Real> delay_line_;
+  Vector<T> coefficients_;
+  Vector<T> delay_line_;
   Int counter_;
   Int length_;
 };
@@ -125,32 +135,32 @@ private:
   
 class GainFilter : public DigitalFilter {
 public:
-  GainFilter(const Real gain) : gain_(gain) {}
+  GainFilter(const T gain) : gain_(gain) {}
   
-  virtual Real Filter(const Real input) noexcept {
+  virtual T Filter(const T input) noexcept {
     return input*gain_;
   }
   
-  virtual void Filter(const Real* input_data, const Int num_samples,
-                      Real* output_data) noexcept {
+  virtual void Filter(const T* input_data, const Int num_samples,
+                      T* output_data) noexcept {
     Multiply(input_data, num_samples, gain_, output_data);
   }
   
   virtual void Reset() {}
 private:
-  Real gain_;
+  T gain_;
 };
 
 class IdenticalFilter : public DigitalFilter {
 public:
   IdenticalFilter() {}
   
-  virtual Real Filter(const Real input) noexcept {
+  virtual T Filter(const T input) noexcept {
     return input;
   }
   
-  virtual void Filter(const Real* input_data, const Int num_samples,
-                      Real* output_data) noexcept {
+  virtual void Filter(const T* input_data, const Int num_samples,
+                      T* output_data) noexcept {
     for (Int i=0; i<num_samples; ++i) {
       output_data[i] = input_data[i];
     }
@@ -158,6 +168,11 @@ public:
   
   virtual void Reset() {}
 };
+
+
+/** Tests */
+bool FirTest();
+void FirSpeedTests();
   
 } // namespace mcl
 

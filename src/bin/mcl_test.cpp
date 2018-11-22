@@ -17,7 +17,7 @@
 #include "statisticsop.h"
 //#include "firfilter.h"
 #include "randomop.h"
-//#include "iirfilter.h"
+#include "iirfilter.h"
 
 
 
@@ -36,7 +36,7 @@ int main (int argc, char * const argv[]) {
   StatisticsOpTest();
   ComparisonOpTest();
   PointTest();
-//  IirFilter::Test();
+  IirFilterTest();
   RandomGenerator::Test();
   std::cout<<"All tests succeded!\n";
 #else

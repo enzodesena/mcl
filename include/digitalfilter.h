@@ -8,63 +8,71 @@
 
 #pragma once
 
-#include <vector>
-
+#include "vector.h"
+#include "vectorop.h"
 #include "mcltypes.h"
 
-namespace mcl {
+namespace mcl
+{
   
 /** Digital filter abstract class */
-class DigitalFilter {
+template<typename T>
+class DigitalFilter
+{
 public:
-  
-  virtual void Filter(const Real* input_data, const Int num_samples,
-                      Real* output_data) noexcept {
-    FilterSerial(input_data, num_samples, output_data);
+  /** Returns the output of the filter for an input equal to `input` . */
+  virtual T Filter(
+    const T input) noexcept
+  {
+    return Filter(UnaryVector<T>(input))[0];
   }
   
-  void FilterSerial(const Real* input_data, const Int num_samples,
-                    Real* output_data) noexcept {
-    ASSERT(num_samples>=0);
-    ASSERT(input_data);
-    ASSERT(output_data);
-    for (Int i=0; i<num_samples; ++i) {
-      output_data[i] = Filter(input_data[i]);
+  template<size_t length>
+  Vector<T,length> Filter(
+    const Vector<T,length>& input) noexcept
+  {
+    Vector<T,length> output(input.length());
+    Filter(input, output);
+    return std::move(output);
+  }
+  
+  virtual void FilterSerial(
+    const Vector<T>& input,
+    Vector<T>& output) noexcept
+  {
+    auto input_iter(input.begin());
+    auto output_iter(output.begin());
+    while (output_iter != output.end())
+    {
+      *(output_iter++) = Filter(*(input_iter++));
     }
   }
   
-  /** Returns the output of the filter for an input equal to `input` . */
-  virtual Real Filter(const Real input) noexcept = 0;
-  
   /** Returns the output of the filter for an input signal equal to `input`. */
-  Vector<Real> Filter(const Vector<Real>& input) noexcept {
-    Vector<Real> output(input.length(), 0.0);
-    Filter(input.data(), input.length(), output.data());
-    return output;
-  }
+  virtual void Filter(
+    const Vector<T>& input,
+    Vector<T>& output) noexcept = 0;
   
   /** Resets the state of the filter */
   virtual void Reset() = 0;
-  
-  virtual ~DigitalFilter() {};
 };
   
 /** Filter bank abstract class */
+template<typename T>
 class FilterBank {
 public:
   /** Returns the output of the filter bank for an input equal to `input`. Hello world! */
-  virtual Vector<Real> Filter(const Real input) = 0;
+  virtual Vector<T> Filter(
+    const T input) = 0;
   
   /** Returns the output of the filter bank for a given input. */
-  virtual Vector<Vector<Real> >
-  Filter(const Vector<Real>& input) = 0;
+  virtual Vector<Vector<T>> Filter(
+    const Vector<T>& input) = 0;
   
   /** Resets the state of the filter */
   virtual void Reset() = 0;
   
   virtual Int num_filters() = 0;
-  
-  virtual ~FilterBank() {};
 };
   
   

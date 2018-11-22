@@ -6,7 +6,7 @@
  Authors: Enzo De Sena, enzodesena@gmail.com
  */
 
-#include "firfilter.h"
+//#include "firfilter.h"
 #include "vectorop.h"
 #include "mcltypes.h"
 #include <vector>
@@ -177,34 +177,6 @@ Real FirFilter::FilterStraight(Real input_sample) noexcept {
   
   
 #ifdef MCL_APPLE_ACCELERATE
-Real FirFilter::FilterAppleDsp(Real input_sample) noexcept {
-  if (length_-counter_ > MCL_MAX_VLA_LENGTH) {
-    return FilterStraight(input_sample);
-  }
-  
-  delay_line_[counter_] = input_sample;
-  Real result = 0.0;
-  
-  MCL_STACK_ALLOCATE(mcl::Real, result_a, length_-counter_); // TODO: handle stack overflow
-  Multiply(&coefficients_[0],
-           &delay_line_[counter_],
-           length_-counter_, result_a);
-  
-  for (Int i=0; i<length_-counter_; i++) { result += result_a[i]; }
-  
-  if (counter_ > 0) {
-    Real result_b[counter_];
-    Multiply(&coefficients_[length_-counter_],
-             &delay_line_[0],
-             counter_, result_b);
-    
-    for (Int i=0; i<counter_; i++) { result += result_b[i]; }
-  }
-  
-  if (--counter_ < 0) { counter_ = length_-1; }
-  
-  return result;
-}
   
 void FirFilter::FilterAppleDsp(const Real* __restrict input_data,
                                const Int num_samples,
