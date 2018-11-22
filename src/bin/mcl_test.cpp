@@ -8,7 +8,7 @@
 
 
 #include <iostream>
-//#include "matrixop.h"
+#include "matrixop.h"
 #include "vectorop.h"
 #include "vector.h"
 #include "elementaryop.h"
@@ -31,7 +31,7 @@ int main (int argc, char * const argv[]) {
   VectorOpTest();
   PointWiseOpTest();
 //  TransformOpTest();
-//  MatrixOpTest();
+  MatrixOpTest();
 //  StatisticsOpTest();
 //  ComparisonOpTest();
 //  PointTest();

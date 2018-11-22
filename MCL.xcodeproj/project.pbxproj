@@ -11,6 +11,7 @@
 		5708B0AF21A5ABE00000F5FD /* basicop_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57B4EF6E1CD8177900134991 /* basicop_test.cpp */; };
 		5708B0B121A7096F0000F5FD /* pointwiseop_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57B4EF731CD8177900134991 /* pointwiseop_test.cpp */; };
 		5708B0B221A70C7E0000F5FD /* quaternion_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57FE67C71CFB61EE00E3CB2A /* quaternion_test.cpp */; };
+		5708B0B321A711170000F5FD /* matrixop_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57B4EF721CD8177900134991 /* matrixop_test.cpp */; };
 		571F9A5817955B160059A90D /* statisticsop.h in Headers */ = {isa = PBXBuildFile; fileRef = 571F9A5717955B160059A90D /* statisticsop.h */; };
 		572A876D19C070ED00F62F8F /* comparisonop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57BA701315B43C60002F077F /* comparisonop.cpp */; };
 		572A876E19C070ED00F62F8F /* transformop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57BA701715B4915E002F077F /* transformop.cpp */; };
@@ -418,6 +419,7 @@
 				573150E52198F99F00F29476 /* vectorop_test.cpp in Sources */,
 				5708B0AF21A5ABE00000F5FD /* basicop_test.cpp in Sources */,
 				5708B0B121A7096F0000F5FD /* pointwiseop_test.cpp in Sources */,
+				5708B0B321A711170000F5FD /* matrixop_test.cpp in Sources */,
 				5708B0B221A70C7E0000F5FD /* quaternion_test.cpp in Sources */,
 				5708B0AD21A598410000F5FD /* elementaryop_test.cpp in Sources */,
 			);

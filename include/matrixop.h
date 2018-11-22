@@ -41,7 +41,7 @@ public:
   Matrix(Int num_rows, Int num_columns) noexcept : num_rows_(num_rows), 
           num_columns_(num_columns) {
     for (Int i=0; i<num_rows; ++i) {
-      data_.push_back(Vector<T>(num_columns));
+      data_.PushBack(Vector<T>(num_columns));
     }
   }
   
@@ -301,13 +301,14 @@ T Max(const Matrix<T>& matrix) noexcept {
   
   
 /** Contains eigenvalues and eigenvectors */
+template<typename T>
 struct EigOutput {
-  Vector<Complex> eigen_values; /**< Eigenvalues */
-  std::vector<Vector<Complex> > eigen_vectors; /**< Eigenvectors */
+  Vector<Complex<T>> eigen_values; /**< Eigenvalues */
+  Vector<Vector<Complex<T>>> eigen_vectors; /**< Eigenvectors */
 };
   
 template<typename T>
-Matrix<T> RealPart(const Matrix<Complex<T>>& input) noexcept;
+Matrix<T> RealPart(const Matrix<Complex<T>>& input) noexcept
 {
   Matrix<Real> output(input.num_rows(), input.num_columns());
   for (Int i=0; i<input.num_rows(); ++i)
@@ -346,8 +347,8 @@ EigOutput Eig(
   
   const Int N = matrix.num_columns();
   EigOutput output;
-  output.eigen_values = Vector<Complex>(N);
-  output.eigen_vectors = std::vector<Vector<Complex> >(N);
+  output.eigen_values = Vector<Complex<T>>(N);
+  output.eigen_vectors = std::vector<Vector<Complex<T>> >(N);
   
   // The following constructor triggers compute()
   Eigen::EigenSolver<Eigen::MatrixXd> es(ConvertToEigen(matrix));
@@ -415,10 +416,10 @@ T CovElement(
   const Vector<T>& x,
   const Vector<T>& y) noexcept
 {
+  ASSERT(x.length() == y.length());
   const size_t N = x.length();
-  ASSERT(N == (Int)y.length());
   
-  T output = Sum(Multiply(Add(x, -Mean(x)), Add(y, -Mean(y))));
+  T output = Sum(Multiply(AddScalar(x, -Mean(x)), AddScalar(y, -Mean(y))));
   // In case N>1 use the unbiased estimator of covariance.
   output = (N > 1) ? output/((T) (N-1)) : output/((T) (N));
   return output;

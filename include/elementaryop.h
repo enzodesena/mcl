@@ -66,7 +66,7 @@ inline Int Fix(const T scalar)
 template<typename T>
 inline Int Sign(const T scalar)
 {
-  if (IsApproximatelyEqual(scalar, 0.0, std::numeric_limits<T>::epsilon()))
+  if (scalar == T(0.0))
   {
     return 0;
   }
