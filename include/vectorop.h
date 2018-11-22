@@ -10,11 +10,20 @@
 
 
 #include "elementaryop.h"
+#include "pointwiseop.h"
 #include "basicop.h"
 #include "mclintrinsics.h"
 #include "vector.h"
 
 namespace mcl {
+
+
+
+// Forward declarations
+template<typename T, size_t length>
+inline Vector<T,length> Pow(
+  const Vector<T,length>& input,
+  const T exponent) noexcept;
 
 template<typename T>
 inline T Mod(
@@ -25,6 +34,30 @@ template<class T>
 inline T Min(
   const T scalar_a,
   const T scalar_b) noexcept;
+  
+template<class T>
+inline T Max(
+  const Vector<T>& input) noexcept;
+// End of forward declarations
+  
+  
+template<typename T, typename U, size_t length>
+inline void ForEach(
+  const Vector<T,length>& input_vector,
+  const T value,
+  U (*operation)(T, T),
+  Vector<U,length>& output_vector)
+{
+  ASSERT(input_vector.length() == output_vector.length());
+  auto input_iter = input_vector.begin();
+  auto output_iter = output_vector.begin();
+  while (input_iter != input_vector.end())
+  {
+    *(output_iter++) = operation(*(input_iter++), value);
+  }
+}
+
+  
   
 template<typename T>
 bool IsNonNegative(
@@ -48,7 +81,7 @@ size_t Length(const Vector<T,length>& input) noexcept {
 
 
 template <class T, size_t length>
-void SetToZero(Vector<T, length>& vector)
+void SetToZero(Vector<T,length>& vector)
 {
   for (auto& element : vector)
   {
@@ -83,9 +116,9 @@ void ZeroPad(
 
 /** Returns a vector of zeros */
 template <class T, size_t length>
-Vector<T, length> Zeros() noexcept
+Vector<T,length> Zeros() noexcept
 {
-  Vector<T, length> vector(length);
+  Vector<T,length> vector(length);
   SetToZero(vector);
   return std::move(vector);
 }
@@ -108,81 +141,106 @@ template <class T>
 
 
 
-
-  
 template<typename T, size_t length>
-void Multiply(
-  const Vector<T>& input,
-  const T gain,
-  Vector<T>& output) noexcept
-{
-  MathIntrinsics<T,length>::Multiply(
-    input,
-    gain,
-    output);
-}
-
-template<typename T, size_t length>
-void MultiplyAdd(
-  const Vector<T,length>& input_to_multiply,
-  const T gain,
-  const Vector<T,length>& input_to_add,
+inline void Add(
+  const Vector<T,length>& input_a,
+  const Vector<T,length>& input_b,
   Vector<T,length>& output) noexcept
 {
-  MathIntrinsics<T,length>::MultiplyAdd(
-    input_to_multiply,
-    gain,
-    input_to_add,
-    output);
+  MathIntrinsics<T,length>::Add(input_a, input_b, output);
 }
 
 
-
+template<typename T, size_t length>
+inline Vector<T,length> Add(
+  const Vector<T,length>& input_a,
+  const Vector<T,length>& input_b) noexcept
+{
+  Vector<T,length> output(input_a.length());
+  Add(input_a, input_b, output);
+  return std::move(output);
+}
 
 /**
  Returns the point by point multiplication of the vector with the gain.
  Equivalent to Matlab's vector_a.*gain.
  */
 template<typename T, size_t length>
-Vector<T, length> Multiply(
+inline void Multiply(
+  const Vector<T,length>& input,
+  const T gain,
+  Vector<T,length>& output) noexcept
+{
+  MathIntrinsics<T,length>::Multiply(input, gain, output);
+}
+
+/**
+ Returns the point by point multiplication of the vector with the gain.
+ Equivalent to Matlab's vector_a.*gain.
+ */
+template<typename T, size_t length>
+inline Vector<T,length> Multiply(
   const Vector<T,length>& input,
   const T gain) noexcept
 {
   Vector<T,length> output(input.length());
-  MathIntrinsics<T,length>::Multiply(
-    input,
-    gain,
-    output);
+  MathIntrinsics<T,length>::Multiply(input, gain, output);
   return std::move(output);
 }
+
+template<typename T, size_t length>
+inline void Multiply(
+  const Vector<T,length>& input_a,
+  const Vector<T,length>& input_b,
+  Vector<T,length>& output) noexcept
+{
+  MathIntrinsics<T,length>::Multiply(input_a, input_b, output);
+}
+  
+template<typename T, size_t length>
+inline void MultiplyAdd(
+  const Vector<T,length>& input_to_multiply,
+  const T gain,
+  const Vector<T,length>& input_to_add,
+  Vector<T,length>& output) noexcept
+{
+  MathIntrinsics<T,length>::MultiplyAdd(input_to_multiply, gain, input_to_add, output);
+}
+
+
   
   
 
+ 
+/**
+ Returns the point by point addition of the two vectors.
+ Equivalent to Matlab's vector_a+vector_b.
+ */
+template<class T, size_t length>
+inline void AddScalar(
+  const Vector<T,length>& input,
+  const T scalar,
+  Vector<T,length>& output) noexcept
+{
+  auto input_iter = input.begin();
+  auto output_iter = output.begin();
+  while (output_iter != output.end())
+  {
+    *(output_iter++) = *(input_iter++) + scalar;
+  }
+}
 
 /**
  Returns the point by point addition of the two vectors.
  Equivalent to Matlab's vector_a+vector_b.
  */
 template<class T, size_t length>
-void Add(
-  const Vector<T, length>& vector,
-  const T scalar,
-  Vector<T, length>& output_vector) noexcept
-{
-  ASSERT(vector.length() == output_vector.length());
-  for (size_t i=0; i<vector.length(); ++i)
-  {
-    output_vector[i] = vector[i]+scalar;
-  }
-}
-
-template<class T, size_t length>
-Vector<T, length> Add(
-  const Vector<T, length>& vector,
+inline Vector<T,length> AddScalar(
+  const Vector<T,length>& vector,
   const T scalar) noexcept
 {
-  Vector<T, length> output(vector.length());
-  Add(vector, scalar, output);
+  Vector<T,length> output(vector.length());
+  AddScalar(vector, scalar, output);
   return std::move(output);
 }
 
@@ -503,7 +561,7 @@ Vector<T> GetSegment(
  */
 template<typename T, size_t length>
 T Prod(
-  const Vector<T, length>& vector) noexcept
+  const Vector<T,length>& vector) noexcept
 {
   T output = (T) 1.0;
   for (auto& element : vector)
@@ -710,6 +768,7 @@ T Var(
   return output/((T) (input.length()-1));
 }
 
+
 /** Weighted var (biased estimator) */
 template<typename T, size_t length>
 T Var(
@@ -719,7 +778,8 @@ T Var(
   ASSERT(IsNonNegative(weights));
 
   T weighted_mean = Mean(input, weights);
-  Vector<T> temp = Pow(Add(input, -weighted_mean), 2.0);
+  Vector<T> tt = AddScalar(input, -weighted_mean);
+  Vector<T> temp = Pow(tt, 2.0);
   Vector<T> norm_weights = Multiply<T>(weights, 1.0/Sum(weights));
 
   return (Sum(Multiply(norm_weights, temp)));
@@ -817,14 +877,29 @@ Vector<T> OverlapAdd(
   return output;
 }
 
+
+
+template<typename TOrigin, typename TDestination>
+Vector<TDestination> Cast(
+  const Vector<TOrigin>& vector) noexcept
+{
+  const size_t length = vector.length();
+  Vector<TDestination> output(length);
+  for (size_t i=0; i<length; ++i)
+  {
+    output[i] = static_cast<TDestination>(vector[i]);
+  }
+  return output;
+}
+
 template<typename T, size_t length>
-Vector<Complex<T>,length> ConvertToComplex(
+Vector<Complex<T>,length> CastToComplex(
   Vector<T,length> input) noexcept
 {
-  Vector<Complex<T>,length> output;
+  Vector<Complex<T>,length> output(input.length());
   for (Int i=0; i<(Int)input.length(); ++i)
   {
-    output.PushBack(Complex(input[i], 0.0));
+    output[i] = Complex<T>(input[i], 0.0);
   }
   return output;
 }

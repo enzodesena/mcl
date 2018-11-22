@@ -108,6 +108,11 @@ bool ElementaryOpTest() {
   pdf_1[1] = 0.35;
   pdf_1[2] = 0.15;
   pdf_1[3] = 0.3;
+  
+  Vector<Real> output(4);
+  
+  MultiplySerial(pdf_1, 2.0, output);
+  
   ASSERT(IsApproximatelyEqual(Entropy(pdf_1, exp(1)), 1.335085165092020));
   ASSERT(IsApproximatelyEqual(Entropy(pdf_1, 2.0), 1.926120746842681));
 

@@ -8,12 +8,23 @@
 
 #pragma once
 
+#include "vectorop.h"
 #include "mcltypes.h"
 #include "pointwiseop.h"
-#include <vector>
 #include <limits>
 
-namespace mcl {
+namespace mcl
+{
+
+// Forward declarations
+template<typename TOrigin, typename TDestination>
+Vector<TDestination> Cast(
+  const Vector<TOrigin>& vector) noexcept;
+  
+template<class T, size_t length>
+inline Vector<T,length> Opposite(
+  const Vector<T,length>& input) noexcept;
+// End of forward declarations
   
 /**
  Returns the index associated to the maximum value in the vector. The index
@@ -57,11 +68,21 @@ inline size_t MaxIndex(
 {
   return MinIndex(Opposite(input));
 }
+
+template<>
+inline size_t MaxIndex<UInt>(
+  const Vector<UInt>& input) noexcept
+{
+  return MinIndex(Opposite(Cast<UInt,Int>(input)));
+}
   
 template<>
-inline size_t MaxIndex<UInt>(const Vector<UInt>& input) noexcept {
-  return MinIndex(Opposite(Convert<UInt,Int>(input)));
+inline size_t MaxIndex<size_t>(
+  const Vector<size_t>& input) noexcept
+{
+  return MinIndex(Opposite(Cast<size_t,Int>(input)));
 }
+  
   
 /** Returns the maximum value of the vector. */
 template<class T>

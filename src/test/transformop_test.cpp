@@ -62,15 +62,15 @@ bool TransformOpTest() {
   // Test real fft
   Vector<Real> vector_h = {-1.0, 2.0, 3.0};
   ASSERT(IsEqual(Rfft(vector_h, 3),
-                 Elements(Fft(ConvertToComplex(vector_h), 3), 0, 1)));
+                 Elements(Fft(CastToComplex(vector_h), 3), 0, 1)));
   ASSERT(IsEqual(Rfft(vector_h, 4),
-                 Elements(Fft(ConvertToComplex(vector_h), 4), 0, 2)));
+                 Elements(Fft(CastToComplex(vector_h), 4), 0, 2)));
   
   Vector<Real> vector_i = {-1.0, 2.0, 3.0, 4.0};
   ASSERT(IsEqual(Rfft(vector_h, 4),
-                 Elements(Fft(ConvertToComplex(vector_h), 4), 0, 2)));
+                 Elements(Fft(CastToComplex(vector_h), 4), 0, 2)));
   ASSERT(IsEqual(Rfft(vector_h, 5),
-                 Elements(Fft(ConvertToComplex(vector_h), 5), 0, 2)));
+                 Elements(Fft(CastToComplex(vector_h), 5), 0, 2)));
   
   // Test Irfft
   ASSERT(IsEqual(Irfft(Rfft(vector_h, 3), 3), vector_h));

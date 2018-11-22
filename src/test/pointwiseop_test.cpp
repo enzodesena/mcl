@@ -17,10 +17,10 @@ namespace mcl {
   
 bool PointWiseOpTest() {
   
-  Vector<Complex> vector_a(3);
-  vector_a[0] = Complex(1.0, 0.0);
-  vector_a[1] = Complex(0.0, 1.0);
-  vector_a[2] = Complex(1.0, 0.5);
+  Vector<Complex<Real>> vector_a(3);
+  vector_a[0] = Complex<Real>(1.0, 0.0);
+  vector_a[1] = Complex<Real>(0.0, 1.0);
+  vector_a[2] = Complex<Real>(1.0, 0.5);
   
   
   ASSERT(! IsReal(vector_a));
@@ -34,33 +34,33 @@ bool PointWiseOpTest() {
   ASSERT(IsEqual(abs_vector_a, abs_vector_a_cmp));
   
   
-  Vector<Complex> vector_b(3);
-  vector_b[0] = Complex(0.5, 1.0);
-  vector_b[1] = Complex(0.2, -1.0);
-  vector_b[2] = Complex(-1.0, -0.5);
+  Vector<Complex<Real>> vector_b(3);
+  vector_b[0] = Complex<Real>(0.5, 1.0);
+  vector_b[1] = Complex<Real>(0.2, -1.0);
+  vector_b[2] = Complex<Real>(-1.0, -0.5);
   
   
-  Vector<Complex> mult_vector = Multiply(vector_a, vector_b);
-  Vector<Complex> mult_vector_cmp(3);
-  mult_vector_cmp[0] = Complex(0.5, 1.0);
-  mult_vector_cmp[1] = Complex(1.0, 0.2);
-  mult_vector_cmp[2] = Complex(-0.75, -1.0);
+  Vector<Complex<Real>> mult_vector = Multiply(vector_a, vector_b);
+  Vector<Complex<Real>> mult_vector_cmp(3);
+  mult_vector_cmp[0] = Complex<Real>(0.5, 1.0);
+  mult_vector_cmp[1] = Complex<Real>(1.0, 0.2);
+  mult_vector_cmp[2] = Complex<Real>(-0.75, -1.0);
   
   ASSERT(IsEqual(mult_vector, mult_vector_cmp));
   
-  Vector<Complex> add_vector = Add(vector_a, vector_b);
-  Vector<Complex> add_vector_cmp(3);
-  add_vector_cmp[0] = Complex(1.5, 1.0);
-  add_vector_cmp[1] = Complex(0.2, 0.0);
-  add_vector_cmp[2] = Complex(0.0, 0.0);
+  Vector<Complex<Real>> add_vector = Add(vector_a, vector_b);
+  Vector<Complex<Real>> add_vector_cmp(3);
+  add_vector_cmp[0] = Complex<Real>(1.5, 1.0);
+  add_vector_cmp[1] = Complex<Real>(0.2, 0.0);
+  add_vector_cmp[2] = Complex<Real>(0.0, 0.0);
   
   ASSERT(IsEqual(add_vector, add_vector_cmp));
   
-  Vector<Complex> sub_vector = Subtract(vector_a, vector_b);
-  Vector<Complex> sub_vector_cmp(3);
-  sub_vector_cmp[0] = Complex(0.5, -1.0);
-  sub_vector_cmp[1] = Complex(-0.2, +2.0);
-  sub_vector_cmp[2] = Complex(2.0, 1.0);
+  Vector<Complex<Real>> sub_vector = Subtract(vector_a, vector_b);
+  Vector<Complex<Real>> sub_vector_cmp(3);
+  sub_vector_cmp[0] = Complex<Real>(0.5, -1.0);
+  sub_vector_cmp[1] = Complex<Real>(-0.2, +2.0);
+  sub_vector_cmp[2] = Complex<Real>(2.0, 1.0);
   
   ASSERT(IsEqual(sub_vector, sub_vector_cmp));
 
@@ -79,11 +79,11 @@ bool PointWiseOpTest() {
   ASSERT(IsEqual(vector_c_inv, vector_c_inv_cmp));
   
   
-  Vector<Complex> vector_cc = ComplexVector(vector_c);
-  Vector<Complex> vector_cc_cmp(3);
-  vector_cc_cmp[0] = Complex(-0.3, 0.0);
-  vector_cc_cmp[1] = Complex(0.3, 0.0);
-  vector_cc_cmp[2] = Complex(2.4, 0.0);
+  Vector<Complex<Real>> vector_cc = CastToComplex(vector_c);
+  Vector<Complex<Real>> vector_cc_cmp(3);
+  vector_cc_cmp[0] = Complex<Real>(-0.3, 0.0);
+  vector_cc_cmp[1] = Complex<Real>(0.3, 0.0);
+  vector_cc_cmp[2] = Complex<Real>(2.4, 0.0);
   
   ASSERT(IsReal(vector_cc));
   
@@ -141,7 +141,7 @@ bool PointWiseOpTest() {
   
   
   
-  Vector<double, 3> vector_o(Zeros<double,3>());
+  Vector<double> vector_o(3);
   vector_o[0] = 1.0;
   vector_o[1] = 2.5;
   vector_o[2] = 4.2;
@@ -151,21 +151,21 @@ bool PointWiseOpTest() {
   log_vector_o_cmp[0] = 0.0;
   log_vector_o_cmp[1] = 0.916290731874155;
   log_vector_o_cmp[2] = 1.435084525289323;
-  ASSERT(IsEqual(log_vector_o_cmp, log_vector_o));
+  ASSERT(IsApproximatelyEqual(log_vector_o_cmp, log_vector_o, VERY_SMALL));
   
   Vector<Real> log10_vector_o = Log10(vector_o);
   Vector<Real> log10_vector_o_cmp(3);
   log10_vector_o_cmp[0] = 0.0;
   log10_vector_o_cmp[1] = 0.397940008672038;
   log10_vector_o_cmp[2] = 0.623249290397900;
-  ASSERT(IsEqual(log10_vector_o_cmp, log10_vector_o));
+  ASSERT(IsApproximatelyEqual(log10_vector_o_cmp, log10_vector_o, VERY_SMALL));
   
-  Vector<Complex> exp_vector_a = Exp(vector_a);
-  Vector<Complex> exp_vector_a_cmp(3);
-  exp_vector_a_cmp[0] = Complex(2.718281828459046, 0.0);
-  exp_vector_a_cmp[1] = Complex(0.5403023058681398, 0.8414709848078965);
-  exp_vector_a_cmp[2] = Complex(2.385516730959136, 1.303213729686996);
-  ASSERT(IsEqual(exp_vector_a_cmp, exp_vector_a));
+  Vector<Complex<Real>> exp_vector_a = Exp(vector_a);
+  Vector<Complex<Real>> exp_vector_a_cmp(3);
+  exp_vector_a_cmp[0] = Complex<Real>(2.718281828459046, 0.0);
+  exp_vector_a_cmp[1] = Complex<Real>(0.5403023058681398, 0.8414709848078965);
+  exp_vector_a_cmp[2] = Complex<Real>(2.385516730959136, 1.303213729686996);
+  ASSERT(IsApproximatelyEqual(exp_vector_a_cmp, exp_vector_a, VERY_SMALL));
 
   Vector<Real> colonop_a = ColonOperator<Real>(2, 4);
   Vector<Real> colonop_a_cmp = Zeros<Real>(3);
@@ -188,10 +188,6 @@ bool PointWiseOpTest() {
   ASSERT(IsEqual(sinvector_cmp, sinvector));
   
   // Testing Divide
-//  Vector<Real> vector_o = Zeros<Real>(3);
-//  vector_o[0] = 1.0;
-//  vector_o[1] = 2.5;
-//  vector_o[2] = 4.2;
   Vector<Real> vector_p(3);
   vector_p[0] = -1.4;
   vector_p[1] = 2.3;

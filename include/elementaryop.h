@@ -315,12 +315,59 @@ inline T LinearInterpolation(
   return y0+(x-x0)*m;
 }
   
+  
+/**
+ Returns true if the imaginary part is exactly zero
+ (tests equality with the type's 0).
+ */
+template<typename T>
+bool IsReal(
+  const Complex<T>& input)
+{
+  return input.imag() == T(0.0);
+}
+
 /** 
  Returns true if the imaginary part is approximately zero. The precision used
  is VERY_SMALL in equality operations, hence use only for testing.
  */
-//template<typename T>
-//inline bool IsReal(const Vector<Complex<T>>& input);
+template<typename T>
+bool IsApproximatelyReal(
+  const Complex<T>& input,
+  const T precision = VERY_SMALL)
+{
+  return IsApproximatelyEqual(input.imag(), T(0.0), precision);
+}
+
+template<typename T>
+bool IsReal(
+  const Vector<T>& vector)
+{
+  for (auto& element : vector)
+  {
+    if (! IsReal(element))
+    {
+      return false;
+    }
+  }
+  return true;
+}
+
+template<typename T>
+bool IsApproximatelyReal(
+  const Vector<T>& vector,
+  const T precision = VERY_SMALL)
+{
+  for (auto& element : vector)
+  {
+    if (! IsApproximatelyReal(element, precision))
+    {
+      return false;
+    }
+  }
+  return true;
+}
+
   
 /** 
  Calculates the entropy of a discreate random variable with given `pdf'.
@@ -328,8 +375,11 @@ inline T LinearInterpolation(
  Note: this function is identical to Matlab's only for uint8 values.
  */
 template<typename T, size_t length>
-T Entropy(Vector<T,length> pdf, T base) {
-  pdf = Multiply(pdf, 1.0/Sum(pdf));
+T Entropy(
+  const Vector<T,length> pdf,
+  T base)
+{
+  Vector<T,length> normalised_pdf(Multiply(pdf, 1.0/Sum(pdf)));
   return -Sum(Multiply(pdf, Log(pdf)))/log(base);
 }
   

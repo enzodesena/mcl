@@ -9,8 +9,8 @@
 /* Begin PBXBuildFile section */
 		5708B0AD21A598410000F5FD /* elementaryop_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57B4EF711CD8177900134991 /* elementaryop_test.cpp */; };
 		5708B0AF21A5ABE00000F5FD /* basicop_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57B4EF6E1CD8177900134991 /* basicop_test.cpp */; };
+		5708B0B121A7096F0000F5FD /* pointwiseop_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57B4EF731CD8177900134991 /* pointwiseop_test.cpp */; };
 		571F9A5817955B160059A90D /* statisticsop.h in Headers */ = {isa = PBXBuildFile; fileRef = 571F9A5717955B160059A90D /* statisticsop.h */; };
-		572A876A19C070ED00F62F8F /* pointwiseop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57BA6FFF15B42297002F077F /* pointwiseop.cpp */; };
 		572A876D19C070ED00F62F8F /* comparisonop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57BA701315B43C60002F077F /* comparisonop.cpp */; };
 		572A876E19C070ED00F62F8F /* transformop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57BA701715B4915E002F077F /* transformop.cpp */; };
 		572A877019C070ED00F62F8F /* firfilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5778D80D15B616320015AAC9 /* firfilter.cpp */; };
@@ -28,7 +28,6 @@
 		5778D81215B616320015AAC9 /* iirfilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5778D80E15B616320015AAC9 /* iirfilter.cpp */; };
 		578BDE692149BEFB001D89B9 /* digitalfilter_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57B4EF701CD8177900134991 /* digitalfilter_test.cpp */; };
 		57B71D15162DD231003411BA /* randomop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57B71D13162DD231003411BA /* randomop.cpp */; };
-		57BA700115B42297002F077F /* pointwiseop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57BA6FFF15B42297002F077F /* pointwiseop.cpp */; };
 		57BA701515B43C61002F077F /* comparisonop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57BA701315B43C60002F077F /* comparisonop.cpp */; };
 		57BA701915B4915E002F077F /* transformop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57BA701715B4915E002F077F /* transformop.cpp */; };
 		57E73F9D1CD7CB1D00095F6E /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57E73F9C1CD7CB1D00095F6E /* Accelerate.framework */; };
@@ -85,7 +84,6 @@
 		57B71D13162DD231003411BA /* randomop.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = randomop.cpp; path = src/randomop.cpp; sourceTree = "<group>"; };
 		57BA6FFC15B41B55002F077F /* pointwiseop.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = pointwiseop.h; path = include/pointwiseop.h; sourceTree = "<group>"; };
 		57BA6FFE15B421F5002F077F /* matrixop.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = matrixop.h; path = include/matrixop.h; sourceTree = "<group>"; };
-		57BA6FFF15B42297002F077F /* pointwiseop.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = pointwiseop.cpp; path = src/pointwiseop.cpp; sourceTree = "<group>"; };
 		57BA700215B4263D002F077F /* mcltypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = mcltypes.h; path = include/mcltypes.h; sourceTree = "<group>"; };
 		57BA700315B4274D002F077F /* vectorop.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = vectorop.h; path = include/vectorop.h; sourceTree = "<group>"; };
 		57BA700E15B43B07002F077F /* elementaryop.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = elementaryop.h; path = include/elementaryop.h; sourceTree = "<group>"; };
@@ -192,6 +190,7 @@
 				57BA700E15B43B07002F077F /* elementaryop.h */,
 				5778D80A15B616260015AAC9 /* firfilter.h */,
 				5778D80B15B616260015AAC9 /* iirfilter.h */,
+				5708B0AE21A59B9B0000F5FD /* mclintrinsics.h */,
 				57BA700215B4263D002F077F /* mcltypes.h */,
 				57BA6FFE15B421F5002F077F /* matrixop.h */,
 				57FE67CD1CFB795800E3CB2A /* point.h */,
@@ -203,7 +202,6 @@
 				57BA700315B4274D002F077F /* vectorop.h */,
 				571D455020B867B50009A84D /* constants.h */,
 				5788B8262185FD2F00D935DE /* vector.h */,
-				5708B0AE21A59B9B0000F5FD /* mclintrinsics.h */,
 			);
 			name = include;
 			sourceTree = "<group>";
@@ -261,7 +259,6 @@
 				57BA701315B43C60002F077F /* comparisonop.cpp */,
 				5778D80D15B616320015AAC9 /* firfilter.cpp */,
 				5778D80E15B616320015AAC9 /* iirfilter.cpp */,
-				57BA6FFF15B42297002F077F /* pointwiseop.cpp */,
 				57B71D13162DD231003411BA /* randomop.cpp */,
 				57BA701715B4915E002F077F /* transformop.cpp */,
 				57A1566015933C5200AA6445 /* bin */,
@@ -388,7 +385,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				578BDE692149BEFB001D89B9 /* digitalfilter_test.cpp in Sources */,
-				572A876A19C070ED00F62F8F /* pointwiseop.cpp in Sources */,
 				572A876D19C070ED00F62F8F /* comparisonop.cpp in Sources */,
 				57301BD01D6B01A800D6F5B0 /* kiss_fft.c in Sources */,
 				572A876E19C070ED00F62F8F /* transformop.cpp in Sources */,
@@ -403,7 +399,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				57BA700115B42297002F077F /* pointwiseop.cpp in Sources */,
 				57BA701515B43C61002F077F /* comparisonop.cpp in Sources */,
 				57301BCF1D6B01A800D6F5B0 /* kiss_fft.c in Sources */,
 				57BA701915B4915E002F077F /* transformop.cpp in Sources */,
@@ -421,6 +416,7 @@
 				573150E42198F8CD00F29476 /* mcl_test.cpp in Sources */,
 				573150E52198F99F00F29476 /* vectorop_test.cpp in Sources */,
 				5708B0AF21A5ABE00000F5FD /* basicop_test.cpp in Sources */,
+				5708B0B121A7096F0000F5FD /* pointwiseop_test.cpp in Sources */,
 				5708B0AD21A598410000F5FD /* elementaryop_test.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

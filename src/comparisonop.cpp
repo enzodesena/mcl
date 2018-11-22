@@ -111,14 +111,6 @@ bool IsEqual(const Vector<Int>& vector_a,
   return true;
 }
 
-bool IsReal(const Vector<Complex>& input) {
-  const Int size = input.length();
-  for (Int i=0; i<size; ++i) {
-    if (! IsEqual(input[i].imag(), 0.0)) { return false; }
-  }
-  return true;
-}
-
 
   
 bool IsEqual(const Real* input_data_a,

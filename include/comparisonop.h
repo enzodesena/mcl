@@ -139,14 +139,6 @@ inline bool IsApproximatelyEqual(
 
 
 
-//bool IsApproximatelyEqual(
-//  double num_a,
-//  double num_b,
-//  double precision)
-//{
-//  if (isnan(num_a) || isnan(num_b)) return false;
-//  return (std::fabs(num_a - num_b)) < precision;
-//}
 
 bool IsSmallerOrEqual(const Real num_a, const Real num_b,
                       const Real precision = VERY_SMALL);

@@ -454,7 +454,7 @@ bool VectorOpTest() {
   ASSERT(IsEqual(vector_ab, vector_ab_cmp));
 
   // Testing summation
-  Vector<Real> vector_zb = Add(vector_z, (Real) 1.5);
+  Vector<Real> vector_zb = AddScalar(vector_z, 1.5);
   ASSERT(vector_zb.length() == 3);
   Vector<Real> vector_zb_cmp(3);
   vector_zb_cmp[0] = 1.5;
@@ -462,7 +462,7 @@ bool VectorOpTest() {
   vector_zb_cmp[2] = 5.5;
   ASSERT(IsEqual(vector_zb, vector_zb_cmp));
 
-  Vector<Real> vector_zc = Add(vector_z, (Real) -1.0);
+  Vector<Real> vector_zc = AddScalar(vector_z, -1.0);
   ASSERT(vector_zc.length() == 3);
   Vector<Real> vector_zc_cmp(3);
   vector_zc_cmp[0] = -1.0;

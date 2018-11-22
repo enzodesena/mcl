@@ -108,7 +108,7 @@ Vector<Real> MinPhase(const Vector<Real>& x) noexcept {
 
 Vector<Complex> Rfft(const Vector<Real>& input,
                           Int n_point) noexcept {
-  return Elements(Fft(ConvertToComplex(input), n_point), 0,
+  return Elements(Fft(CastToComplex(input), n_point), 0,
                   (Int) floor(1.0+((double)n_point)/2.0)-1);
 }
 

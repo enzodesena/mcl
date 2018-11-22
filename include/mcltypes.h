@@ -98,7 +98,7 @@ using Complex = std::complex<T>;
   typedef long Int; /**< Int type */
 #endif
 
-  
+
   
 class Logger {
 public:
