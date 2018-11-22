@@ -17,10 +17,10 @@ struct traits
     }
 
     void prepare(
-            Vector< std::complex<T_scalar> > & dst,
+            std::vector< std::complex<T_scalar> > & dst,
             int nfft,bool inverse, 
-            Vector<int> & stageRadix, 
-            Vector<int> & stageRemainder )
+            std::vector<int> & stageRadix,
+            std::vector<int> & stageRemainder )
     {
         _twiddles.resize(nfft);
         fill_twiddles( &_twiddles[0],nfft,inverse);
@@ -45,7 +45,7 @@ struct traits
             stageRemainder.push_back(n);
         }while(n>1);
     }
-    Vector<cpx_type> _twiddles;
+    std::vector<cpx_type> _twiddles;
 
 
     const cpx_type twiddle(int i) { return _twiddles[i]; }
@@ -264,7 +264,7 @@ class kissfft
             cpx_type * twiddles = &_twiddles[0];
             cpx_type t;
             int Norig = _nfft;
-            Vector<cpx_type> scratchbuf(p);
+            std::vector<cpx_type> scratchbuf(p);
 
             for ( u=0; u<m; ++u ) {
                 k=u;
@@ -291,9 +291,9 @@ class kissfft
 
         int _nfft;
         bool _inverse;
-        Vector<cpx_type> _twiddles;
-        Vector<int> _stageRadix;
-        Vector<int> _stageRemainder;
+        std::vector<cpx_type> _twiddles;
+        std::vector<int> _stageRadix;
+        std::vector<int> _stageRemainder;
         traits_type _traits;
 };
 #endif

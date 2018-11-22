@@ -13,6 +13,10 @@
   #define VERY_SMALL (0.0000000000001)
 #endif
 
+#ifndef VERY_SMALLF
+  #define VERY_SMALLF (0.0000000000001f)
+#endif
+
 #if defined(__APPLE__)
 #if (__GNUC__ >= 4)
 #include <cmath>
@@ -90,8 +94,6 @@ inline bool ConditonCheckerWithPrecision(
   }
   return true;
 }
-
-
   
 inline bool IsApproximatelyEqual(
   const double num_a,
@@ -104,14 +106,33 @@ inline bool IsApproximatelyEqual(
 inline bool IsApproximatelyEqual(
   const float num_a,
   const float num_b,
-  const float precision = VERY_SMALL);
-
-inline bool IsApproximatelyEqual(
-  const float num_a,
-  const float num_b,
-  const float precision)
+  const float precision = VERY_SMALLF)
 {
   return std::abs(num_a - num_b) < precision;
+}
+
+inline bool IsApproximatelyEqual(
+  const size_t num_a,
+  const size_t num_b,
+  const size_t /*precision*/)
+{
+  return num_a == num_b;
+}
+
+inline bool IsApproximatelyEqual(
+  const Int num_a,
+  const Int num_b,
+  const Int /*precision*/)
+{
+  return num_a == num_b;
+}
+
+inline bool IsApproximatelyEqual(
+  const UInt num_a,
+  const UInt num_b,
+  const UInt /*precision*/)
+{
+  return num_a == num_b;
 }
 
 template<typename T>
@@ -126,12 +147,11 @@ inline bool IsApproximatelyEqual(
 
 template<
   typename VectorT,
-  size_t length_vector_a,
-  size_t length_vector_b,
+  size_t length,
   typename PrecisionT>
 inline bool IsApproximatelyEqual(
-  const Vector<VectorT,length_vector_a>& vector_a,
-  const Vector<VectorT,length_vector_b>& vector_b,
+  const Vector<VectorT,length>& vector_a,
+  const Vector<VectorT,length>& vector_b,
   const PrecisionT precision = VERY_SMALL)
 {
   return ConditonCheckerWithPrecision(
@@ -144,11 +164,11 @@ inline bool IsApproximatelyEqual(
 
 
 
-bool IsSmallerOrEqual(const Real num_a, const Real num_b,
-                      const Real precision = VERY_SMALL);
-
-bool IsLargerOrEqual(const Real num_a, const Real num_b,
-                     const Real precision = VERY_SMALL);
+//bool IsSmallerOrEqual(const Real num_a, const Real num_b,
+//                      const Real precision = VERY_SMALL);
+//
+//bool IsLargerOrEqual(const Real num_a, const Real num_b,
+//                     const Real precision = VERY_SMALL);
 
 //bool AreAllSmallerOrEqual(const Vector<Real>& vector_a,
 //                          const Vector<Real>& vector_b);

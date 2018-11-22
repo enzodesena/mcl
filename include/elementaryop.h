@@ -47,7 +47,8 @@ inline T Min(
 
 /** Equivalent to Matlab's fix(scalar) */
 template<typename T>
-inline Int Fix(const T scalar)
+inline Int Fix(
+  const T scalar) noexcept
 {
   if (scalar >= 0.0)
   {
@@ -64,7 +65,8 @@ inline Int Fix(const T scalar)
  is greater than zero, 0 if it equals zero and -1 if it is less than zero.
  */
 template<typename T>
-inline Int Sign(const T scalar)
+inline Int Sign(
+  const T scalar) noexcept
 {
   if (scalar == T(0.0))
   {
@@ -79,15 +81,18 @@ inline Int Sign(const T scalar)
     return -1;
   }
 }
-
+inline bool IsApproximatelyEqual(
+  const size_t num_a,
+  const size_t num_b,
+  const size_t /*precision*/);
 
 /** Equivalent to Matlab's rem(scalar_a,scalar_b) */
 template<typename T>
 inline T Rem(
   const T x,
-  const T y)
+  const T y) noexcept
 {
-  if (IsApproximatelyEqual(y, (T) 0.0, std::numeric_limits<T>::epsilon()))
+  if (IsApproximatelyEqual(y, T(0.0), std::numeric_limits<T>::epsilon()))
   {
     return std::numeric_limits<T>::quiet_NaN();
   }
@@ -101,7 +106,7 @@ inline T Rem(
 
 
 template<typename T>
-inline T Floor(const T input)
+inline T Floor(const T input) noexcept
 {
   // TODO: verify for all types.
   return std::floor(input);
@@ -112,7 +117,7 @@ inline T Floor(const T input)
 template<typename T>
 inline T Mod(
   const T x,
-  const T y)
+  const T y) noexcept
 {
   static_assert(! std::is_integral<T>::value);
   if (IsApproximatelyEqual(y, 0, std::numeric_limits<T>::epsilon()))
@@ -137,7 +142,7 @@ inline T Mod(
 template<>
 inline int Mod<int>(
   const int x,
-  const int y)
+  const int y) noexcept
 {
   if (y == 0)
   {
@@ -159,7 +164,7 @@ inline int Mod<int>(
 template<>
 inline Int Mod<Int>(
   const Int x,
-  const Int y)
+  const Int y) noexcept
 {
   if (y == 0)
   {
@@ -180,14 +185,16 @@ inline Int Mod<Int>(
 
 
 /** Equivalent to Matlab's abs(scalar) */
-inline double Abs(double input)
+inline double Abs(
+  double input) noexcept
 {
   return std::fabs(input);
 }
   
   
 /** Equivalent to Matlab's abs(scalar) */
-inline float Abs(float input)
+inline float Abs(
+  float input) noexcept
 {
   return std::abs(input);
 }
@@ -195,7 +202,8 @@ inline float Abs(float input)
 
 /** Equivalent to Matlab's abs(scalar) */
 template<typename T>
-inline T Abs(Complex<T> input)
+inline T Abs(
+  const Complex<T> input) noexcept
 {
   return static_cast<T>(std::abs(input));
 }
@@ -205,7 +213,7 @@ inline T Abs(Complex<T> input)
 template<typename T>
 inline T Pow(
   T input,
-  T exponent)
+  T exponent) noexcept
 {
   return (T) pow((double) input, (double) exponent);
 }
@@ -213,7 +221,7 @@ inline T Pow(
 /** Square root function. Equivalent to Matlab's sqrt(input) */
 template<typename T>
 inline T Sqrt(
-  T input)
+  T input) noexcept
 {
   return (T) sqrt((double) input);
 }
@@ -233,16 +241,16 @@ inline Int RoundToInt(
 /** Returns the conjugate of the element. Equivalent to Matlab's conj(scalar). */
 template<typename T>
 inline Complex<T> Conj(
-  const Complex<T> scalar) noexcept
+  const Complex<T>& scalar) noexcept
 {
-  return Complex(scalar.real(), -scalar.imag());
+  return Complex<T>(scalar.real(), -scalar.imag());
 }
 
 /** Returns the real part of a complex scalar. Equivalent to Matlab's 
  real(scalar). I am calling it `RealPart' since `T' denotes the number type */
 template<typename T>
 inline T RealPart(
-  const Complex<T> scalar) noexcept
+  const Complex<T>& scalar) noexcept
 {
   return scalar.real();
 }
@@ -251,7 +259,7 @@ inline T RealPart(
  imag(scalar). I am calling it `ImagPart' for consistency with `RealPart' */
 template<typename T>
 inline T ImagPart(
-  const Complex<T> scalar) noexcept
+  const Complex<T>& scalar) noexcept
 {
   return scalar.imag();
 }
@@ -259,7 +267,7 @@ inline T ImagPart(
 /** Equivalent to Matlab's nextpow2(input) */
 template<typename T>
 inline Int NextPow2(
-  T input) noexcept
+  const T input) noexcept
 {
   return static_cast<int>(std::ceil(log2(std::fabs((double) input))));
 }
@@ -267,7 +275,7 @@ inline Int NextPow2(
 /** This returns the next power of 2. For instance 5=>8, 12=>16, 16=>16. */
 //template<typename T>
 inline Int Next2(
-  Int input) noexcept
+  const Int input) noexcept
 {
   return pow(2, NextPow2(input));
 }
@@ -322,26 +330,14 @@ inline T LinearInterpolation(
  */
 template<typename T>
 bool IsReal(
-  const Complex<T>& input)
+  const Complex<T>& input) noexcept
 {
   return input.imag() == T(0.0);
 }
 
-/** 
- Returns true if the imaginary part is approximately zero. The precision used
- is VERY_SMALL in equality operations, hence use only for testing.
- */
-template<typename T>
-bool IsApproximatelyReal(
-  const Complex<T>& input,
-  const T precision = VERY_SMALL)
-{
-  return IsApproximatelyEqual(input.imag(), T(0.0), precision);
-}
-
 template<typename T>
 bool IsReal(
-  const Vector<T>& vector)
+  const Vector<T>& vector) noexcept
 {
   for (auto& element : vector)
   {
@@ -353,10 +349,23 @@ bool IsReal(
   return true;
 }
 
+/** 
+ Returns true if the imaginary part is approximately zero. The precision used
+ is VERY_SMALL in equality operations, hence use only for testing.
+ */
 template<typename T>
 bool IsApproximatelyReal(
-  const Vector<T>& vector,
-  const T precision = VERY_SMALL)
+  const Complex<T>& input,
+  const T precision = VERY_SMALL) noexcept
+{
+  return IsApproximatelyEqual(input.imag(), T(0.0), precision);
+}
+
+
+template<typename T>
+bool IsApproximatelyReal(
+  const Vector<Complex<T>>& vector,
+  const T precision = VERY_SMALL) noexcept
 {
   for (auto& element : vector)
   {
@@ -377,7 +386,7 @@ bool IsApproximatelyReal(
 template<typename T, size_t length>
 T Entropy(
   const Vector<T,length> pdf,
-  T base)
+  T base) noexcept
 {
   Vector<T,length> normalised_pdf(Multiply(pdf, 1.0/Sum(pdf)));
   return -Sum(Multiply(pdf, Log(pdf)))/log(base);

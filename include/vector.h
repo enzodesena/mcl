@@ -93,6 +93,12 @@ public:
   {
   }
 
+  Vector(
+    std::initializer_list<T> list)
+    : std::vector<T>(list)
+  {
+  }
+  
   inline size_t length() const noexcept
   {
     return static_cast<int>(this->size());

@@ -18,7 +18,15 @@
 
 namespace mcl
 {
-
+// Forward declaration
+template<typename T>
+inline Complex<T> Conj(
+  const Complex<T>& scalar) noexcept;
+  
+template<typename T>
+inline T Abs(
+  const Complex<T> input) noexcept;
+// End of forward declaration
   
 template<typename T, size_t length>
 inline void ForEach(
@@ -281,7 +289,9 @@ Vector<Complex<T>> Conj(
   const Vector<Complex<T>>& input) noexcept
 {
   Vector<Complex<T>> output(input.length());
-  ForEach(input, &Conj, output);
+  Complex<T> (*operation) (Complex<T>) =
+    [] (Complex<T> value) { return Conj(value); };
+  ForEach(input, operation, output);
   return std::move(output);
 }
 
@@ -297,28 +307,29 @@ ComplexVector(const Vector<T>& input) noexcept
   }
   return std::move(output);
 }
-//
-///** Equivalent to Matlab's real(input). */
-//template<typename T>
-//Vector<T> RealPart(
-//  const Vector<Complex<T>>& input) noexcept
-//{
-//  Vector<T> output(input.length());
-//  ForEach(input, &std::real, output);
-//  return std::move(output);
-//}
-//
-///** Equivalent to Matlab's imag(input). */
-//template<typename T>
-//Vector<T> Imag(
-//  const Vector<Complex<T>>& input) noexcept
-//{
-//  Vector<T> output(input.length());
-//  ForEach(input, &std::imag, output);
-//  return std::move(output);
-//}
-//
-//
+
+/** Equivalent to Matlab's real(input). */
+template<typename T>
+Vector<T> RealPart(
+  const Vector<Complex<T>>& input) noexcept
+{
+  Vector<T> output(input.length());
+  T (*operation) (Complex<T>) = [] (Complex<T> value) { return value.real(); };
+  ForEach(input, operation, output);
+  return std::move(output);
+}
+
+/** Equivalent to Matlab's imag(input). */
+template<typename T>
+Vector<T> Imag(
+  const Vector<Complex<T>>& input) noexcept
+{
+  Vector<T> output(input.length());
+  ForEach(input, &std::imag, output);
+  return std::move(output);
+}
+
+
 /**
  Returns the point-wise poser to exponent.
  Equivalent to Matlab's vector.^exponent
@@ -363,7 +374,8 @@ inline Vector<double> Abs(
   const Vector<Complex<T>,length>& input) noexcept
 {
   Vector<T,length> output(input.length());
-  ForEach(input, &mcl::Abs, output);
+  T (*operation) (Complex<T>) = [] (Complex<T> value) { return mcl::Abs(value); };
+  ForEach(input, operation, output);
   return std::move(output);
 }
 //

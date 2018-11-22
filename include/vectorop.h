@@ -28,7 +28,7 @@ inline Vector<T,length> Pow(
 template<typename T>
 inline T Mod(
   const T x,
-  const T y);
+  const T y) noexcept;
   
 template<class T>
 inline T Min(
