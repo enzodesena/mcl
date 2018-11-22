@@ -10,7 +10,7 @@
 #pragma once
 
 #ifndef VERY_SMALL
-  #define VERY_SMALL (0.0001)
+  #define VERY_SMALL (0.0000000000001)
 #endif
 
 #if defined(__APPLE__)
@@ -29,6 +29,10 @@
 #include <vector>
 
 namespace mcl {
+
+// Forward declaration
+template<typename T>
+class Quaternion;
 
 
 inline bool IsEqual(
@@ -201,14 +205,15 @@ inline bool IsEqual(
 
 
 template<typename T>
-inline bool IsEqual(
+inline bool IsApproximatelyEqual(
   const Point<T>& point_a,
   const Point<T>& point_b,
   const T precision = VERY_SMALL)
 {
-  return mcl::IsEqual(point_a.x(), point_b.x(), precision) &&
-  mcl::IsEqual(point_a.y(), point_b.y(), precision) &&
-  mcl::IsEqual(point_a.z(), point_b.z(), precision);
+  return
+    mcl::IsApproximatelyEqual(point_a.x(), point_b.x(), precision) &&
+    mcl::IsApproximatelyEqual(point_a.y(), point_b.y(), precision) &&
+    mcl::IsApproximatelyEqual(point_a.z(), point_b.z(), precision);
 }
 
 template<typename T>
@@ -264,6 +269,20 @@ inline bool IsInf(T num)
 
 ///** Returns true if num is +inf or -inf */
 //Vector<bool> IsInf(Vector<Real> input);
+
+
+template<typename T>
+inline bool IsApproximatelyEqual(
+  const Quaternion<T>& quat_a,
+  const Quaternion<T>& quat_b,
+  const T precision = VERY_SMALL)
+{
+  return
+    IsApproximatelyEqual(quat_a.w(), quat_b.w()) &&
+    IsApproximatelyEqual(quat_a.x(), quat_b.x()) &&
+    IsApproximatelyEqual(quat_a.y(), quat_b.y()) &&
+    IsApproximatelyEqual(quat_a.z(), quat_b.z());
+}
 
 bool ComparisonOpTest();
   

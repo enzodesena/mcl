@@ -12,6 +12,7 @@
 #include "vectorop.h"
 #include "vector.h"
 #include "elementaryop.h"
+#include "quaternion.h"
 //#include "statisticsop.h"
 //#include "firfilter.h"
 //#include "randomop.h"
@@ -24,7 +25,7 @@ int main (int argc, char * const argv[]) {
 
 #ifndef NDEBUG
 //  FirFilter::Test();
-//  Quaternion::Test();
+  QuaternionTest();
   ElementaryOpTest();
   BasicOpTest();
   VectorOpTest();

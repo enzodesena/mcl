@@ -13,6 +13,7 @@
 #include "mcltypes.h"
 #include "point.h"
 #include "constants.h"
+#include "elementaryop.h"
 #include <cassert>
 
 namespace mcl {
@@ -34,7 +35,8 @@ struct AxAng {
 
 /** Quaternion class */
 template<typename T>
-class Quaternion{
+class Quaternion
+{
 public:
   /** Constructs a quaternion, with the first element being the scalar
    component and the following three forming the vector component */
@@ -57,8 +59,6 @@ public:
   {
     return Quaternion(1.0, 0.0, 0.0, 0.0);
   }
-  
-  static bool Test();
   
 private:
   // q = w + x*i + y*j + z*k where i² = j² = k² = i*j*k = -1
@@ -129,6 +129,20 @@ T Norm(const Quaternion<T>& q) noexcept
   return sqrt(pow(q.w(),2.0)+pow(q.x(),2.0)+pow(q.y(),2.0)+pow(q.z(),2.0));
 }
   
+
+/** Implements the (Hamilton) quaternion multiplication **/
+template<typename T>
+Quaternion<T> QuatMultiply(
+  const Quaternion<T>& q,
+  const Quaternion<T>& r) noexcept
+{
+return Quaternion(
+  r.w()*q.w()-r.x()*q.x()-r.y()*q.y()-r.z()*q.z(),
+  r.w()*q.x()+r.x()*q.w()-r.y()*q.z()+r.z()*q.y(),
+  r.w()*q.y()+r.x()*q.z()+r.y()*q.w()-r.z()*q.x(),
+  r.w()*q.z()-r.x()*q.y()+r.y()*q.x()+r.z()*q.w());
+}
+  
 template<typename T>
 Point<T> QuatRotate(
   const Quaternion<T>& q,
@@ -150,19 +164,6 @@ Point<T> QuatRotate(
     Quaternion result = QuatMultiply(QuatMultiply(QuatConj(q_norm), p), q_norm);
     return Point(result.x(), result.y(), result.z());
   }
-}
-
-/** Implements the (Hamilton) quaternion multiplication **/
-template<typename T>
-Quaternion<T> QuatMultiply(
-  const Quaternion<T>& q,
-  const Quaternion<T>& r) noexcept
-{
-return Quaternion(
-  r.w()*q.w()-r.x()*q.x()-r.y()*q.y()-r.z()*q.z(),
-  r.w()*q.x()+r.x()*q.w()-r.y()*q.z()+r.z()*q.y(),
-  r.w()*q.y()+r.x()*q.z()+r.y()*q.w()-r.z()*q.x(),
-  r.w()*q.z()-r.x()*q.y()+r.y()*q.x()+r.z()*q.w());
 }
   
 /** Converts Euler angles with a given convention to a Quaternion. 
@@ -304,5 +305,8 @@ Quaternion<T> QuatInverse(
     conj.y()/norm_sq,
     conj.z()/norm_sq);
 }
+
+
+bool QuaternionTest();
   
 } // namespace mcl
