@@ -13,6 +13,7 @@
 #include "vector.h"
 #include "elementaryop.h"
 #include "quaternion.h"
+#include "transformop.h"
 //#include "statisticsop.h"
 //#include "firfilter.h"
 //#include "randomop.h"
@@ -30,7 +31,7 @@ int main (int argc, char * const argv[]) {
   BasicOpTest();
   VectorOpTest();
   PointWiseOpTest();
-//  TransformOpTest();
+  TransformOpTest();
   MatrixOpTest();
 //  StatisticsOpTest();
 //  ComparisonOpTest();
