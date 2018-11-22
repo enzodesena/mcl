@@ -26,6 +26,7 @@
 		57301BD01D6B01A800D6F5B0 /* kiss_fft.c in Sources */ = {isa = PBXBuildFile; fileRef = 57301BCD1D6B01A800D6F5B0 /* kiss_fft.c */; };
 		573150E42198F8CD00F29476 /* mcl_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57B4EF6C1CD8174E00134991 /* mcl_test.cpp */; };
 		573150E52198F99F00F29476 /* vectorop_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57B4EF771CD8177900134991 /* vectorop_test.cpp */; };
+		5762C75621A72F58001E73FB /* statisticsop_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57B4EF751CD8177900134991 /* statisticsop_test.cpp */; };
 		5778D81015B616320015AAC9 /* firfilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5778D80D15B616320015AAC9 /* firfilter.cpp */; };
 		5778D81215B616320015AAC9 /* iirfilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5778D80E15B616320015AAC9 /* iirfilter.cpp */; };
 		578BDE692149BEFB001D89B9 /* digitalfilter_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57B4EF701CD8177900134991 /* digitalfilter_test.cpp */; };
@@ -413,6 +414,7 @@
 				573150E42198F8CD00F29476 /* mcl_test.cpp in Sources */,
 				573150E52198F99F00F29476 /* vectorop_test.cpp in Sources */,
 				5708B0AF21A5ABE00000F5FD /* basicop_test.cpp in Sources */,
+				5762C75621A72F58001E73FB /* statisticsop_test.cpp in Sources */,
 				5708B0B121A7096F0000F5FD /* pointwiseop_test.cpp in Sources */,
 				5708B0B321A711170000F5FD /* matrixop_test.cpp in Sources */,
 				5708B0B221A70C7E0000F5FD /* quaternion_test.cpp in Sources */,

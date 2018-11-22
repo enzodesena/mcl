@@ -23,9 +23,11 @@ T Corr(
   const Vector<T>& y) noexcept
 {
   
-  T pearson_num_lin = Sum(mcl::Multiply(Add(x,-Mean(x)), Add(y,-Mean(y))));
-  T pearson_den_lin = sqrt(Sum(Pow(Add(x, -Mean(x)),2.0)))*
-  sqrt(Sum(Pow(Add(y, -Mean(y)),2.0)));
+  T pearson_num_lin = Sum(mcl::Multiply(
+    AddScalar(x,-Mean(x)),
+    AddScalar(y,-Mean(y))));
+  T pearson_den_lin = sqrt(Sum(Pow(AddScalar(x, -Mean(x)),2.0)))*
+    sqrt(Sum(Pow(AddScalar(y, -Mean(y)),2.0)));
   return pearson_num_lin/pearson_den_lin;
 }
 
@@ -33,5 +35,3 @@ T Corr(
 bool StatisticsOpTest();
   
 } /**< namespace mcl */
-
-#endif

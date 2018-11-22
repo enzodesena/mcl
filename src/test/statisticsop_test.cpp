@@ -29,8 +29,7 @@ bool StatisticsOpTest() {
   vector_b[2] = 2;
   vector_b[3] = -3;
   
-  ASSERT(IsEqual(Corr(vector_a, vector_b), 0.689797863572754));
-         
+  ASSERT(IsApproximatelyEqual(Corr(vector_a, vector_b), 0.689797863572754));
   
   return true;
 }

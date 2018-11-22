@@ -26,6 +26,11 @@ inline Complex<T> Conj(
 template<typename T>
 inline T Abs(
   const Complex<T> input) noexcept;
+  
+template<typename T>
+inline T Pow(
+  T input,
+  T exponent) noexcept;
 // End of forward declaration
   
 template<typename T, size_t length>
