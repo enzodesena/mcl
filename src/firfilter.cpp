@@ -7,70 +7,44 @@
  */
 
 //#include "firfilter.h"
-#include "vectorop.h"
-#include "mcltypes.h"
-#include <vector>
 
-#if defined(MCL_APPLE_ACCELERATE)
-  #include <Accelerate/Accelerate.h>
-#elif defined(MCL_AVX_ACCELERATE)
-  #include <pmmintrin.h>
-  #include <xmmintrin.h>
-  #include <immintrin.h>
-#endif
-
-#ifdef MCL_NEON_ACCELERATE
-  #include "arm_neon.h"
-#endif
-
-#ifdef MCL_ENVWINDOWS
-  #define ALIGNED(n) __declspec(align(n))
-#else
-  #define ALIGNED(n) __attribute__ ((aligned (n)))
-#endif
 
 namespace mcl {
 
-Vector<Real> FirFilter::impulse_response() noexcept {
-  return Vector<Real>(impulse_response_.begin(),
-                           impulse_response_.end());
-}
   
-FirFilter::FirFilter() noexcept :
-        impulse_response_(mcl::UnaryVector<Real>(1.0)),
-        impulse_response_old_(mcl::UnaryVector<Real>(1.0)),
-        update_index_(0), update_length_(0), updating_(false),
-        coefficients_(mcl::UnaryVector<Real>(1.0)),
-        counter_(0), length_(1) {
-  delay_line_.assign(1, 0.0);
-}
   
-FirFilter::FirFilter(Vector<Real> B) noexcept :
-        impulse_response_(B),
-        impulse_response_old_(B),
-        update_index_(0), update_length_(0), updating_(false),
-        coefficients_(B),
-        counter_(B.length()-1), length_(B.length()) {
-  delay_line_.assign(length_, 0.0);
-}
 
-Real FirFilter::Filter(Real input_sample) noexcept {
-  if (updating_) { UpdateCoefficients(); }
-  if (length_ == 1) {
-    delay_line_[0] = input_sample;
-    return input_sample*coefficients_[0];
+
+void FilterAppleDsp(
+  const Vector<double>& input_data,
+  Vector<double>& output_data) noexcept {
+  if (num_samples < length_ || (num_samples+length_-1) > MCL_MAX_VLA_LENGTH) {
+    FilterSerial(input_data, num_samples, output_data);
+    return;
   }
-#ifdef MCL_APPLE_ACCELERATE
-  return FilterAppleDsp(input_sample);
-#else
-  return FilterStraight(input_sample);
-#endif
-}
   
+  MCL_STACK_ALLOCATE(mcl::T, padded_data, num_samples+length_-1); // TODO: handle stack overflow
+  GetExtendedInput(input_data, num_samples, padded_data);
+  
+  vDSP_convD(padded_data, 1,
+             coefficients_.data()+length_-1, -1,
+             output_data, 1,
+             num_samples, length_);
+  
+  // Reorganise state for the next run
+  for (Int i=0; i<length_; ++i) {
+    delay_line_[i] = input_data[num_samples-1-i];
+  }
+  
+  counter_ = length_-1;
+}
+#endif
 
-void FirFilter::Filter(const Real* __restrict input_data,
+
+
+void FirFilter::Filter(const T* __restrict input_data,
                        const Int num_samples,
-                       Real* __restrict output_data) noexcept {
+                       T* __restrict output_data) noexcept {
   if (updating_) { UpdateCoefficients(); }
   if (length_ == 1) {
     delay_line_[0] = input_data[num_samples-1];
@@ -138,7 +112,7 @@ void FirFilter::Filter(const Real* __restrict input_data,
     const Int num_samples_completed = num_samples - num_samples_left;
     
     for (Int n=0; n<num_samples_completed; ++n) {
-      output_data[n] = (Real) output_data_float[n];
+      output_data[n] = (T) output_data_float[n];
     }
     
     for (Int n=num_samples_completed; n<num_samples; ++n) {
@@ -160,122 +134,12 @@ void FirFilter::Filter(const Real* __restrict input_data,
 }
   
 
-Real FirFilter::FilterStraight(Real input_sample) noexcept {
-  delay_line_[counter_] = input_sample;
-  Real result = 0.0;
-  Int index = (Int) counter_;
   
-  for (int i=0; i<length_; ++i) {
-    result += coefficients_[i] * delay_line_[index++];
-    if (index >= length_) { index = 0; }
-  }
-  
-  if (--counter_ < 0) { counter_ = length_-1; }
-  
-  return result;
-}
-  
-  
-#ifdef MCL_APPLE_ACCELERATE
-  
-void FirFilter::FilterAppleDsp(const Real* __restrict input_data,
-                               const Int num_samples,
-                               Real* __restrict output_data) noexcept {
-  if (num_samples < length_ || (num_samples+length_-1) > MCL_MAX_VLA_LENGTH) {
-    FilterSerial(input_data, num_samples, output_data);
-    return;
-  }
-  
-  MCL_STACK_ALLOCATE(mcl::Real, padded_data, num_samples+length_-1); // TODO: handle stack overflow
-  GetExtendedInput(input_data, num_samples, padded_data);
-  
-#if MCL_DATA_TYPE_DOUBLE
-  vDSP_convD(padded_data, 1,
-             coefficients_.data()+length_-1, -1,
-             output_data, 1,
-             num_samples, length_);
-#else // Type is float
-  vDSP_conv(padded_data, 1,
-            coefficients_.data()+length_-1, -1,
-            output_data, 1,
-            num_samples, length_);
-#endif
-  
-  // Reorganise state for the next run
-  for (Int i=0; i<length_; ++i) {
-    delay_line_[i] = input_data[num_samples-1-i];
-  }
-  
-  counter_ = length_-1;
-}
-#endif
   
 
   
-
-FirFilter FirFilter::GainFilter(Real gain) noexcept {
-  Vector<Real> B(1);
-  B[0] = 1.0*gain;
-  
-  return FirFilter(B);
-}
-  
-void FirFilter::Reset() noexcept {
-  delay_line_ = Zeros<Real>(delay_line_.length());
-}
-  
-void FirFilter::SetImpulseResponse(const Vector<Real>& impulse_response,
-                                   const Int update_length) noexcept {
-  if (mcl::IsEqual(impulse_response, impulse_response_)) { return; }
   
 
-  
-  if ((Int)impulse_response.length() != length_) {
-    // If the impulse response changes length, then reset everything.
-    length_ = impulse_response.length();
-    delay_line_.assign(length_, 0.0);
-    counter_ = length_-1;
-    impulse_response_ = impulse_response;
-    impulse_response_old_ = impulse_response;
-    coefficients_ = impulse_response;
-    updating_ = false;
-    update_length_ = 0;
-    update_index_ = 0;
-  } else {
-    updating_ = true;
-    update_length_ = update_length;
-    update_index_ = 0;
-    impulse_response_ = impulse_response;
-    
-    if (! updating_) { // If there is no update being carried out
-      impulse_response_old_ = impulse_response_;
-    } else {
-      impulse_response_old_ = coefficients_;
-    }
-  }
-  ASSERT(impulse_response_.length() == impulse_response_old_.length());
-}
-
-void FirFilter::UpdateCoefficients() noexcept {
-  ASSERT(update_index_>=0 && update_index_<=update_length_);
-  ASSERT(impulse_response_.length() == impulse_response_old_.length());
-  ASSERT(impulse_response_.length() == coefficients_.length());
-  Real weight_new = ((Real)update_index_+1)/((Real)update_length_+1);
-  Real weight_old = 1.0f-weight_new;
-  Multiply(impulse_response_.data(), impulse_response_.length(), weight_new, coefficients_.data());
-  MultiplyAdd(impulse_response_old_.data(), weight_old,
-              coefficients_.data(), impulse_response_.length(),
-              coefficients_.data());
-  // The above is a lock-free equivalent version to
-  // coefficients_ = mcl::Add(mcl::Multiply(impulse_response_, weight_new),
-  //                          mcl::Multiply(impulse_response_old_, weight_old));
-  
-  if (update_index_ == update_length_) {
-    updating_ = false;
-  } else {
-    update_index_++;
-  }
-}
   
 } // namespace mcl
 

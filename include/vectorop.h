@@ -142,16 +142,6 @@ template <class T>
 
 
 template<typename T, size_t length>
-inline void Add(
-  const Vector<T,length>& input_a,
-  const Vector<T,length>& input_b,
-  Vector<T,length>& output) noexcept
-{
-  MathIntrinsics<T,length>::Add(input_a, input_b, output);
-}
-
-
-template<typename T, size_t length>
 inline Vector<T,length> Add(
   const Vector<T,length>& input_a,
   const Vector<T,length>& input_b) noexcept
@@ -161,18 +151,6 @@ inline Vector<T,length> Add(
   return std::move(output);
 }
 
-/**
- Returns the point by point multiplication of the vector with the gain.
- Equivalent to Matlab's vector_a.*gain.
- */
-template<typename T, size_t length>
-inline void Multiply(
-  const Vector<T,length>& input,
-  const T gain,
-  Vector<T,length>& output) noexcept
-{
-  MathIntrinsics<T,length>::Multiply(input, gain, output);
-}
 
 /**
  Returns the point by point multiplication of the vector with the gain.
@@ -184,27 +162,8 @@ inline Vector<T,length> Multiply(
   const T gain) noexcept
 {
   Vector<T,length> output(input.length());
-  MathIntrinsics<T,length>::Multiply(input, gain, output);
+  Multiply(input, gain, output);
   return std::move(output);
-}
-
-template<typename T, size_t length>
-inline void Multiply(
-  const Vector<T,length>& input_a,
-  const Vector<T,length>& input_b,
-  Vector<T,length>& output) noexcept
-{
-  MathIntrinsics<T,length>::Multiply(input_a, input_b, output);
-}
-  
-template<typename T, size_t length>
-inline void MultiplyAdd(
-  const Vector<T,length>& input_to_multiply,
-  const T gain,
-  const Vector<T,length>& input_to_add,
-  Vector<T,length>& output) noexcept
-{
-  MathIntrinsics<T,length>::MultiplyAdd(input_to_multiply, gain, input_to_add, output);
 }
 
 

@@ -17,72 +17,19 @@ namespace mcl {
 /** FIR Filter */
 template<typename T>
 class FirFilter : public DigitalFilter {
-public:
-  /** Constructs a default FIR filter, i.e. identical filter */
-  FirFilter() noexcept
-  {
-  }
-  
-  /** Constructs an FIR filter with impulse response B. */
-  FirFilter(
-    const Vector<T>& B) noexcept
-  {
-  }
-  
-  /** 
-   Returns the output of the filter for an input equal to `input`.
-   For example, if B=1, A=1, output will be equal to input. 
-   As a second example, if B=[0,1], A=[1], you will have 
-   (1) Filter(0.5)==0 and then
-   (2) Filter(0.0)==0.5
-   */
-  virtual T Filter(
-    const T input_sample) noexcept;
-  
-  using DigitalFilter::Filter;
-  
-  /** 
-   Updates the filter coefficients. You can set how long it takes to 
-   update the coefficients (using linear interpolation between old and new
-   impulse response). If an update is requested while another is already in
-   progress, the new interpolation will pick up from where the old one left
-   off to avoid audible artifacts.
-   @param[in] update_length How many calls to Filter it takes to update the
-   coefficients. A value of 0 means that the update is instantaneous. A call
-   to Filter(const T input) counts one, just like
-   Filter(const Vector<T>& input).
-   */
-  void SetImpulseResponse(
-    const Vector<T>& impulse_response,
-    const Int update_length = 0) noexcept
-  {
-  
-  }
-  
-  /** Resets the state of the filter */
-  void Reset() noexcept
-  {
-  
-  }
-  
-  /** Returns the impulse response of the filter */
-  Vector<T> impulse_response() noexcept
-  {
-  
-  }
-  
-  /** Constructs a filter for which output==gain*input always. */
-  static FirFilter GainFilter(const T gain) noexcept;
-  
-  
-  virtual ~FirFilter() {}
-  
 private:
-#ifdef MCL_APPLE_ACCELERATE
-  T FilterAppleDsp(T input_sample) noexcept;
-  void FilterAppleDsp(const T* __restrict input_data, const Int num_samples,
-                      T* __restrict output_data) noexcept;
-#endif
+
+  /* This is the current vector of coefficients. When the filter is updating
+   this will in general be different from impulse_response_. */
+  Vector<T> delay_line_;
+  Vector<T> coefficients_;
+  size_t counter_;
+  size_t length_;
+  Vector<T> impulse_response_;
+  Vector<T> impulse_response_old_;
+  size_t update_index_;
+  size_t update_length_;
+  bool updating_;
   
   template<class T>
   void GetExtendedInput(const T* __restrict input_data, const Int num_samples,
@@ -107,67 +54,205 @@ private:
     }
   }
   
-  T FilterStraight(T input_sample) noexcept;
-  
-  Vector<T> FilterSequential(const Vector<T>& input) noexcept;
-  
   /** Method called to slowly update the filter coefficients. It is called
    every time one of the Filter method is called and is activated only
    if updating_ = true. TODO: uniformise action between sequential and
    batch. */
-  void UpdateCoefficients() noexcept;
-  
-  Vector<T> impulse_response_;
-  Vector<T> impulse_response_old_;
-  Int update_index_;
-  Int update_length_;
-  
-  bool updating_;
-  
-  /* This is the current vector of coefficients. When the filter is updating
-   this will in general be different from impulse_response_. */
-  Vector<T> coefficients_;
-  Vector<T> delay_line_;
-  Int counter_;
-  Int length_;
-};
-  
-  
-class GainFilter : public DigitalFilter {
-public:
-  GainFilter(const T gain) : gain_(gain) {}
-  
-  virtual T Filter(const T input) noexcept {
-    return input*gain_;
-  }
-  
-  virtual void Filter(const T* input_data, const Int num_samples,
-                      T* output_data) noexcept {
-    Multiply(input_data, num_samples, gain_, output_data);
-  }
-  
-  virtual void Reset() {}
-private:
-  T gain_;
-};
-
-class IdenticalFilter : public DigitalFilter {
-public:
-  IdenticalFilter() {}
-  
-  virtual T Filter(const T input) noexcept {
-    return input;
-  }
-  
-  virtual void Filter(const T* input_data, const Int num_samples,
-                      T* output_data) noexcept {
-    for (Int i=0; i<num_samples; ++i) {
-      output_data[i] = input_data[i];
+  void UpdateCoefficients() noexcept
+  {
+    ASSERT(update_index_>=0 && update_index_<=update_length_);
+    ASSERT(impulse_response_.length() == impulse_response_old_.length());
+    ASSERT(impulse_response_.length() == coefficients_.length());
+    T weight_new = ((T)update_index_+T(1))/((T)update_length_+T(1));
+    T weight_old = T(1)-weight_new;
+    Multiply(impulse_response_.data(), impulse_response_.length(), weight_new, coefficients_.data());
+    MultiplyAdd(impulse_response_old_.data(), weight_old,
+                coefficients_.data(), impulse_response_.length(),
+                coefficients_.data());
+    // The above is a lock-free equivalent version to
+    // coefficients_ = mcl::Add(mcl::Multiply(impulse_response_, weight_new),
+    //                          mcl::Multiply(impulse_response_old_, weight_old));
+    
+    if (update_index_ == update_length_)
+    {
+      updating_ = false;
+    }
+    else
+    {
+      update_index_++;
     }
   }
   
-  virtual void Reset() {}
+public:
+  /** Constructs a default FIR filter, i.e. identical filter */
+  FirFilter() noexcept
+    : delay_line_(1)
+    , coefficients_(mcl::UnaryVector<T>(1.0))
+    , impulse_response_(mcl::UnaryVector<T>(1.0))
+    , impulse_response_old_(mcl::UnaryVector<T>(1.0))
+    , update_index_(0) update_length_(0) updating_(false)
+    , counter_(0)
+    , length_(1)
+  {
+    SetToZero(delay_line_);
+  }
+  
+  /** Constructs an FIR filter with impulse response B. */
+  FirFilter(
+    const Vector<T>& B) noexcept
+    : delay_line_(B.length())
+    , coefficients_(B)
+    , impulse_response_(B)
+    , impulse_response_old_(B)
+    , update_index_(0)
+    , update_length_(0)
+    , updating_(false)
+    , counter_(B.length()-1)
+    , length_(B.length())
+  {
+    SetToZero(delay_line_);
+  }
+  
+  
+  /**
+   Returns the output of the filter for an input equal to `input`.
+   For example, if B=1, A=1, output will be equal to input.
+   As a second example, if B=[0,1], A=[1], you will have
+   (1) Filter(0.5)==0 and then
+   (2) Filter(0.0)==0.5
+   */
+  T Filter(
+    const T input_sample) noexcept
+  {
+    if (updating_)
+    {
+      UpdateCoefficients();
+    }
+    if (length_ == 1)
+    {
+      delay_line_[0] = input_sample;
+      return input_sample*coefficients_[0];
+    }
+    delay_line_[counter_] = input_sample;
+    T result = T(0.0);
+    size_t index = counter_;
+    for (int i=0; i<length_; ++i)
+    {
+      result += coefficients_[i] * delay_line_[index++];
+      if (index >= length_)
+      {
+        index = 0;
+      }
+    }
+    
+    if (--counter_ < 0)
+    {
+      counter_ = length_-1;
+    }
+    return result;
+  }
+  
+  /** 
+   Updates the filter coefficients. You can set how long it takes to 
+   update the coefficients (using linear interpolation between old and new
+   impulse response). If an update is requested while another is already in
+   progress, the new interpolation will pick up from where the old one left
+   off to avoid audible artifacts.
+   @param[in] update_length How many calls to Filter it takes to update the
+   coefficients. A value of 0 means that the update is instantaneous. A call
+   to Filter(const T input) counts one, just like
+   Filter(const Vector<T>& input).
+   */
+  void SetImpulseResponse(
+    const Vector<T>& impulse_response,
+    const Int update_length = 0) noexcept
+  {
+    if (mcl::IsEqual(impulse_response, impulse_response_))
+    {
+      return;
+    }
+  
+    if ((Int)impulse_response.length() != length_)
+    {
+      // If the impulse response changes length, then reset everything.
+      length_ = impulse_response.length();
+      delay_line_.assign(length_, 0.0);
+      counter_ = length_-1;
+      impulse_response_ = impulse_response;
+      impulse_response_old_ = impulse_response;
+      coefficients_ = impulse_response;
+      updating_ = false;
+      update_length_ = 0;
+      update_index_ = 0;
+    }
+    else
+    {
+      updating_ = true;
+      update_length_ = update_length;
+      update_index_ = 0;
+      impulse_response_ = impulse_response;
+      
+      if (! updating_)
+      { // If there is no update being carried out
+        impulse_response_old_ = impulse_response_;
+      }
+      else
+      {
+        impulse_response_old_ = coefficients_;
+      }
+    }
+    ASSERT(impulse_response_.length() == impulse_response_old_.length());
+  }
+  
+  /** Resets the state of the filter */
+  void Reset() noexcept
+  {
+    SetToZero(delay_line_);
+  }
+  
+  /** Returns the impulse response of the filter */
+  Vector<T> impulse_response() const noexcept
+  {
+    return impulse_response_;
+  }
+  
+  void Filter(
+    const Vector<T>& input,
+    Vector<T>& output) noexcept
+  {
+    ASSERT(input.length() == output.length());
+    if (updating_)
+    {
+      UpdateCoefficients();
+    }
+    if (length_ == 1)
+    {
+      delay_line_[0] = input_data[input.length()-1];
+      Multiply(input, coefficients_[0], output);
+      return;
+    }
+    if (num_samples < length_ || (num_samples+length_-1) > MCL_MAX_VLA_LENGTH)
+    {
+      FilterSerial(input, output);
+      return;
+    }
+    else
+    {
+      MCL_STACK_ALLOCATE(T, extended_input_data, num_samples+length_-1); // TODO: handle stack overflow
+      Conv(input, coefficients_, output);
+      // Reorganise state for the next run
+      for (size_t i=0; i<length_; ++i)
+      {
+        delay_line_[i] = input_data[num_samples-1-i];
+      }
+      counter_ = length_-1;
+    }
+  }
 };
+
+
+  
+
 
 
 /** Tests */
