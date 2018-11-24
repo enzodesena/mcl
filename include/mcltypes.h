@@ -28,6 +28,7 @@ constexpr T pi_const = T(3.14159265358979323846264338327950288419716939937510582
 #include <iostream>
 #include <fstream>
 
+
 #if _WIN32 || _WIN64
   #if _WIN64
     #define MCL_ENV64BIT 1
@@ -74,6 +75,10 @@ constexpr T pi_const = T(3.14159265358979323846264338327950288419716939937510582
   #define MCL_STACK_ALLOCATE(type, variable, size) type variable[(size)];
 #endif
 
+#if MCL_ENVWINDOWS
+  #include <intrin.h>
+#endif
+
 namespace mcl {
 
   
@@ -99,7 +104,40 @@ using Complex = std::complex<T>;
 #endif
 
 
+/** Singleton class carrying information about the runtime environment */
+class RuntimeArchInfo {
+public:
+  static RuntimeArchInfo& GetInstance() {
+    static RuntimeArchInfo instance;
+    return instance;
+  }
   
+  bool IsAvxSupported() {
+#if defined(MCL_ENVWINDOWS)
+    if (! system_has_been_polled_) {
+      int cpu_info[4];
+      __cpuid(cpu_info, 0);
+      if (cpu_info[0] >= 1) {
+        __cpuidex(cpu_info, 1, 0);
+        if ((cpu_info[2] & (1 << 28)) != 0) {
+          avx_supported_ = true;
+        }
+      }
+      system_has_been_polled_ = true;
+    }
+#endif
+
+    return avx_supported_;
+  }
+  
+private:
+  bool avx_supported_ = false;
+  bool system_has_been_polled_ = false;
+};
+  
+  
+  
+/** Singleton logger class */
 class Logger {
 public:
   static Logger& GetInstance() {
@@ -175,8 +213,9 @@ private:
     }
   }
   
-  Logger(const Logger&);
-  const Logger& operator= (const Logger&);
+  Logger(const Logger&) = delete;
+  const Logger& operator= (const Logger&) = delete;
+  
   OutputType output_type_;
   
   std::string log_string_;
