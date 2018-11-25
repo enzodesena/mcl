@@ -711,6 +711,48 @@ bool VectorOpTest() {
 //                                      2.7000};
 //  ASSERT(IsEqual(OverlapAdd(frames_a, window_d, 4), frames_a_4_cmp));
   
+  
+  // Testing vector reference
+  Vector<Real> referenced(3,0.0);
+  referenced[1] = 2.0;
+  ASSERT(referenced.length() == 3);
+  ASSERT(referenced[0] == 0.0);
+  ASSERT(referenced[1] == 2.0);
+  ASSERT(referenced[2] == 0.0);
+  Vector<Real,kReference> reference(referenced);
+  reference[0] = 1.0;
+  reference[1] = 3.0;
+  reference[2] = 5.0;
+  ASSERT(reference[0] == 1.0);
+  ASSERT(reference[1] == 3.0);
+  ASSERT(reference[2] == 5.0);
+  ASSERT(referenced[0] == 1.0);
+  ASSERT(referenced[1] == 3.0);
+  ASSERT(referenced[2] == 5.0);
+  ASSERT(reference.length() == 3);
+  
+  Vector<Real,kReference> reference_b(referenced, 0);
+  ASSERT(reference_b.length() == 3);
+  ASSERT(reference_b[0] == 1.0);
+  ASSERT(reference_b[1] == 3.0);
+  ASSERT(reference_b[2] == 5.0);
+  referenced.PushBack(7.0);
+  ASSERT(reference_b.length() == 4); // The length of the reference has increased along with the referenced
+  
+  
+  Vector<Real,kReference> reference_c(referenced, 0, 4);
+  ASSERT(reference_c.length() == 4);
+  referenced.PushBack(9.0);
+  ASSERT(reference_c.length() == 4); // In this case the lenght did not increase, because specified a length
+  ASSERT(reference_c[0] == 1.0);
+  ASSERT(reference_c[1] == 3.0);
+  ASSERT(reference_c[2] == 5.0);
+  
+  Vector<Real,kReference> reference_d(referenced, 2, 2);
+  ASSERT(reference_d.length() == 2);
+  ASSERT(reference_d[0] == 5.0);
+  ASSERT(reference_d[1] == 7.0);
+  
   return true;
 }
   
