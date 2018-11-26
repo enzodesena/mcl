@@ -15,7 +15,7 @@
 #include "quaternion.h"
 #include "transformop.h"
 #include "statisticsop.h"
-//#include "firfilter.h"
+#include "firfilter.h"
 #include "randomop.h"
 #include "iirfilter.h"
 
@@ -25,7 +25,7 @@ int main (int argc, char * const argv[]) {
   using namespace mcl;
 
 #ifndef NDEBUG
-//  FirFilter::Test();
+  FirFilterTest();
   QuaternionTest();
   ElementaryOpTest();
   BasicOpTest();

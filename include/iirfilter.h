@@ -17,7 +17,7 @@ namespace mcl {
   
 /** IIR Filter */
 template<typename T>
-class IirFilter : public DigitalFilter<T> {
+class IirFilter {
 public:
   /** Constructs a default filter, i.e. identical filter*/
   IirFilter()
@@ -88,11 +88,12 @@ public:
     return output;
   }
   
-  using DigitalFilter<T>::FilterSerial;
+//  using DigitalFilter<T>::FilterSerial;
   
+  template<size_t input_length, size_t output_length>
   void Filter(
-    const Vector<T>& input,
-    Vector<T>& output) noexcept
+    const Vector<T,input_length>& input,
+    Vector<T,output_length>& output) noexcept
   {
     if (B_.length() == 1)
     {
@@ -104,7 +105,7 @@ public:
     }
   }
   
-  using DigitalFilter<T>::Filter;
+//  using DigitalFilter<T>::Filter;
   
   /** Returns the order of the filter. */
   Int order() const noexcept

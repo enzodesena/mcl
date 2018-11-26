@@ -38,8 +38,14 @@ namespace mcl
 {
 
 
-
-
+template<typename T, size_t length>
+static inline void Add(
+  const Vector<Complex<T>,length>& input_a,
+  const Vector<Complex<T>,length>& input_b,
+  Vector<Complex<T>,length>& output) noexcept
+{
+  AddSerial(input_a, input_b, output);
+}
 
 template<size_t length>
 static inline void Add(
@@ -80,11 +86,11 @@ static inline void Add(
  Returns the point by point multiplication of the vector with the gain.
  Equivalent to Matlab's vector_a.*gain.
  */
-template<size_t length>
+template<size_t input_length, size_t output_length>
 static inline void Multiply(
-  const Vector<double,length>& input,
+  const Vector<double,input_length>& input,
   const double gain,
-  Vector<double,length>& output) noexcept
+  Vector<double,output_length>& output) noexcept
 {
 #if defined(MCL_APPLE_ACCELERATE_MMA) && MCL_APPLE_ACCELERATE_MMA
   vDSP_vmulD(&input[0], 1,
@@ -100,11 +106,11 @@ static inline void Multiply(
  Returns the point by point multiplication of the vector with the gain.
  Equivalent to Matlab's vector_a.*gain.
  */
-template<size_t length>
+template<size_t input_length, size_t output_length>
 static inline void Multiply(
-  const Vector<float,length>& input,
+  const Vector<float,input_length>& input,
   const float gain,
-  Vector<float,length>& output) noexcept
+  Vector<float,output_length>& output) noexcept
 {
 #if defined(MCL_APPLE_ACCELERATE_MMA) && MCL_APPLE_ACCELERATE_MMA
   vDSP_vmul(
@@ -117,12 +123,20 @@ static inline void Multiply(
 #endif
 }
 
-
-template<size_t length>
+template<typename T, size_t input_length, size_t output_length>
 static inline void Multiply(
-  const Vector<double,length>& input_a,
-  const Vector<double,length>& input_b,
-  Vector<double,length>& output) noexcept
+  const Vector<Complex<T>,input_length>& input,
+  const Complex<T> gain,
+  Vector<Complex<T>,output_length>& output) noexcept
+{
+  MultiplySerial(input, gain, output);
+}
+
+template<size_t input_a_length, size_t input_b_length, size_t output_length>
+static inline void Multiply(
+  const Vector<double,input_a_length>& input_a,
+  const Vector<double,input_b_length>& input_b,
+  Vector<double,output_length>& output) noexcept
 {
 #if defined(MCL_APPLE_ACCELERATE_MMA) && MCL_APPLE_ACCELERATE_MMA
   vDSP_vmulD(
@@ -135,11 +149,11 @@ static inline void Multiply(
 #endif
 }
 
-template<size_t length>
+template<size_t input_a_length, size_t input_b_length, size_t output_length>
 static inline void Multiply(
-  const Vector<float,length>& input_a,
-  const Vector<float,length>& input_b,
-  Vector<float,length>& output) noexcept
+  const Vector<float,input_a_length>& input_a,
+  const Vector<float,input_b_length>& input_b,
+  Vector<float,output_length>& output) noexcept
 {
 #if defined(MCL_APPLE_ACCELERATE_MMA) && MCL_APPLE_ACCELERATE_MMA
   vDSP_vmul(
@@ -267,6 +281,17 @@ static inline void ConvAvx(
   const Vector<float,length>& kernel,
   Vector<float,length>& output) noexcept
 {
+#if defined(MCL_ENVWINDOWS) // defined(MCL_AVX_ACCELERATE)
+  // Some Intel CPUs do not support AVX instructions.
+  // Here we check whether they AVX supported or not, and in that case
+  // we filter serially.
+  if (! RuntimeArchInfo::GetInstance().IsAvxSupported())
+  {
+    ConvSerial(input_data, num_samples, output_data);
+    return;
+  }
+#endif
+  
   const size_t batch_size = 8;
   ALIGNED(16) __m256 input_frame;
   ALIGNED(16) __m256 coefficient;

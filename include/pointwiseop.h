@@ -59,14 +59,14 @@ inline void ForEach(
 }
 
 
-template<typename T, size_t length>
+template<typename T, size_t input_a_length, size_t input_b_length, size_t output_length>
 inline void ForEach(
-  const Vector<T,length>& input_a,
-  const Vector<T,length>& input_b,
+  const Vector<T,input_a_length>& input_a,
+  const Vector<T,input_b_length>& input_b,
   std::function<T(T,T)> pointwise_operation,
-  Vector<T,length>& output) noexcept
+  Vector<T,output_length>& output) noexcept
 {
-  ASSERT(input_a.length() == input_a.length());
+  ASSERT(input_a.length() == input_b.length());
   ASSERT(input_a.length() == output.length());
   auto input_a_iter = input_a.begin();
   auto input_b_iter = input_b.begin();
@@ -81,11 +81,11 @@ inline void ForEach(
 
 
 /** Fall-back multiply by a constant in case of no available optimisations. */
-template<typename T, size_t length>
+template<typename T, size_t input_length, size_t output_length>
 inline void MultiplySerial(
-  const Vector<T,length>& input,
+  const Vector<T,input_length>& input,
   const T gain,
-  Vector<T,length>& output) noexcept
+  Vector<T,output_length>& output) noexcept
 {
   ASSERT(input.length() == output.length());
 //  auto input_iter(input.begin());
@@ -98,11 +98,11 @@ inline void MultiplySerial(
 }
 
 /** Fall-back multiply vectors in case of no available optimisations. */
-template<typename T, size_t length>
+template<typename T, size_t input_a_length, size_t input_b_length, size_t output_length>
 inline void MultiplySerial(
-  const Vector<T,length>& input_a,
-  const Vector<T,length>& input_b,
-  Vector<T,length>& output) noexcept
+  const Vector<T,input_a_length>& input_a,
+  const Vector<T,input_b_length>& input_b,
+  Vector<T,output_length>& output) noexcept
 {
   ForEach(input_a, input_b, [] (T a, T b) { return a * b; }, output);
 }

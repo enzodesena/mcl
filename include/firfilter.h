@@ -10,13 +10,14 @@
 #include <vector>
 
 #include "mcltypes.h"
+#include "mclintrinsics.h"
 #include "digitalfilter.h"
 #include "vectorop.h"
 
 namespace mcl {
 /** FIR Filter */
 template<typename T>
-class FirFilter : public DigitalFilter {
+class FirFilter {
 private:
 
   /* This is the current vector of coefficients. When the filter is updating
@@ -31,26 +32,31 @@ private:
   size_t update_length_;
   bool updating_;
   
-  template<class T>
-  void GetExtendedInput(const T* __restrict input_data, const Int num_samples,
-                        T* __restrict extended_input_data) {
+  template<size_t length>
+  void GetExtendedInput(
+    const Vector<T,length>& input,
+    Vector<T,length> extended_input) noexcept
+  {
     
     // Stage 1
-    for (Int i=0; i<counter_; ++i) {
-      extended_input_data[i] = delay_line_[counter_-i-1];
+    for (size_t i=0; i<counter_; ++i)
+    {
+      extended_input[i] = delay_line_[counter_-i-1];
     }
     
     // Stage 2
     // Starting from counter_ in padded_data
     // Ending in counter_+(length_-counter_-1)
-    for (Int i=counter_; i<(length_-1); ++i) {
-      extended_input_data[i] = delay_line_[length_-1-(i-counter_)];
+    for (size_t i=counter_; i<(length_-1); ++i)
+    {
+      extended_input[i] = delay_line_[length_-1-(i-counter_)];
     }
     
     // Stage 3
     // Append input signal
-    for (Int i=(length_-1); i<(length_-1+num_samples); ++i) {
-      extended_input_data[i] = input_data[i-(length_-1)];
+    for (size_t i=(length_-1); i<(length_-1+input.length()); ++i)
+    {
+      extended_input[i] = input[i-(length_-1)];
     }
   }
   
@@ -65,10 +71,10 @@ private:
     ASSERT(impulse_response_.length() == coefficients_.length());
     T weight_new = ((T)update_index_+T(1))/((T)update_length_+T(1));
     T weight_old = T(1)-weight_new;
-    Multiply(impulse_response_.data(), impulse_response_.length(), weight_new, coefficients_.data());
-    MultiplyAdd(impulse_response_old_.data(), weight_old,
-                coefficients_.data(), impulse_response_.length(),
-                coefficients_.data());
+    Multiply(impulse_response_, weight_new, coefficients_);
+    MultiplyAdd(impulse_response_old_, weight_old,
+                coefficients_,
+                coefficients_);
     // The above is a lock-free equivalent version to
     // coefficients_ = mcl::Add(mcl::Multiply(impulse_response_, weight_new),
     //                          mcl::Multiply(impulse_response_old_, weight_old));
@@ -90,7 +96,9 @@ public:
     , coefficients_(mcl::UnaryVector<T>(1.0))
     , impulse_response_(mcl::UnaryVector<T>(1.0))
     , impulse_response_old_(mcl::UnaryVector<T>(1.0))
-    , update_index_(0) update_length_(0) updating_(false)
+    , update_index_(0)
+    , update_length_(0)
+    , updating_(false)
     , counter_(0)
     , length_(1)
   {
@@ -136,7 +144,7 @@ public:
     delay_line_[counter_] = input_sample;
     T result = T(0.0);
     size_t index = counter_;
-    for (int i=0; i<length_; ++i)
+    for (size_t i=0; i<length_; ++i)
     {
       result += coefficients_[i] * delay_line_[index++];
       if (index >= length_)
@@ -216,19 +224,34 @@ public:
     return impulse_response_;
   }
   
+  template<size_t input_length, size_t output_length>
+  void FilterSerial(
+    const Vector<T,input_length>& input,
+    Vector<T,output_length>& output) noexcept
+  {
+    auto input_iter(input.begin());
+    auto output_iter(output.begin());
+    while (output_iter != output.end())
+    {
+      *(output_iter++) = Filter(*(input_iter++));
+    }
+  }
+  
+  template<size_t input_length, size_t output_length>
   void Filter(
-    const Vector<T>& input,
-    Vector<T>& output) noexcept
+    const Vector<T,input_length>& input,
+    Vector<T,output_length>& output) noexcept
   {
     ASSERT(input.length() == output.length());
+    const size_t num_samples = input.length();
     if (updating_)
     {
       UpdateCoefficients();
     }
     if (length_ == 1)
     {
-      delay_line_[0] = input_data[input.length()-1];
-      Multiply(input, coefficients_[0], output);
+      delay_line_[0] = input[input.length()-1];
+      Multiply(input, coefficients_, output);
       return;
     }
     if (num_samples < length_ || (num_samples+length_-1) > MCL_MAX_VLA_LENGTH)
@@ -238,12 +261,13 @@ public:
     }
     else
     {
-      MCL_STACK_ALLOCATE(T, extended_input_data, num_samples+length_-1); // TODO: handle stack overflow
-      Conv(input, coefficients_, output);
+      Vector<T> extended_input(num_samples+length_-1, 0.0);
+      GetExtendedInput(input, extended_input);
+      Conv(extended_input, coefficients_, output);
       // Reorganise state for the next run
       for (size_t i=0; i<length_; ++i)
       {
-        delay_line_[i] = input_data[num_samples-1-i];
+        delay_line_[i] = input[num_samples-1-i];
       }
       counter_ = length_-1;
     }
@@ -256,7 +280,7 @@ public:
 
 
 /** Tests */
-bool FirTest();
+bool FirFilterTest();
 void FirSpeedTests();
   
 } // namespace mcl
