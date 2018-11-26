@@ -44,14 +44,14 @@ bool RandomGenerator::Test() {
   ASSERT(Abs(Mean(rand_gen.Rand(100000))-0.5)<0.05);
   
   // Test integer generator
-  Vector<Int> rand_int_vector;
   const Int num_samples = 1000000;
+  Vector<Int> rand_int_vector(num_samples);
   const Int min_value = -2;
   const Int max_value = 3;
   Vector<Int> num_occurrances(max_value-min_value+1, 0);
   for (Int i=0; i<num_samples; ++i) {
     Int output = rand_gen.RandInt(min_value, max_value);
-    rand_int_vector.PushBack(output);
+    rand_int_vector[i] = output;
     num_occurrances[output-min_value]++;
   }
   ASSERT(mcl::Min(rand_int_vector) >= min_value);
@@ -61,14 +61,14 @@ bool RandomGenerator::Test() {
                       1.0E-2));
   
   // Test integer generator
-  Vector<Int> rand_int_vector_b;
   const Int num_samples_b = 1000000;
+  Vector<Int> rand_int_vector_b(num_samples_b);
   const Int min_value_b = 0;
   const Int max_value_b = 1;
   Vector<Int> num_occurrances_b(max_value_b-min_value_b+1, 0);
-  for (Int i=0; i<num_samples_b; ++i) {
+  for (size_t i=0; i<num_samples_b; ++i) {
     Int output = rand_gen.RandInt(min_value_b, max_value_b);
-    rand_int_vector_b.PushBack(output);
+    rand_int_vector_b[i] = output;
     num_occurrances_b[output-min_value_b]++;
   }
   ASSERT(mcl::Min(rand_int_vector_b) >= min_value_b);

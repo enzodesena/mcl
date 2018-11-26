@@ -209,15 +209,14 @@ inline IirFilterBank<T> OctaveFilterBank(
   const T sampling_frequency) noexcept
 {
   T current_frequency = starting_frequency;
-  Vector<IirFilter<T>> filters;
-  for (Int i=0; i<num_bands; ++i)
+  Vector<IirFilter<T>> filters(num_bands);
+  for (size_t i=0; i<(size_t)num_bands; ++i)
   {
-    mcl::IirFilter
-    octave_filter = mcl::OctaveFilter<T>(
+    mcl::IirFilter octave_filter = mcl::OctaveFilter<T>(
       order,
       current_frequency,
       sampling_frequency);
-    filters.PushBack(octave_filter);
+    filters[i] = octave_filter;
     current_frequency = current_frequency * 2.0;
   }
   return IirFilterBank<T>(filters);

@@ -392,7 +392,8 @@ Vector<T> Interleave(
 }
 //
 /** Decreases the sampling frequency of the input vector by keeping
- the first sample and then every `downsampling_factor`-th sample after the first. */
+ the first sample and then every `downsampling_factor`-th sample after the
+ first. */
 template<class T>
 Vector<T> Downsample(
   const Vector<T>& vector,

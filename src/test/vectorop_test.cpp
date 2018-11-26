@@ -29,10 +29,10 @@ bool VectorOpTest() {
   myvector_a[2] = -0.3;
   ASSERT(myvector_a[2] == -0.3);
   
-  Vector<double> myvector_b;
-  myvector_b.PushBack(0.1);
-  myvector_b.PushBack(0.2);
-  myvector_b.PushBack(0.3);
+  Vector<double> myvector_b(3);
+  myvector_b[0] = 0.1;
+  myvector_b[1] = 0.2;
+  myvector_b[2] = 0.3;
   ASSERT(myvector_b[0] == 0.1);
   ASSERT(myvector_b[1] == 0.2);
   ASSERT(myvector_b[2] == 0.3);
@@ -280,10 +280,10 @@ bool VectorOpTest() {
 
 
 
-  Vector<Vector<Real>> vectors;
-  vectors.PushBack(vector_q); // -1.2, 4.5
-  vectors.PushBack(vector_o); // 1.0, 2.5, 4.2
-  vectors.PushBack(vector_m); // 0.0, -1.0, -2.0
+  Vector<Vector<Real>> vectors(3);
+  vectors[0] = vector_q; // -1.2, 4.5
+  vectors[1] = vector_o; // 1.0, 2.5, 4.2
+  vectors[2] = vector_m; // 0.0, -1.0, -2.0
 
   Vector<Real> add_vectors = AddVectors(vectors);
   ASSERT(add_vectors.length() == 3);
@@ -636,14 +636,14 @@ bool VectorOpTest() {
 //  //  vector_f[2] = -2.4;
 //  //  vector_f[3] = -1.0;
 //  Vector<Real> interleaves_e_f_cmp;
-//  interleaves_e_f_cmp.PushBack(vector_e[0]);
-//  interleaves_e_f_cmp.PushBack(vector_f[0]);
-//  interleaves_e_f_cmp.PushBack(vector_e[1]);
-//  interleaves_e_f_cmp.PushBack(vector_f[1]);
-//  interleaves_e_f_cmp.PushBack(vector_e[2]);
-//  interleaves_e_f_cmp.PushBack(vector_f[2]);
-//  interleaves_e_f_cmp.PushBack(vector_e[3]);
-//  interleaves_e_f_cmp.PushBack(vector_f[3]);
+//  interleaves_e_f_cmp[] = vector_e[0]);
+//  interleaves_e_f_cmp[] = vector_f[0]);
+//  interleaves_e_f_cmp[] = vector_e[1]);
+//  interleaves_e_f_cmp[] = vector_f[1]);
+//  interleaves_e_f_cmp[] = vector_e[2]);
+//  interleaves_e_f_cmp[] = vector_f[2]);
+//  interleaves_e_f_cmp[] = vector_e[3]);
+//  interleaves_e_f_cmp[] = vector_f[3]);
 //  ASSERT(IsEqual(Interleave(vector_e, vector_f), interleaves_e_f_cmp));
 //
 //
@@ -669,9 +669,9 @@ bool VectorOpTest() {
 //
 //
 //  Vector<Real> window_b;
-//  window_b.PushBack(0.2);
-//  window_b.PushBack(0.4);
-//  window_b.PushBack(-0.3);
+//  window_b[] = 0.2);
+//  window_b[] = 0.4);
+//  window_b[] = -0.3);
 //  Vector<Vector<Real> > output_1 = Enframe(vector, window_b, 1);
 //  ASSERT(output_1.length() == 8);
 //  Vector<Real> output_1_0_cmp = {0.2000,   0.8000,   -0.9000};
@@ -696,9 +696,9 @@ bool VectorOpTest() {
 //  Vector<Real> frames_a_0 = {1,2,3};
 //  Vector<Real> frames_a_1 = {4,5,6};
 //  Vector<Real> frames_a_2 = {7,8,9};
-//  frames_a.PushBack(frames_a_0);
-//  frames_a.PushBack(frames_a_1);
-//  frames_a.PushBack(frames_a_2);
+//  frames_a[] = frames_a_0);
+//  frames_a[] = frames_a_1);
+//  frames_a[] = frames_a_2);
 //  Vector<Real> window_d = {0.2,-0.4, 0.3};
 //
 //  Vector<Real> frames_a_1_cmp = {0.2000, 0, 0.3000, -1.4000, 2.7000};
@@ -736,13 +736,13 @@ bool VectorOpTest() {
 //  ASSERT(reference_b[0] == 1.0);
 //  ASSERT(reference_b[1] == 3.0);
 //  ASSERT(reference_b[2] == 5.0);
-//  referenced.PushBack(7.0);
+//  referenced[] = 7.0);
 //  ASSERT(reference_b.length() == 4); // The length of the reference has increased along with the referenced
 //  
 //  
 //  Vector<Real,kReference> reference_c(referenced, 0, 4);
 //  ASSERT(reference_c.length() == 4);
-//  referenced.PushBack(9.0);
+//  referenced[] = 9.0);
 //  ASSERT(reference_c.length() == 4); // In this case the lenght did not increase, because specified a length
 //  ASSERT(reference_c[0] == 1.0);
 //  ASSERT(reference_c[1] == 3.0);

@@ -35,7 +35,7 @@ private:
   
   void GetExtendedInput(
     const Vector<T>& input,
-    Vector<T> extended_input) noexcept
+    Vector<T>& extended_input) noexcept
   {
     
     // Stage 1
@@ -152,8 +152,7 @@ public:
         index = 0;
       }
     }
-    
-    if (--counter_ < 0)
+    if (counter_-- == 0)
     {
       counter_ = length_-1;
     }
@@ -180,11 +179,11 @@ public:
       return;
     }
   
-    if ((Int)impulse_response.length() != length_)
+    if (impulse_response.length() != length_)
     {
       // If the impulse response changes length, then reset everything.
       length_ = impulse_response.length();
-      delay_line_.assign(length_, 0.0);
+      delay_line_.Assign(length_, 0.0);
       counter_ = length_-1;
       impulse_response_ = impulse_response;
       impulse_response_old_ = impulse_response;

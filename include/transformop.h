@@ -82,9 +82,9 @@ inline Vector<Vector<Complex<T>>> Rfft(
   const Vector<Vector<T> >& input,
   size_t n_point) noexcept
 {
-  Vector<Vector<Complex<T>> > outputs;
-  for (Int i=0; i<(Int)input.length(); ++i) {
-    outputs.PushBack(Rfft(input[i], n_point));
+  Vector<Vector<Complex<T>>> outputs(input.length());
+  for (size_t i=0; i<input.length(); ++i) {
+    outputs[i] = Rfft(input[i], n_point);
   }
   return outputs;
 }

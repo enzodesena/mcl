@@ -94,6 +94,11 @@ public:
   {
     std::vector<T>::push_back(element);
   }
+  
+  inline void Assign(const size_t num_elements, T value)
+  {
+    std::vector<T>::assign(num_elements, value);
+  }
 };
 
 //
