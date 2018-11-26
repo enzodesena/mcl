@@ -90,10 +90,10 @@ public:
   
 //  using DigitalFilter<T>::FilterSerial;
   
-  template<size_t input_length, size_t output_length>
+  
   void Filter(
-    const Vector<T,input_length>& input,
-    Vector<T,output_length>& output) noexcept
+    const Vector<T>& input,
+    Vector<T>& output) noexcept
   {
     if (B_.length() == 1)
     {

@@ -37,21 +37,49 @@
 namespace mcl
 {
 
+// Beginning of forward declarations
+template<typename T>
+inline void AddSerial(
+  const Vector<T>& input_a,
+  const Vector<T>& input_b,
+  Vector<T>& output) noexcept;
+  
+template<typename T>
+inline void MultiplySerial(
+  const Vector<T>& input,
+  const T gain,
+  Vector<T>& output) noexcept;
 
-template<typename T, size_t length>
+template<typename T>
+inline void MultiplySerial(
+  const Vector<T>& input_a,
+  const Vector<T>& input_b,
+  Vector<T>& output) noexcept;
+  
+template<typename T>
+inline void MultiplyAddSerial(
+  const Vector<T>& input_to_multiply,
+  const T gain,
+  const Vector<T>& input_to_add,
+  Vector<T>& output) noexcept;
+// End of forward declaration
+  
+  
+
+template<typename T>
 static inline void Add(
-  const Vector<Complex<T>,length>& input_a,
-  const Vector<Complex<T>,length>& input_b,
-  Vector<Complex<T>,length>& output) noexcept
+  const Vector<Complex<T>>& input_a,
+  const Vector<Complex<T>>& input_b,
+  Vector<Complex<T>>& output) noexcept
 {
   AddSerial(input_a, input_b, output);
 }
 
-template<size_t length>
+
 static inline void Add(
-  const Vector<double,length>& input_a,
-  const Vector<double,length>& input_b,
-  Vector<double,length>& output) noexcept
+  const Vector<double>& input_a,
+  const Vector<double>& input_b,
+  Vector<double>& output) noexcept
 {
 #if defined(MCL_APPLE_ACCELERATE_MMA) && MCL_APPLE_ACCELERATE_MMA
   vDSP_vaddD(
@@ -64,11 +92,11 @@ static inline void Add(
 #endif
 }
 
-template<size_t length>
+
 static inline void Add(
-  const Vector<float,length>& input_a,
-  const Vector<float,length>& input_b,
-  Vector<float,length>& output) noexcept
+  const Vector<float>& input_a,
+  const Vector<float>& input_b,
+  Vector<float>& output) noexcept
 {
 #if defined(MCL_APPLE_ACCELERATE_MMA) && MCL_APPLE_ACCELERATE_MMA
   vDSP_vadd(
@@ -86,11 +114,11 @@ static inline void Add(
  Returns the point by point multiplication of the vector with the gain.
  Equivalent to Matlab's vector_a.*gain.
  */
-template<size_t input_length, size_t output_length>
+
 static inline void Multiply(
-  const Vector<double,input_length>& input,
+  const Vector<double>& input,
   const double gain,
-  Vector<double,output_length>& output) noexcept
+  Vector<double>& output) noexcept
 {
 #if defined(MCL_APPLE_ACCELERATE_MMA) && MCL_APPLE_ACCELERATE_MMA
   vDSP_vmulD(&input[0], 1,
@@ -106,11 +134,11 @@ static inline void Multiply(
  Returns the point by point multiplication of the vector with the gain.
  Equivalent to Matlab's vector_a.*gain.
  */
-template<size_t input_length, size_t output_length>
+
 static inline void Multiply(
-  const Vector<float,input_length>& input,
+  const Vector<float>& input,
   const float gain,
-  Vector<float,output_length>& output) noexcept
+  Vector<float>& output) noexcept
 {
 #if defined(MCL_APPLE_ACCELERATE_MMA) && MCL_APPLE_ACCELERATE_MMA
   vDSP_vmul(
@@ -123,20 +151,19 @@ static inline void Multiply(
 #endif
 }
 
-template<typename T, size_t input_length, size_t output_length>
+template<typename T>
 static inline void Multiply(
-  const Vector<Complex<T>,input_length>& input,
+  const Vector<Complex<T>>& input,
   const Complex<T> gain,
-  Vector<Complex<T>,output_length>& output) noexcept
+  Vector<Complex<T>>& output) noexcept
 {
   MultiplySerial(input, gain, output);
 }
 
-template<size_t input_a_length, size_t input_b_length, size_t output_length>
 static inline void Multiply(
-  const Vector<double,input_a_length>& input_a,
-  const Vector<double,input_b_length>& input_b,
-  Vector<double,output_length>& output) noexcept
+  const Vector<double>& input_a,
+  const Vector<double>& input_b,
+  Vector<double>& output) noexcept
 {
 #if defined(MCL_APPLE_ACCELERATE_MMA) && MCL_APPLE_ACCELERATE_MMA
   vDSP_vmulD(
@@ -149,11 +176,10 @@ static inline void Multiply(
 #endif
 }
 
-template<size_t input_a_length, size_t input_b_length, size_t output_length>
 static inline void Multiply(
-  const Vector<float,input_a_length>& input_a,
-  const Vector<float,input_b_length>& input_b,
-  Vector<float,output_length>& output) noexcept
+  const Vector<float>& input_a,
+  const Vector<float>& input_b,
+  Vector<float>& output) noexcept
 {
 #if defined(MCL_APPLE_ACCELERATE_MMA) && MCL_APPLE_ACCELERATE_MMA
   vDSP_vmul(
@@ -167,12 +193,12 @@ static inline void Multiply(
 }
 
 
-template<size_t length>
+
 static inline void MultiplyAdd(
-  const Vector<double,length>& input_to_multiply,
+  const Vector<double>& input_to_multiply,
   const double gain,
-  const Vector<double,length>& input_to_add,
-  Vector<double,length>& output) noexcept
+  const Vector<double>& input_to_add,
+  Vector<double>& output) noexcept
 {
 #if defined(MCL_APPLE_ACCELERATE_MMA) && MCL_APPLE_ACCELERATE_MMA
   vDSP_vmaD(
@@ -186,12 +212,12 @@ static inline void MultiplyAdd(
 #endif
 }
 
-template<size_t length>
+
 static inline void MultiplyAdd(
-  const Vector<float,length>& input_to_multiply,
+  const Vector<float>& input_to_multiply,
   const float gain,
-  const Vector<float,length>& input_to_add,
-  Vector<float,length>& output) noexcept
+  const Vector<float>& input_to_add,
+  Vector<float>& output) noexcept
 {
 #if defined(MCL_APPLE_ACCELERATE_MMA) && MCL_APPLE_ACCELERATE_MMA
   vDSP_vma(
@@ -223,11 +249,11 @@ static inline void MultiplyAdd(
   @param[in] kernel filter kernel
   @param[out] output output vector
 */
-template<typename T, size_t length>
+template<typename T>
 static inline void ConvSerial(
-  const Vector<T,length>& input,
-  const Vector<T,length>& kernel,
-  Vector<T,length>& output) noexcept
+  const Vector<T>& input,
+  const Vector<T>& kernel,
+  Vector<T>& output) noexcept
 {
   const size_t N = output.length();
   const size_t P = kernel.length();
@@ -243,11 +269,11 @@ static inline void ConvSerial(
 
 
 #if defined(MCL_APPLE_ACCELERATE_MMA) && MCL_APPLE_ACCELERATE_MMA
-template<size_t length>
+
 static inline void ConvApple(
-  const Vector<double,length>& padded_input,
-  const Vector<double,length>& coefficients,
-  Vector<double,length>& output)
+  const Vector<double>& padded_input,
+  const Vector<double>& coefficients,
+  Vector<double>& output)
 {
   vDSP_convD(
     &padded_input[0], 1,
@@ -261,9 +287,9 @@ static inline void ConvApple(
 
 #if defined(MCL_APPLE_ACCELERATE_MMA) && MCL_APPLE_ACCELERATE_MMA
 static inline void ConvApple(
-  const Vector<float,length>& input,
-  const Vector<float,length>& kernel,
-  Vector<float,length>& output) noexcept
+  const Vector<float>& input,
+  const Vector<float>& kernel,
+  Vector<float>& output) noexcept
 {
   vDSP_conv(
     &input[0], 1,
@@ -277,9 +303,9 @@ static inline void ConvApple(
 
 #if defined(MCL_AVX_ACCELERATE) && MCL_AVX_ACCELERATE
 static inline void ConvAvx(
-  const Vector<float,length>& input,
-  const Vector<float,length>& kernel,
-  Vector<float,length>& output) noexcept
+  const Vector<float>& input,
+  const Vector<float>& kernel,
+  Vector<float>& output) noexcept
 {
 #if defined(MCL_ENVWINDOWS) // defined(MCL_AVX_ACCELERATE)
   // Some Intel CPUs do not support AVX instructions.
@@ -324,9 +350,9 @@ static inline void ConvAvx(
 
 #if defined(MCL_NEON_ACCELERATE) && MCL_NEON_ACCELERATE
 static inline void ConvNeon(
-  const Vector<float,length>& input,
-  const Vector<float,length>& kernel,
-  Vector<float,length>& output) noexcept
+  const Vector<float>& input,
+  const Vector<float>& kernel,
+  Vector<float>& output) noexcept
 {
   const Int batch_size = 4;
   float32x4_t input_frame;
@@ -371,11 +397,11 @@ static inline void ConvNeon(
   @param[in] kernel filter kernel
   @param[out] output output vector
 */
-template<typename T, size_t length>
+template<typename T>
 static inline void Conv(
-  const Vector<T,length>& input,
-  const Vector<T,length>& kernel,
-  Vector<T,length>& output) noexcept
+  const Vector<T>& input,
+  const Vector<T>& kernel,
+  Vector<T>& output) noexcept
 {
   ASSERT(input.length() >= kernel.length()+output.length()-1);
 #if defined(MCL_APPLE_ACCELERATE_MMA) && MCL_APPLE_ACCELERATE_MMA

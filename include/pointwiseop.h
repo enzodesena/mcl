@@ -35,11 +35,11 @@ inline T Pow(
   
 
 
-template<typename T, typename U, size_t length>
+template<typename T, typename U>
 inline void ForEach(
-  const Vector<T,length>& input_vector,
+  const Vector<T>& input_vector,
   std::function<U(T)> operation,
-  Vector<U,length>& output_vector) noexcept
+  Vector<U>& output_vector) noexcept
 {
   ASSERT(input_vector.length() == output_vector.length());
   auto input_iter = input_vector.begin();
@@ -50,21 +50,21 @@ inline void ForEach(
   }
 }
 
-template<typename T, size_t length>
+template<typename T>
 inline void ForEach(
-  Vector<T,length>& vector,
+  Vector<T>& vector,
   std::function<T(T)> operation) noexcept
 {
   ForEach(vector, operation, vector);
 }
 
 
-template<typename T, size_t input_a_length, size_t input_b_length, size_t output_length>
+template<typename T>
 inline void ForEach(
-  const Vector<T,input_a_length>& input_a,
-  const Vector<T,input_b_length>& input_b,
+  const Vector<T>& input_a,
+  const Vector<T>& input_b,
   std::function<T(T,T)> pointwise_operation,
-  Vector<T,output_length>& output) noexcept
+  Vector<T>& output) noexcept
 {
   ASSERT(input_a.length() == input_b.length());
   ASSERT(input_a.length() == output.length());
@@ -81,11 +81,11 @@ inline void ForEach(
 
 
 /** Fall-back multiply by a constant in case of no available optimisations. */
-template<typename T, size_t input_length, size_t output_length>
+template<typename T>
 inline void MultiplySerial(
-  const Vector<T,input_length>& input,
+  const Vector<T>& input,
   const T gain,
-  Vector<T,output_length>& output) noexcept
+  Vector<T>& output) noexcept
 {
   ASSERT(input.length() == output.length());
 //  auto input_iter(input.begin());
@@ -97,23 +97,30 @@ inline void MultiplySerial(
   }
 }
 
+//template<typename T>
+//inline void ForEach(
+//  const Vector<T>& input_a,
+//  const Vector<T>& input_b,
+//  std::function<T(T,T)> pointwise_operation,
+//  Vector<T>& output) noexcept
+
 /** Fall-back multiply vectors in case of no available optimisations. */
-template<typename T, size_t input_a_length, size_t input_b_length, size_t output_length>
+template<typename T>
 inline void MultiplySerial(
-  const Vector<T,input_a_length>& input_a,
-  const Vector<T,input_b_length>& input_b,
-  Vector<T,output_length>& output) noexcept
+  const Vector<T>& input_a,
+  const Vector<T>& input_b,
+  Vector<T>& output) noexcept
 {
-  ForEach(input_a, input_b, [] (T a, T b) { return a * b; }, output);
+  ForEach<T>(input_a, input_b, [] (T a, T b) { return a * b; }, output);
 }
 
 
-template<typename T, size_t length>
+template<typename T>
 inline void MultiplyAddSerial(
-  const Vector<T,length>& input_to_multiply,
+  const Vector<T>& input_to_multiply,
   const T gain,
-  const Vector<T,length>& input_to_add,
-  Vector<T,length>& output) noexcept
+  const Vector<T>& input_to_add,
+  Vector<T>& output) noexcept
 {
   ASSERT(input_to_multiply.length() == input_to_add.length());
   ASSERT(input_to_add.length() == output.length());
@@ -134,11 +141,11 @@ inline void MultiplyAddSerial(
  Returns the point by point addition of the two vectors.
  Equivalent to Matlab's vector_a+vector_b.
  */
-template<class T, size_t length>
+template<typename T>
 inline void AddSerial(
-  const Vector<T,length>& input_a,
-  const Vector<T,length>& input_b,
-  Vector<T,length>& output) noexcept
+  const Vector<T>& input_a,
+  const Vector<T>& input_b,
+  Vector<T>& output) noexcept
 {
   ASSERT(input_a.length() == input_a.length());
   ASSERT(input_a.length() == output.length());
@@ -153,11 +160,11 @@ inline void AddSerial(
 
 
   
-template<typename T, size_t length>
+template<typename T>
 inline void ForEach(
-  const Vector<T,length>& input_vector,
+  const Vector<T>& input_vector,
   T (*operation)(T),
-  Vector<T,length>& output_vector)
+  Vector<T>& output_vector)
 {
   ASSERT(input_vector.length() == output_vector.length());
   auto input_iter = input_vector.begin();
@@ -169,16 +176,16 @@ inline void ForEach(
 }
   
 /** Returns the opposite vector.Equivalent to Matlab's -vector. */
-template<class T, size_t length>
-inline Vector<T,length> Opposite(
-  const Vector<T,length>& input) noexcept
+template<typename T>
+inline Vector<T> Opposite(
+  const Vector<T>& input) noexcept
 {
   // Checking we are not dealing with unsigned types.
   static_assert(
     std::is_same<T, Complex<double>>::value ||
     std::is_same<T, Complex<float>>::value ||
     std::is_signed<T>::value, "");
-  Vector<T,length> output(input.length());
+  Vector<T> output(input.length());
   T (*operation)(T) = [] (T value) -> T { return -value; };
   ForEach(input, operation, output);
   return std::move(output);
@@ -186,41 +193,41 @@ inline Vector<T,length> Opposite(
 
   
 /** Returns the inverse vector.Equivalent to Matlab's 1./vector. */
-template<typename T, size_t length>
-inline Vector<T,length> Inverse(
-  const Vector<T,length>& input) noexcept
+template<typename T>
+inline Vector<T> Inverse(
+  const Vector<T>& input) noexcept
 {
-  Vector<T,length> output(input.length());
+  Vector<T> output(input.length());
   T (*operation) (T value) = [] (T value) { return T(1.0) / value; };
   ForEach(input, operation, output);
   return std::move(output);
 }
 
-template<typename T, size_t length>
-inline Vector<T,length> HalfWave(
-  const Vector<T,length>& input) noexcept
+template<typename T>
+inline Vector<T> HalfWave(
+  const Vector<T>& input) noexcept
 {
-  Vector<T,length> output(input.length());
+  Vector<T> output(input.length());
   T (*operation) (T value) = [] (T value) { return mcl::Max(T(0.0), value); };
   ForEach(input, operation, output);
   return output;
 }
 
-template<typename T, size_t length>
-inline Vector<T,length> Cos(
-  const Vector<T,length>& input) noexcept
+template<typename T>
+inline Vector<T> Cos(
+  const Vector<T>& input) noexcept
 {
-  Vector<T,length> output(input.length());
+  Vector<T> output(input.length());
   T (*operation) (T value) = [] (T value) { return cos(value); };
   ForEach(input, operation, output);
   return output;
 }
 
-template<typename T, size_t length>
-inline Vector<T,length> Sin(
-  const Vector<T,length>& input) noexcept
+template<typename T>
+inline Vector<T> Sin(
+  const Vector<T>& input) noexcept
 {
-  Vector<T,length> output(input.length());
+  Vector<T> output(input.length());
   T (*operation) (T value) = [] (T value) { return sin(value); };
   ForEach(input, operation, output);
   return output;
@@ -311,20 +318,20 @@ ComplexVector(const Vector<T>& input) noexcept
   return std::move(output);
 }
 
-//template<typename T, typename U, size_t length>
+//template<typename T, typename U>
 //inline void ForEach(
-//  const Vector<T,length>& input_vector,
+//  const Vector<T>& input_vector,
 //  std::function<U(T)> operation,
-//  Vector<U,length>& output_vector) noexcept
+//  Vector<U>& output_vector) noexcept
 
 /** Equivalent to Matlab's real(input). */
-template<typename T, size_t length>
-Vector<T,length> RealPart(
-  const Vector<Complex<T>,length>& input) noexcept
+template<typename T>
+Vector<T> RealPart(
+  const Vector<Complex<T>>& input) noexcept
 {
-  Vector<T,length> output(input.length());
+  Vector<T> output(input.length());
   T (*operation) (Complex<T>) = [] (Complex<T> value) { return value.real(); };
-  ForEach<Complex<T>,T,length>(input, operation, output);
+  ForEach<Complex<T>,T>(input, operation, output);
   return std::move(output);
 }
 
@@ -343,12 +350,12 @@ Vector<T> Imag(
  Returns the point-wise poser to exponent.
  Equivalent to Matlab's vector.^exponent
  */
-template<typename T, size_t length>
-inline Vector<T,length> Pow(
-  const Vector<T,length>& input,
+template<typename T>
+inline Vector<T> Pow(
+  const Vector<T>& input,
   const T exponent) noexcept
 {
-  Vector<T,length> output(input.length());
+  Vector<T> output(input.length());
   for (size_t i=0; i<input.length(); ++i)
   {
     output[i] = Pow(input[i], exponent);
@@ -358,33 +365,33 @@ inline Vector<T,length> Pow(
 
 
 /** Equivalent to Matlab's abs(vector) */
-template<size_t length>
-inline Vector<double,length> Abs(
-  const Vector<double,length>& input) noexcept
+
+inline Vector<double> Abs(
+  const Vector<double>& input) noexcept
 {
-  Vector<double,length> output(input.length());
+  Vector<double> output(input.length());
   ForEach(input, &std::fabs, output);
   return output;
 }
 
 /** Equivalent to Matlab's abs(vector) */
-template<size_t length>
-inline Vector<float,length> Abs(
-  const Vector<float,length>& input) noexcept
+
+inline Vector<float> Abs(
+  const Vector<float>& input) noexcept
 {
-  Vector<float,length> output(input.length());
+  Vector<float> output(input.length());
   ForEach(input, &std::abs, output);
   return output;
 }
 
 /** Equivalent to Matlab's abs(vector) */
-template<typename T, size_t length>
+template<typename T>
 inline Vector<double> Abs(
-  const Vector<Complex<T>,length>& input) noexcept
+  const Vector<Complex<T>>& input) noexcept
 {
-  Vector<T,length> output(input.length());
+  Vector<T> output(input.length());
   T (*operation) (Complex<T>) = [] (Complex<T> value) { return mcl::Abs(value); };
-  ForEach<Complex<T>,T,length>(input, operation, output);
+  ForEach<Complex<T>,T>(input, operation, output);
   return std::move(output);
 }
 //
@@ -401,11 +408,11 @@ inline Vector<double> Abs(
  Returns the natural logarithm of the elements of vector.
  Equivalent to Matlab's log(vector).
  */
-template<typename T, size_t length>
-inline Vector<T,length> Log(
-  const Vector<T,length>& vector) noexcept
+template<typename T>
+inline Vector<T> Log(
+  const Vector<T>& vector) noexcept
 {
-  Vector<T,length> output(vector.length());
+  Vector<T> output(vector.length());
   for (size_t i=0; i<vector.length(); ++i)
   {
     output[i] = log(vector[i]);
@@ -418,11 +425,11 @@ inline Vector<T,length> Log(
  Returns the 10-base logarithm of the elements of vector.
  Equivalent to Matlab's log10(vector).
  */
-template<typename T, size_t length>
-inline Vector<T,length> Log10(
-  const Vector<T,length>& vector) noexcept
+template<typename T>
+inline Vector<T> Log10(
+  const Vector<T>& vector) noexcept
 {
-  Vector<T,length> output(vector.length());
+  Vector<T> output(vector.length());
   for (size_t i=0; i<vector.length(); ++i)
   {
     output[i] = log10(vector[i]);

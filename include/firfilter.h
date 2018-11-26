@@ -32,10 +32,10 @@ private:
   size_t update_length_;
   bool updating_;
   
-  template<size_t length>
+  
   void GetExtendedInput(
-    const Vector<T,length>& input,
-    Vector<T,length> extended_input) noexcept
+    const Vector<T>& input,
+    Vector<T> extended_input) noexcept
   {
     
     // Stage 1
@@ -224,10 +224,10 @@ public:
     return impulse_response_;
   }
   
-  template<size_t input_length, size_t output_length>
+  
   void FilterSerial(
-    const Vector<T,input_length>& input,
-    Vector<T,output_length>& output) noexcept
+    const Vector<T>& input,
+    Vector<T>& output) noexcept
   {
     auto input_iter(input.begin());
     auto output_iter(output.begin());
@@ -237,10 +237,10 @@ public:
     }
   }
   
-  template<size_t input_length, size_t output_length>
+  
   void Filter(
-    const Vector<T,input_length>& input,
-    Vector<T,output_length>& output) noexcept
+    const Vector<T>& input,
+    Vector<T>& output) noexcept
   {
     ASSERT(input.length() == output.length());
     const size_t num_samples = input.length();

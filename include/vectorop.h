@@ -20,9 +20,9 @@ namespace mcl {
 
 
 // Forward declarations
-template<typename T, size_t length>
-inline Vector<T,length> Pow(
-  const Vector<T,length>& input,
+template<typename T>
+inline Vector<T> Pow(
+  const Vector<T>& input,
   const T exponent) noexcept;
 
 template<typename T>
@@ -41,12 +41,12 @@ inline T Max(
 // End of forward declarations
   
   
-template<typename T, typename U, size_t length>
+template<typename T, typename U>
 inline void ForEach(
-  const Vector<T,length>& input_vector,
+  const Vector<T>& input_vector,
   const T value,
   U (*operation)(T, T),
-  Vector<U,length>& output_vector)
+  Vector<U>& output_vector)
 {
   ASSERT(input_vector.length() == output_vector.length());
   auto input_iter = input_vector.begin();
@@ -74,14 +74,14 @@ bool IsNonNegative(
 }
   
 /** Equivalent to Matlab's length(input). */
-template<class T, size_t length>
-size_t Length(const Vector<T,length>& input) noexcept {
+template<typename T>
+size_t Length(const Vector<T>& input) noexcept {
   return input.length();
 }
 
 
-template <class T, size_t length>
-void SetToZero(Vector<T,length>& vector)
+template <class T>
+void SetToZero(Vector<T>& vector)
 {
   for (auto& element : vector)
   {
@@ -94,10 +94,10 @@ void SetToZero(Vector<T,length>& vector)
  If the length of input is smaller than total_length, than it returns the
  vector with the first total_length elements.
  */
-template<typename T, size_t input_length, size_t output_length>
+template<typename T>
 void ZeroPad(
-  const Vector<T,input_length>& input,
-  Vector<T,output_length>& output) noexcept
+  const Vector<T>& input,
+  Vector<T>& output) noexcept
 {
   auto input_iter = input.begin();
   auto output_iter = output.begin();
@@ -115,38 +115,29 @@ void ZeroPad(
 }
 
 /** Returns a vector of zeros */
-template <class T, size_t length>
-Vector<T,length> Zeros() noexcept
-{
-  Vector<T,length> vector(length);
-  SetToZero(vector);
-  return std::move(vector);
-}
-
-
 template <class T>
-Vector<T, kDynamicLength> Zeros(
+Vector<T> Zeros(
   size_t length) noexcept
 {
-  Vector<T, kDynamicLength> vector(length);
+  Vector<T> vector(length);
   SetToZero(vector);
   return std::move(vector);
 }
 
 template <class T>
-  Vector<T, kDynamicLength> EmptyVector() noexcept
+  Vector<T> EmptyVector() noexcept
 {
-  return Vector<T, kDynamicLength>(0);
+  return Vector<T>(0);
 }
 
 
 
-template<typename T, size_t length>
-inline Vector<T,length> Add(
-  const Vector<T,length>& input_a,
-  const Vector<T,length>& input_b) noexcept
+template<typename T>
+inline Vector<T> Add(
+  const Vector<T>& input_a,
+  const Vector<T>& input_b) noexcept
 {
-  Vector<T,length> output(input_a.length());
+  Vector<T> output(input_a.length());
   Add(input_a, input_b, output);
   return std::move(output);
 }
@@ -156,12 +147,12 @@ inline Vector<T,length> Add(
  Returns the point by point multiplication of the vector with the gain.
  Equivalent to Matlab's vector_a.*gain.
  */
-template<typename T, size_t length>
-inline Vector<T,length> Multiply(
-  const Vector<T,length>& input,
+template<typename T>
+inline Vector<T> Multiply(
+  const Vector<T>& input,
   const T gain) noexcept
 {
-  Vector<T,length> output(input.length());
+  Vector<T> output(input.length());
   Multiply(input, gain, output);
   return std::move(output);
 }
@@ -175,11 +166,11 @@ inline Vector<T,length> Multiply(
  Returns the point by point addition of the two vectors.
  Equivalent to Matlab's vector_a+vector_b.
  */
-template<class T, size_t length>
+template<typename T>
 inline void AddScalar(
-  const Vector<T,length>& input,
+  const Vector<T>& input,
   const T scalar,
-  Vector<T,length>& output) noexcept
+  Vector<T>& output) noexcept
 {
   auto input_iter = input.begin();
   auto output_iter = output.begin();
@@ -193,12 +184,12 @@ inline void AddScalar(
  Returns the point by point addition of the two vectors.
  Equivalent to Matlab's vector_a+vector_b.
  */
-template<class T, size_t length>
-inline Vector<T,length> AddScalar(
-  const Vector<T,length>& vector,
+template<typename T>
+inline Vector<T> AddScalar(
+  const Vector<T>& vector,
   const T scalar) noexcept
 {
-  Vector<T,length> output(vector.length());
+  Vector<T> output(vector.length());
   AddScalar(vector, scalar, output);
   return std::move(output);
 }
@@ -274,12 +265,12 @@ Vector<T> BinaryVector(
  Flips the vector. Equivalent to matlab's flipud or fliplr (which for vectors
  are equivalent).
  */
-template<class T, size_t length>
-Vector<T,length> Flip(
-  const Vector<T,length>& input) noexcept
+template<typename T>
+Vector<T> Flip(
+  const Vector<T>& input) noexcept
 {
   if (input.length() <= 1) { return input; }
-  Vector<T,length> output(input.length());
+  Vector<T> output(input.length());
   auto input_iter = input.end()-1; // Start from last element of vector
   auto output_iter = output.begin();
   while (output_iter != output.end()) {
@@ -292,9 +283,9 @@ Vector<T,length> Flip(
  Equivalent to Matlab's circshift(vector, num_positions). A positive
  num_positions corresponds to a forward shift.
  */
-template<class T, size_t length>
-Vector<T,length> CircShift(
-  const Vector<T,length>& vector,
+template<typename T>
+Vector<T> CircShift(
+  const Vector<T>& vector,
   Int num_positions) noexcept
 {
   Int N(static_cast<Int>(vector.length()));
@@ -518,9 +509,9 @@ Vector<T> GetSegment(
  Multiplies all the elements in the vector. Equivalent to Matlab's
  prod(vector).
  */
-template<typename T, size_t length>
+template<typename T>
 T Prod(
-  const Vector<T,length>& vector) noexcept
+  const Vector<T>& vector) noexcept
 {
   T output = (T) 1.0;
   for (auto& element : vector)
@@ -546,8 +537,8 @@ T Dot(
   return output;
 }
 
-template<class T, size_t length>
-T Norm(const Vector<T,length>& vector, T l_norm = 2.0) noexcept
+template<typename T>
+T Norm(const Vector<T>& vector, T l_norm = 2.0) noexcept
 {
 const size_t num_elements = vector.length();
   T output = 0.0;
@@ -557,8 +548,8 @@ const size_t num_elements = vector.length();
   return std::pow(output, 1.0/l_norm);
 }
 
-template<typename T, size_t length>
-void Print(const Vector<T,length>& vector) noexcept
+template<typename T>
+void Print(const Vector<T>& vector) noexcept
 {
   std::cout<<"\n------------\n";
   for (auto iter = vector.begin(); iter != vector.end(); ++iter)
@@ -649,8 +640,8 @@ Vector<T> TukeyWin(
 
 
 
-template <typename T, size_t length>
-T Sum(const Vector<T,length>& input) noexcept
+template <typename T>
+T Sum(const Vector<T>& input) noexcept
 {
   T output((T) 0.0);
   for (auto iter = input.begin(); iter != input.end(); iter++)
@@ -661,9 +652,9 @@ T Sum(const Vector<T,length>& input) noexcept
 }
 
 
-template <typename T, size_t length>
+template <typename T>
 /** Equivalent to Matlab's mean(input) */
-T Mean(const Vector<T,length>& input) noexcept
+T Mean(const Vector<T>& input) noexcept
 {
   return Sum(input) / ((T) input.length());
 }
@@ -675,9 +666,9 @@ T Mean(const Vector<T,length>& input) noexcept
  Returns the geometric mean of the input vector. Equivalent
  to Matlab's geomean(input)
  **/
-template<typename T, size_t length>
+template<typename T>
 T Geomean(
-  const Vector<T,length>& input) noexcept
+  const Vector<T>& input) noexcept
 {
 // TODO: Throw error for negative entries
   return Pow(Prod(input), 1.0/((T)input.length()));
@@ -688,16 +679,16 @@ T Geomean(
  normalised inside the function. Hence Mean(input, ones(N)) gives the same
  result as Mean(input, ones(N)/N).
  */
-template<typename T, size_t length>
+template<typename T>
 T Mean(
-  const Vector<T,length>& input,
-  const Vector<T,length>& weights) noexcept
+  const Vector<T>& input,
+  const Vector<T>& weights) noexcept
 {
   ASSERT(input.length() == weights.length());
   ASSERT(IsNonNegative(weights));
   
   // Normalise the weigths
-  Vector<T,length> normalised_weights = Multiply(weights, 1.0/Sum(weights));
+  Vector<T> normalised_weights = Multiply(weights, 1.0/Sum(weights));
   ASSERT(Sum(normalised_weights) == 1.0);
   return Sum(Multiply(input, normalised_weights));
 }
@@ -706,17 +697,17 @@ T Mean(
  Returns the standard deviation of the `input` vector. Equivalent to Matlab's
  std(input). This includes the correction for having an unbiased estimator.
  */
-template<typename T, size_t length>
+template<typename T>
 T Std(
-  const Vector<T,length>& input) noexcept
+  const Vector<T>& input) noexcept
 {
   return sqrt(Var(input));
 }
 
 /** Var (unbiased estimator) */
-template<typename T, size_t length>
+template<typename T>
 T Var(
-  const Vector<T,length>& input) noexcept
+  const Vector<T>& input) noexcept
 {
   T mean = Mean(input);
   T output(0.0);
@@ -729,10 +720,10 @@ T Var(
 
 
 /** Weighted var (biased estimator) */
-template<typename T, size_t length>
+template<typename T>
 T Var(
-  const Vector<T,length>& input,
-  const Vector<T,length>& weights) noexcept
+  const Vector<T>& input,
+  const Vector<T>& weights) noexcept
 {
   ASSERT(IsNonNegative(weights));
 
@@ -851,11 +842,11 @@ Vector<TDestination> Cast(
   return output;
 }
 
-template<typename T, size_t length>
-Vector<Complex<T>,length> CastToComplex(
-  Vector<T,length> input) noexcept
+template<typename T>
+Vector<Complex<T>> CastToComplex(
+  Vector<T> input) noexcept
 {
-  Vector<Complex<T>,length> output(input.length());
+  Vector<Complex<T>> output(input.length());
   for (Int i=0; i<(Int)input.length(); ++i)
   {
     output[i] = Complex<T>(input[i], 0.0);

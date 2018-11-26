@@ -18,7 +18,7 @@ namespace mcl {
   
 bool VectorOpTest() {
 
-  Vector<double, 3> myvector_a;
+  Vector<double> myvector_a(3);
   myvector_a[0] = 0.1;
   myvector_a[1] = 0.2;
   myvector_a[2] = 0.3;
@@ -29,7 +29,7 @@ bool VectorOpTest() {
   myvector_a[2] = -0.3;
   ASSERT(myvector_a[2] == -0.3);
   
-  Vector<double, kDynamicLength> myvector_b;
+  Vector<double> myvector_b;
   myvector_b.PushBack(0.1);
   myvector_b.PushBack(0.2);
   myvector_b.PushBack(0.3);
@@ -40,7 +40,7 @@ bool VectorOpTest() {
   myvector_b[2] = -0.3;
   ASSERT(myvector_b[2] == -0.3);
 
-  Vector<Complex<double>, 3> vector_a;
+  Vector<Complex<double>> vector_a(3);
   vector_a[0] = Complex<double>(1.0, 0.0);
   vector_a[1] = Complex<double>(0.0, 1.0);
   vector_a[2] = Complex<double>(1.0, 0.5);
@@ -48,8 +48,8 @@ bool VectorOpTest() {
 
   ASSERT(Length(vector_a) == 3);
 
-  Vector<Complex<double>, 3> flip_vector_a = Flip(vector_a);
-  Vector<Complex<double>, 3> flip_vector_a_cmp(3);
+  Vector<Complex<double>> flip_vector_a = Flip(vector_a);
+  Vector<Complex<double>> flip_vector_a_cmp(3);
   flip_vector_a_cmp[0] = Complex<double>(1.0, 0.5);
   flip_vector_a_cmp[1] = Complex<double>(0.0, 1.0);
   flip_vector_a_cmp[2] = Complex<double>(1.0, 0.0);
@@ -101,7 +101,7 @@ bool VectorOpTest() {
 
   ASSERT(IsApproximatelyEqual(Sum(vector_c), -0.3+0.3+2.4, VERY_SMALL));
 
-  Vector<Real, 5> pad_vector_c;
+  Vector<Real> pad_vector_c(5);
   ZeroPad(vector_c, pad_vector_c);
   Vector<Real> pad_vector_c_cmp(5);
   pad_vector_c_cmp[0] = -0.3;
@@ -713,45 +713,45 @@ bool VectorOpTest() {
   
   
   // Testing vector reference
-  Vector<Real> referenced(3,0.0);
-  referenced[1] = 2.0;
-  ASSERT(referenced.length() == 3);
-  ASSERT(referenced[0] == 0.0);
-  ASSERT(referenced[1] == 2.0);
-  ASSERT(referenced[2] == 0.0);
-  Vector<Real,kReference> reference(referenced);
-  reference[0] = 1.0;
-  reference[1] = 3.0;
-  reference[2] = 5.0;
-  ASSERT(reference[0] == 1.0);
-  ASSERT(reference[1] == 3.0);
-  ASSERT(reference[2] == 5.0);
-  ASSERT(referenced[0] == 1.0);
-  ASSERT(referenced[1] == 3.0);
-  ASSERT(referenced[2] == 5.0);
-  ASSERT(reference.length() == 3);
-  
-  Vector<Real,kReference> reference_b(referenced, 0);
-  ASSERT(reference_b.length() == 3);
-  ASSERT(reference_b[0] == 1.0);
-  ASSERT(reference_b[1] == 3.0);
-  ASSERT(reference_b[2] == 5.0);
-  referenced.PushBack(7.0);
-  ASSERT(reference_b.length() == 4); // The length of the reference has increased along with the referenced
-  
-  
-  Vector<Real,kReference> reference_c(referenced, 0, 4);
-  ASSERT(reference_c.length() == 4);
-  referenced.PushBack(9.0);
-  ASSERT(reference_c.length() == 4); // In this case the lenght did not increase, because specified a length
-  ASSERT(reference_c[0] == 1.0);
-  ASSERT(reference_c[1] == 3.0);
-  ASSERT(reference_c[2] == 5.0);
-  
-  Vector<Real,kReference> reference_d(referenced, 2, 2);
-  ASSERT(reference_d.length() == 2);
-  ASSERT(reference_d[0] == 5.0);
-  ASSERT(reference_d[1] == 7.0);
+//  Vector<Real> referenced(3,0.0);
+//  referenced[1] = 2.0;
+//  ASSERT(referenced.length() == 3);
+//  ASSERT(referenced[0] == 0.0);
+//  ASSERT(referenced[1] == 2.0);
+//  ASSERT(referenced[2] == 0.0);
+//  Vector<Real,kReference> reference(referenced);
+//  reference[0] = 1.0;
+//  reference[1] = 3.0;
+//  reference[2] = 5.0;
+//  ASSERT(reference[0] == 1.0);
+//  ASSERT(reference[1] == 3.0);
+//  ASSERT(reference[2] == 5.0);
+//  ASSERT(referenced[0] == 1.0);
+//  ASSERT(referenced[1] == 3.0);
+//  ASSERT(referenced[2] == 5.0);
+//  ASSERT(reference.length() == 3);
+//  
+//  Vector<Real,kReference> reference_b(referenced, 0);
+//  ASSERT(reference_b.length() == 3);
+//  ASSERT(reference_b[0] == 1.0);
+//  ASSERT(reference_b[1] == 3.0);
+//  ASSERT(reference_b[2] == 5.0);
+//  referenced.PushBack(7.0);
+//  ASSERT(reference_b.length() == 4); // The length of the reference has increased along with the referenced
+//  
+//  
+//  Vector<Real,kReference> reference_c(referenced, 0, 4);
+//  ASSERT(reference_c.length() == 4);
+//  referenced.PushBack(9.0);
+//  ASSERT(reference_c.length() == 4); // In this case the lenght did not increase, because specified a length
+//  ASSERT(reference_c[0] == 1.0);
+//  ASSERT(reference_c[1] == 3.0);
+//  ASSERT(reference_c[2] == 5.0);
+//  
+//  Vector<Real,kReference> reference_d(referenced, 2, 2);
+//  ASSERT(reference_d.length() == 2);
+//  ASSERT(reference_d[0] == 5.0);
+//  ASSERT(reference_d[1] == 7.0);
   
   return true;
 }

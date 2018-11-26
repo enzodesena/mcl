@@ -383,12 +383,12 @@ bool IsApproximatelyReal(
  It normalises the pdf if its sum is not 1.
  Note: this function is identical to Matlab's only for uint8 values.
  */
-template<typename T, size_t length>
+template<typename T>
 T Entropy(
-  const Vector<T,length> pdf,
+  const Vector<T> pdf,
   T base) noexcept
 {
-  Vector<T,length> normalised_pdf(Multiply(pdf, 1.0/Sum(pdf)));
+  Vector<T> normalised_pdf(Multiply(pdf, 1.0/Sum(pdf)));
   return -Sum(Multiply(pdf, Log(pdf)))/log(base);
 }
   

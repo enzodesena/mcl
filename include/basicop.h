@@ -21,9 +21,9 @@ template<typename TOrigin, typename TDestination>
 Vector<TDestination> Cast(
   const Vector<TOrigin>& vector) noexcept;
   
-template<class T, size_t length>
-inline Vector<T,length> Opposite(
-  const Vector<T,length>& input) noexcept;
+template<typename T>
+inline Vector<T> Opposite(
+  const Vector<T>& input) noexcept;
 // End of forward declarations
   
 /**
