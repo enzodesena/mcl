@@ -7,7 +7,7 @@
  */
 
 
-#include "matrixop.h"
+#include "matrixop.hpp"
 
 namespace mcl {
   

@@ -40,20 +40,20 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		5708B0AE21A59B9B0000F5FD /* mclintrinsics.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = mclintrinsics.h; path = include/mclintrinsics.h; sourceTree = "<group>"; };
-		571D455020B867B50009A84D /* constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = constants.h; path = include/constants.h; sourceTree = "<group>"; };
+		5708B0AE21A59B9B0000F5FD /* mclintrinsics.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = mclintrinsics.hpp; path = include/mclintrinsics.hpp; sourceTree = "<group>"; };
+		571D455020B867B50009A84D /* constants.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = constants.hpp; path = include/constants.hpp; sourceTree = "<group>"; };
 		572A877E19C070ED00F62F8F /* libMCLiOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libMCLiOS.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		57301BCD1D6B01A800D6F5B0 /* kiss_fft.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = kiss_fft.c; path = kissfft/src/kiss_fft.c; sourceTree = "<group>"; };
 		57301BD31D6B01F900D6F5B0 /* _kiss_fft_guts.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = _kiss_fft_guts.h; path = kissfft/include/_kiss_fft_guts.h; sourceTree = "<group>"; };
 		57301BD41D6B01F900D6F5B0 /* kiss_fft.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = kiss_fft.h; path = kissfft/include/kiss_fft.h; sourceTree = "<group>"; };
 		57301BD51D6B01F900D6F5B0 /* kissfft.hh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = kissfft.hh; path = kissfft/include/kissfft.hh; sourceTree = "<group>"; };
 		57301BDA1D6B022400D6F5B0 /* butter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = butter.h; path = butter/include/butter.h; sourceTree = "<group>"; };
-		576B25781CF9DFD200673FC0 /* quaternion.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = quaternion.h; path = include/quaternion.h; sourceTree = "<group>"; };
+		576B25781CF9DFD200673FC0 /* quaternion.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = quaternion.hpp; path = include/quaternion.hpp; sourceTree = "<group>"; };
 		5774892E21AC4D2200D949F8 /* matrix.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = matrix.hpp; path = include/matrix.hpp; sourceTree = "<group>"; };
-		5778D80915B616260015AAC9 /* digitalfilter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = digitalfilter.h; path = include/digitalfilter.h; sourceTree = "<group>"; };
-		5778D80A15B616260015AAC9 /* firfilter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = firfilter.h; path = include/firfilter.h; sourceTree = "<group>"; };
-		5778D80B15B616260015AAC9 /* iirfilter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = iirfilter.h; path = include/iirfilter.h; sourceTree = "<group>"; };
-		5788B8262185FD2F00D935DE /* vector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = vector.h; path = include/vector.h; sourceTree = "<group>"; };
+		5778D80915B616260015AAC9 /* digitalfilter.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = digitalfilter.hpp; path = include/digitalfilter.hpp; sourceTree = "<group>"; };
+		5778D80A15B616260015AAC9 /* firfilter.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = firfilter.hpp; path = include/firfilter.hpp; sourceTree = "<group>"; };
+		5778D80B15B616260015AAC9 /* iirfilter.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = iirfilter.hpp; path = include/iirfilter.hpp; sourceTree = "<group>"; };
+		5788B8262185FD2F00D935DE /* vector.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = vector.hpp; path = include/vector.hpp; sourceTree = "<group>"; };
 		57A158AA1593501200AA6445 /* MCL_test */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = MCL_test; sourceTree = BUILT_PRODUCTS_DIR; };
 		57A158AC1593501200AA6445 /* libMCL.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libMCL.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		57B4EF6C1CD8174E00134991 /* mcl_test.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mcl_test.cpp; path = src/bin/mcl_test.cpp; sourceTree = "<group>"; };
@@ -66,18 +66,18 @@
 		57B4EF741CD8177900134991 /* random_test.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = random_test.cpp; path = src/test/random_test.cpp; sourceTree = "<group>"; };
 		57B4EF761CD8177900134991 /* transformop_test.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = transformop_test.cpp; path = src/test/transformop_test.cpp; sourceTree = "<group>"; };
 		57B4EF771CD8177900134991 /* vectorop_test.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = vectorop_test.cpp; path = src/test/vectorop_test.cpp; sourceTree = "<group>"; };
-		57B71D12162DD224003411BA /* randomop.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = randomop.h; path = include/randomop.h; sourceTree = "<group>"; };
-		57BA6FFC15B41B55002F077F /* pointwiseop.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = pointwiseop.h; path = include/pointwiseop.h; sourceTree = "<group>"; };
-		57BA6FFE15B421F5002F077F /* matrixop.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = matrixop.h; path = include/matrixop.h; sourceTree = "<group>"; };
-		57BA700215B4263D002F077F /* mcltypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = mcltypes.h; path = include/mcltypes.h; sourceTree = "<group>"; };
-		57BA700315B4274D002F077F /* vectorop.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = vectorop.h; path = include/vectorop.h; sourceTree = "<group>"; };
-		57BA700E15B43B07002F077F /* elementaryop.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = elementaryop.h; path = include/elementaryop.h; sourceTree = "<group>"; };
-		57BA701215B43BC9002F077F /* comparisonop.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = comparisonop.h; path = include/comparisonop.h; sourceTree = "<group>"; };
-		57BA701615B490C4002F077F /* transformop.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = transformop.h; path = include/transformop.h; sourceTree = "<group>"; };
-		57BA701A15B49263002F077F /* basicop.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = basicop.h; path = include/basicop.h; sourceTree = "<group>"; };
+		57B71D12162DD224003411BA /* randomop.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = randomop.hpp; path = include/randomop.hpp; sourceTree = "<group>"; };
+		57BA6FFC15B41B55002F077F /* pointwiseop.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = pointwiseop.hpp; path = include/pointwiseop.hpp; sourceTree = "<group>"; };
+		57BA6FFE15B421F5002F077F /* matrixop.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = matrixop.hpp; path = include/matrixop.hpp; sourceTree = "<group>"; };
+		57BA700215B4263D002F077F /* mcltypes.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = mcltypes.hpp; path = include/mcltypes.hpp; sourceTree = "<group>"; };
+		57BA700315B4274D002F077F /* vectorop.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = vectorop.hpp; path = include/vectorop.hpp; sourceTree = "<group>"; };
+		57BA700E15B43B07002F077F /* elementaryop.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = elementaryop.hpp; path = include/elementaryop.hpp; sourceTree = "<group>"; };
+		57BA701215B43BC9002F077F /* comparisonop.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = comparisonop.hpp; path = include/comparisonop.hpp; sourceTree = "<group>"; };
+		57BA701615B490C4002F077F /* transformop.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = transformop.hpp; path = include/transformop.hpp; sourceTree = "<group>"; };
+		57BA701A15B49263002F077F /* basicop.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = basicop.hpp; path = include/basicop.hpp; sourceTree = "<group>"; };
 		57E73F9C1CD7CB1D00095F6E /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		57FE67C71CFB61EE00E3CB2A /* quaternion_test.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = quaternion_test.cpp; path = src/test/quaternion_test.cpp; sourceTree = "<group>"; };
-		57FE67CD1CFB795800E3CB2A /* point.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = point.h; path = include/point.h; sourceTree = "<group>"; };
+		57FE67CD1CFB795800E3CB2A /* point.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = point.hpp; path = include/point.hpp; sourceTree = "<group>"; };
 		57FE67CE1CFB7A4D00E3CB2A /* point_test.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = point_test.cpp; path = src/test/point_test.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -163,23 +163,23 @@
 		57A1565115933B8A00AA6445 /* include */ = {
 			isa = PBXGroup;
 			children = (
-				57BA701A15B49263002F077F /* basicop.h */,
-				57BA701215B43BC9002F077F /* comparisonop.h */,
-				5778D80915B616260015AAC9 /* digitalfilter.h */,
-				57BA700E15B43B07002F077F /* elementaryop.h */,
-				5778D80A15B616260015AAC9 /* firfilter.h */,
-				5778D80B15B616260015AAC9 /* iirfilter.h */,
-				5708B0AE21A59B9B0000F5FD /* mclintrinsics.h */,
-				57BA700215B4263D002F077F /* mcltypes.h */,
-				57BA6FFE15B421F5002F077F /* matrixop.h */,
-				57FE67CD1CFB795800E3CB2A /* point.h */,
-				57BA6FFC15B41B55002F077F /* pointwiseop.h */,
-				576B25781CF9DFD200673FC0 /* quaternion.h */,
-				57B71D12162DD224003411BA /* randomop.h */,
-				57BA701615B490C4002F077F /* transformop.h */,
-				57BA700315B4274D002F077F /* vectorop.h */,
-				571D455020B867B50009A84D /* constants.h */,
-				5788B8262185FD2F00D935DE /* vector.h */,
+				57BA701A15B49263002F077F /* basicop.hpp */,
+				57BA701215B43BC9002F077F /* comparisonop.hpp */,
+				5778D80915B616260015AAC9 /* digitalfilter.hpp */,
+				57BA700E15B43B07002F077F /* elementaryop.hpp */,
+				5778D80A15B616260015AAC9 /* firfilter.hpp */,
+				5778D80B15B616260015AAC9 /* iirfilter.hpp */,
+				5708B0AE21A59B9B0000F5FD /* mclintrinsics.hpp */,
+				57BA700215B4263D002F077F /* mcltypes.hpp */,
+				57BA6FFE15B421F5002F077F /* matrixop.hpp */,
+				57FE67CD1CFB795800E3CB2A /* point.hpp */,
+				57BA6FFC15B41B55002F077F /* pointwiseop.hpp */,
+				576B25781CF9DFD200673FC0 /* quaternion.hpp */,
+				57B71D12162DD224003411BA /* randomop.hpp */,
+				57BA701615B490C4002F077F /* transformop.hpp */,
+				57BA700315B4274D002F077F /* vectorop.hpp */,
+				571D455020B867B50009A84D /* constants.hpp */,
+				5788B8262185FD2F00D935DE /* vector.hpp */,
 				5774892E21AC4D2200D949F8 /* matrix.hpp */,
 			);
 			name = include;

@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include "mcltypes.h"
-#include "comparisonop.h"
+#include "mcltypes.hpp"
+#include "comparisonop.hpp"
 
 namespace mcl {
 

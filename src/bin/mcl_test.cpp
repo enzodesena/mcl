@@ -8,15 +8,15 @@
 
 
 #include <iostream>
-#include "matrixop.h"
-#include "vectorop.h"
-#include "vector.h"
-#include "elementaryop.h"
-#include "quaternion.h"
-#include "transformop.h"
-#include "firfilter.h"
-#include "randomop.h"
-#include "iirfilter.h"
+#include "matrixop.hpp"
+#include "vectorop.hpp"
+#include "vector.hpp"
+#include "elementaryop.hpp"
+#include "quaternion.hpp"
+#include "transformop.hpp"
+#include "firfilter.hpp"
+#include "randomop.hpp"
+#include "iirfilter.hpp"
 
 
 

@@ -9,10 +9,10 @@
 #pragma once
 #include <vector>
 
-#include "mcltypes.h"
-#include "mclintrinsics.h"
-#include "digitalfilter.h"
-#include "vectorop.h"
+#include "mcltypes.hpp"
+#include "mclintrinsics.hpp"
+#include "digitalfilter.hpp"
+#include "vectorop.hpp"
 
 namespace mcl {
 /** FIR Filter */

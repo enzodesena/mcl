@@ -6,14 +6,14 @@
  Authors: Enzo De Sena, enzodesena@gmail.com
  */
 
-#include "iirfilter.h"
-#include "firfilter.h"
-#include "mcltypes.h"
-//#include "maxgradientfilter.h"
-#include "comparisonop.h"
-#include "randomop.h"
+#include "iirfilter.hpp"
+#include "firfilter.hpp"
+#include "mcltypes.hpp"
+//#include "maxgradientfilter.hpp"
+#include "comparisonop.hpp"
+#include "randomop.hpp"
 #include "butter.h"
-#include "vectorop.h"
+#include "vectorop.hpp"
 
 namespace mcl {
 

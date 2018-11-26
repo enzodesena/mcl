@@ -10,10 +10,10 @@
 
 
 //#include <cassert>
-//#include "mcltypes.h"
-#include "vector.h"
-#include "basicop.h"
-#include "elementaryop.h"
+//#include "mcltypes.hpp"
+#include "vector.hpp"
+#include "basicop.hpp"
+#include "elementaryop.hpp"
 #include <functional>
 
 namespace mcl

@@ -7,10 +7,10 @@
  */
 
 
-#include "pointwiseop.h"
-#include "comparisonop.h"
-#include "vectorop.h"
-#include "mcltypes.h"
+#include "pointwiseop.hpp"
+#include "comparisonop.hpp"
+#include "vectorop.hpp"
+#include "mcltypes.hpp"
 #include <vector>
 
 namespace mcl {

@@ -12,7 +12,7 @@
 #define MCL_BUTTER_H
 
 #include <vector>
-#include "iirfilter.h"
+#include "iirfilter.hpp"
 
 namespace mcl {
   

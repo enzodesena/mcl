@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include "digitalfilter.h"
-#include "vectorop.h"
-#include "constants.h"
+#include "digitalfilter.hpp"
+#include "vectorop.hpp"
+#include "constants.hpp"
 
 namespace mcl {
 

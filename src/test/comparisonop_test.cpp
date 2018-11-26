@@ -7,7 +7,7 @@
  */
 
 
-#include "comparisonop.h"
+#include "comparisonop.hpp"
 #include <cassert>
 
 namespace mcl {

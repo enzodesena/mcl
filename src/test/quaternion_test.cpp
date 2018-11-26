@@ -7,12 +7,12 @@
  */
 
 
-#include "quaternion.h"
-#include "comparisonop.h"
-#include "mcltypes.h"
-#include "point.h"
-#include "vectorop.h"
-#include "constants.h"
+#include "quaternion.hpp"
+#include "comparisonop.hpp"
+#include "mcltypes.hpp"
+#include "point.hpp"
+#include "vectorop.hpp"
+#include "constants.hpp"
 #include <vector>
 
 namespace mcl

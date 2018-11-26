@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include "mcltypes.h"
-#include "vector.h"
-#include "elementaryop.h"
+#include "mcltypes.hpp"
+#include "vector.hpp"
+#include "elementaryop.hpp"
 #include "kissfft.hh"
 
 namespace mcl {

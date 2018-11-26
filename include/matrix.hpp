@@ -12,10 +12,10 @@
 #include <fstream>
 #include <iostream>
 #include <iomanip>
-#include "mcltypes.h"
-#include "comparisonop.h"
-#include "basicop.h"
-#include "elementaryop.h"
+#include "mcltypes.hpp"
+#include "comparisonop.hpp"
+#include "basicop.hpp"
+#include "elementaryop.hpp"
 
 #if MCL_LOAD_EIGEN
   #include <Eigen/Dense>

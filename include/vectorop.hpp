@@ -9,11 +9,11 @@
 #pragma once
 
 
-#include "elementaryop.h"
-#include "pointwiseop.h"
-#include "basicop.h"
-#include "mclintrinsics.h"
-#include "vector.h"
+#include "elementaryop.hpp"
+#include "pointwiseop.hpp"
+#include "basicop.hpp"
+#include "mclintrinsics.hpp"
+#include "vector.hpp"
 
 namespace mcl {
 

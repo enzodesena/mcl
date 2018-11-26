@@ -27,9 +27,9 @@
 #endif
 #endif
 
-#include "mcltypes.h"
-#include "quaternion.h"
-#include "vector.h"
+#include "mcltypes.hpp"
+#include "quaternion.hpp"
+#include "vector.hpp"
 #include <vector>
 #include <functional>
 

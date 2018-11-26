@@ -7,10 +7,10 @@
  */
 
 
-#include "comparisonop.h"
-#include "transformop.h"
-#include "vectorop.h"
-#include "vector.h"
+#include "comparisonop.hpp"
+#include "transformop.hpp"
+#include "vectorop.hpp"
+#include "vector.hpp"
 #include <cassert>
 
 namespace mcl {

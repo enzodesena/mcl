@@ -8,12 +8,12 @@
 
 #pragma once
 
-#include "vector.h"
-#include "pointwiseop.h"
+#include "vector.hpp"
+#include "pointwiseop.hpp"
 
 
-#include "vectorop.h"
-#include "mcltypes.h"
+#include "vectorop.hpp"
+#include "mcltypes.hpp"
 
 #if defined(MCL_APPLE_ACCELERATE)
   #include <Accelerate/Accelerate.h>
@@ -24,7 +24,7 @@
 #endif
 
 #ifdef MCL_NEON_ACCELERATE
-  #include "arm_neon.h"
+  #include "arm_neon.hpp"
 #endif
 
 #ifdef MCL_ENVWINDOWS

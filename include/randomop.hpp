@@ -10,8 +10,8 @@
 
 // Using TR1 and old c++ library
 
-#include "mcltypes.h"
-#include "vector.h"
+#include "mcltypes.hpp"
+#include "vector.hpp"
 #include <random>
 
 namespace mcl {

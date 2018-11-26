@@ -7,9 +7,9 @@
  */
 
 
-#include "elementaryop.h"
-#include "comparisonop.h"
-#include "mcltypes.h"
+#include "elementaryop.hpp"
+#include "comparisonop.hpp"
+#include "mcltypes.hpp"
 #include <vector>
 #include <cassert>
 

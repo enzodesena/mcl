@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include "vectorop.h"
-#include "mcltypes.h"
-#include "pointwiseop.h"
+#include "vectorop.hpp"
+#include "mcltypes.hpp"
+#include "pointwiseop.hpp"
 #include <limits>
 
 namespace mcl

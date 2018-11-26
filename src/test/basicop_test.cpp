@@ -7,10 +7,10 @@
  */
 
 
-#include "basicop.h"
-#include "comparisonop.h"
-#include "mcltypes.h"
-#include "vectorop.h"
+#include "basicop.hpp"
+#include "comparisonop.hpp"
+#include "mcltypes.hpp"
+#include "vectorop.hpp"
 #include <vector>
 
 namespace mcl {

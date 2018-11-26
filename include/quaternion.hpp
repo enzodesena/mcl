@@ -10,10 +10,10 @@
 
 #pragma once
 
-#include "mcltypes.h"
-#include "point.h"
-#include "constants.h"
-#include "elementaryop.h"
+#include "mcltypes.hpp"
+#include "point.hpp"
+#include "constants.hpp"
+#include "elementaryop.hpp"
 #include <cassert>
 
 namespace mcl {

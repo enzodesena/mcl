@@ -7,12 +7,12 @@
  */
 
 
-#include "randomop.h"
-#include "comparisonop.h"
-#include "mcltypes.h"
+#include "randomop.hpp"
+#include "comparisonop.hpp"
+#include "mcltypes.hpp"
 #include <vector>
 #include <cassert>
-#include "vectorop.h"
+#include "vectorop.hpp"
 
 namespace mcl {
 

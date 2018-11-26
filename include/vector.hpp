@@ -10,7 +10,7 @@
 
 #include <array>
 #include <vector>
-#include "mcltypes.h"
+#include "mcltypes.hpp"
 
 namespace mcl
 {

@@ -6,10 +6,10 @@
  Authors: Enzo De Sena, enzodesena@gmail.com
  */
 
-#include "point.h"
+#include "point.hpp"
 #include <cmath>
 #include <cassert>
-#include "comparisonop.h"
+#include "comparisonop.hpp"
 
 namespace mcl {
 
