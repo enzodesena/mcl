@@ -8,12 +8,7 @@
 
 #pragma once
 
-#include "vector.hpp"
-#include "pointwiseop.hpp"
-
-
-#include "vectorop.hpp"
-#include "mcltypes.hpp"
+#include "basicop.hpp"
 
 #if defined(MCL_APPLE_ACCELERATE)
   #include <Accelerate/Accelerate.h>
@@ -36,38 +31,10 @@
 
 namespace mcl
 {
-
-// Beginning of forward declarations
-template<typename T>
-inline void AddSerial(
-  const Vector<T>& input_a,
-  const Vector<T>& input_b,
-  Vector<T>& output) noexcept;
-  
-template<typename T>
-inline void MultiplySerial(
-  const Vector<T>& input,
-  const T gain,
-  Vector<T>& output) noexcept;
-
-template<typename T>
-inline void MultiplySerial(
-  const Vector<T>& input_a,
-  const Vector<T>& input_b,
-  Vector<T>& output) noexcept;
-  
-template<typename T>
-inline void MultiplyAddSerial(
-  const Vector<T>& input_to_multiply,
-  const T gain,
-  const Vector<T>& input_to_add,
-  Vector<T>& output) noexcept;
-// End of forward declaration
-  
   
 
 template<typename T>
-static inline void Add(
+inline void Add(
   const Vector<Complex<T>>& input_a,
   const Vector<Complex<T>>& input_b,
   Vector<Complex<T>>& output) noexcept
@@ -76,7 +43,7 @@ static inline void Add(
 }
 
 
-static inline void Add(
+inline void Add(
   const Vector<double>& input_a,
   const Vector<double>& input_b,
   Vector<double>& output) noexcept
@@ -93,7 +60,7 @@ static inline void Add(
 }
 
 
-static inline void Add(
+inline void Add(
   const Vector<float>& input_a,
   const Vector<float>& input_b,
   Vector<float>& output) noexcept
@@ -115,7 +82,7 @@ static inline void Add(
  Equivalent to Matlab's vector_a.*gain.
  */
 
-static inline void Multiply(
+inline void Multiply(
   const Vector<double>& input,
   const double gain,
   Vector<double>& output) noexcept
@@ -135,7 +102,7 @@ static inline void Multiply(
  Equivalent to Matlab's vector_a.*gain.
  */
 
-static inline void Multiply(
+inline void Multiply(
   const Vector<float>& input,
   const float gain,
   Vector<float>& output) noexcept
@@ -152,7 +119,7 @@ static inline void Multiply(
 }
 
 template<typename T>
-static inline void Multiply(
+inline void Multiply(
   const Vector<Complex<T>>& input,
   const Complex<T> gain,
   Vector<Complex<T>>& output) noexcept
@@ -160,7 +127,7 @@ static inline void Multiply(
   MultiplySerial(input, gain, output);
 }
 
-static inline void Multiply(
+inline void Multiply(
   const Vector<double>& input_a,
   const Vector<double>& input_b,
   Vector<double>& output) noexcept
@@ -176,7 +143,7 @@ static inline void Multiply(
 #endif
 }
 
-static inline void Multiply(
+inline void Multiply(
   const Vector<float>& input_a,
   const Vector<float>& input_b,
   Vector<float>& output) noexcept
@@ -192,9 +159,16 @@ static inline void Multiply(
 #endif
 }
 
+template<typename T>
+inline void Multiply(
+  const Vector<Complex<T>>& input_a,
+  const Vector<Complex<T>>& input_b,
+  Vector<Complex<T>>& output) noexcept
+{
+  MultiplySerial(input_a, input_b, output);
+}
 
-
-static inline void MultiplyAdd(
+inline void MultiplyAdd(
   const Vector<double>& input_to_multiply,
   const double gain,
   const Vector<double>& input_to_add,
@@ -213,7 +187,7 @@ static inline void MultiplyAdd(
 }
 
 
-static inline void MultiplyAdd(
+inline void MultiplyAdd(
   const Vector<float>& input_to_multiply,
   const float gain,
   const Vector<float>& input_to_add,
@@ -250,7 +224,7 @@ static inline void MultiplyAdd(
   @param[out] output output vector
 */
 template<typename T>
-static inline void ConvSerial(
+inline void ConvSerial(
   const Vector<T>& input,
   const Vector<T>& kernel,
   Vector<T>& output) noexcept
@@ -270,7 +244,7 @@ static inline void ConvSerial(
 
 #if defined(MCL_APPLE_ACCELERATE_MMA) && MCL_APPLE_ACCELERATE_MMA
 
-static inline void ConvApple(
+inline void ConvApple(
   const Vector<double>& padded_input,
   const Vector<double>& coefficients,
   Vector<double>& output)
@@ -286,7 +260,7 @@ static inline void ConvApple(
 
 
 #if defined(MCL_APPLE_ACCELERATE_MMA) && MCL_APPLE_ACCELERATE_MMA
-static inline void ConvApple(
+inline void ConvApple(
   const Vector<float>& input,
   const Vector<float>& kernel,
   Vector<float>& output) noexcept
@@ -302,7 +276,7 @@ static inline void ConvApple(
 
 
 #if defined(MCL_AVX_ACCELERATE) && MCL_AVX_ACCELERATE
-static inline void ConvAvx(
+inline void ConvAvx(
   const Vector<float>& input,
   const Vector<float>& kernel,
   Vector<float>& output) noexcept
@@ -349,7 +323,7 @@ static inline void ConvAvx(
 
 
 #if defined(MCL_NEON_ACCELERATE) && MCL_NEON_ACCELERATE
-static inline void ConvNeon(
+inline void ConvNeon(
   const Vector<float>& input,
   const Vector<float>& kernel,
   Vector<float>& output) noexcept
@@ -398,7 +372,7 @@ static inline void ConvNeon(
   @param[out] output output vector
 */
 template<typename T>
-static inline void Conv(
+inline void Conv(
   const Vector<T>& input,
   const Vector<T>& kernel,
   Vector<T>& output) noexcept
@@ -418,5 +392,122 @@ static inline void Conv(
 
 
 
+template<typename T>
+inline Vector<T> Add(
+  const Vector<T>& input_a,
+  const Vector<T>& input_b) noexcept
+{
+  Vector<T> output(input_a.length());
+  Add(input_a, input_b, output);
+  return std::move(output);
+}
+
+
+/**
+ Returns the point by point multiplication of the vector with the gain.
+ Equivalent to Matlab's vector_a.*gain.
+ */
+template<typename T>
+inline Vector<T> Multiply(
+  const Vector<T>& input,
+  const T gain) noexcept
+{
+  Vector<T> output(input.length());
+  Multiply(input, gain, output);
+  return std::move(output);
+}
+
+
+template<typename T>
+inline Vector<T> Multiply(
+  const Vector<T>& input_a,
+  const Vector<T>& input_b) noexcept
+{
+  Vector<T> output(input_a.length());
+  Multiply(input_a, input_b, output);
+  return std::move(output);
+}
+  
+  
+
+ 
+/**
+ Returns the point by point addition of the two vectors.
+ Equivalent to Matlab's vector_a+vector_b.
+ */
+template<typename T>
+inline void AddScalar(
+  const Vector<T>& input,
+  const T scalar,
+  Vector<T>& output) noexcept
+{
+  auto input_iter = input.begin();
+  auto output_iter = output.begin();
+  while (output_iter != output.end())
+  {
+    *(output_iter++) = *(input_iter++) + scalar;
+  }
+}
+
+/**
+ Returns the point by point addition of the two vectors.
+ Equivalent to Matlab's vector_a+vector_b.
+ */
+template<typename T>
+inline Vector<T> AddScalar(
+  const Vector<T>& vector,
+  const T scalar) noexcept
+{
+  Vector<T> output(vector.length());
+  AddScalar(vector, scalar, output);
+  return std::move(output);
+}
+
+
+/**
+ Adds all the vectors and zero-pads short vectors if they have different
+ lengths.
+ */
+template<class T>
+Vector<T>
+AddVectors(
+  const Vector<Vector<T>>& vectors) noexcept
+{
+  // Get maximum length
+  Vector<size_t> vector_lengths(vectors.length());
+  for (size_t i=0; i<vectors.length(); ++i)
+  {
+    vector_lengths[i] = vectors[i].length();
+  }
+  size_t max_length(Max(vector_lengths));
+  Vector<T> output = Zeros<T>(max_length);
+  Vector<T> temp(max_length);
+  for (auto& vector : vectors)
+  {
+    if (vector.length() == max_length)
+    {
+      output = Add(output, vector);
+    }
+    else
+    {
+      ZeroPad(vector, temp);
+      output = Add(output, temp);
+    }
+  }
+  return std::move(output);
+}
+
+
+/**
+ Returns the point by point subtraction of the two vectors.
+ Equivalent to Matlab's vector_a-vector_b.
+ */
+template<class T>
+inline Vector<T> Subtract(
+  const Vector<T>& vector_a,
+  const Vector<T>& vector_b) noexcept
+{
+  return Add(vector_a, Opposite(vector_b));
+}
 
 } /**< namespace mcl */

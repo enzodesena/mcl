@@ -15,9 +15,11 @@
 
 
 
-namespace mcl {
+namespace mcl
+{
   
-bool ElementaryOpTest() {
+inline bool ElementaryOpTest()
+{
   
   ASSERT(Fix(0.2) == 0);
   ASSERT(Fix(2.2) == 2);
@@ -102,25 +104,6 @@ bool ElementaryOpTest() {
   ASSERT(Next2(6001) == 8192);
 
 
-  // Testing entropy
-  Vector<Real> pdf_1(4);
-  pdf_1[0] = 0.2;
-  pdf_1[1] = 0.35;
-  pdf_1[2] = 0.15;
-  pdf_1[3] = 0.3;
-  
-  Vector<Real> output(4);
-  
-  MultiplySerial(pdf_1, 2.0, output);
-  
-  ASSERT(IsApproximatelyEqual(Entropy(pdf_1, exp(1)), 1.335085165092020));
-  ASSERT(IsApproximatelyEqual(Entropy(pdf_1, 2.0), 1.926120746842681));
-
-  Vector<Real> pdf_2(2);
-  pdf_2[0] = 0.5;
-  pdf_2[1] = 0.5;
-  ASSERT(IsApproximatelyEqual(Entropy(pdf_2, exp(1)), 0.693147180559945));
-  ASSERT(IsApproximatelyEqual(Entropy(pdf_2, 2.0), 1.0));
 
   ASSERT(Factorial(0) == 1);
   ASSERT(Factorial(1) == 1);

@@ -13,9 +13,11 @@
 #include "vectorop.hpp"
 #include <vector>
 
-namespace mcl {
+namespace mcl
+{
   
-bool BasicOpTest() {
+inline bool BasicOpTest()
+{
   Vector<Real> vector_d(4);
   vector_d[0] = -0.3;
   vector_d[1] = 0.3;

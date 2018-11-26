@@ -9,8 +9,8 @@
 #pragma once
 
 #include "digitalfilter.hpp"
+#include "pointwiseop.hpp"
 #include "vectorop.hpp"
-#include "constants.hpp"
 
 namespace mcl {
 
@@ -459,7 +459,5 @@ Vector<T> poles(5);
   
   return IirFilter<T>(RealPart<T>(num),RealPart<T>(den));
 }
-
-bool IirFilterTest();
   
 } // namespace mcl

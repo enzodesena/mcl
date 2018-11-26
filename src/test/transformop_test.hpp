@@ -7,15 +7,14 @@
  */
 
 
-#include "comparisonop.hpp"
 #include "transformop.hpp"
-#include "vectorop.hpp"
-#include "vector.hpp"
 #include <cassert>
 
-namespace mcl {
+namespace mcl
+{
   
-bool TransformOpTest() {
+inline bool TransformOpTest()
+{
   Vector<Complex<Real>> vector_a(3);
   vector_a[0] = Complex<Real>(1.0, 0.0);
   vector_a[1] = Complex<Real>(0.0, 1.0);

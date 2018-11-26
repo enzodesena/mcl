@@ -8,31 +8,11 @@
 
 #pragma once
 
-
-//#include <cassert>
-//#include "mcltypes.hpp"
-#include "vector.hpp"
-#include "basicop.hpp"
 #include "elementaryop.hpp"
 #include <functional>
 
 namespace mcl
 {
-// Forward declaration
-template<typename T>
-inline Complex<T> Conj(
-  const Complex<T>& scalar) noexcept;
-  
-template<typename T>
-inline T Abs(
-  const Complex<T> input) noexcept;
-  
-template<typename T>
-inline T Pow(
-  T input,
-  T exponent) noexcept;
-// End of forward declaration
-  
 
 
 template<typename T, typename U>
@@ -112,6 +92,22 @@ inline void MultiplySerial(
   Vector<T>& output) noexcept
 {
   ForEach<T>(input_a, input_b, [] (T a, T b) { return a * b; }, output);
+}
+
+/**
+ Returns the point by point multiplication of the two vectors.
+ Equivalent to Matlab's vector_a.*vector_b.
+ */
+template<class T>
+inline Vector<T> MultiplySerial(
+  const Vector<T>& vector_a,
+  const Vector<T>& vector_b) noexcept
+{
+  ASSERT(vector_a.length() == vector_b.length());
+  Vector<T> output(vector_a.length());
+  MultiplySerial(vector_a, vector_b, output);
+  
+  return output;
 }
 
 
@@ -234,36 +230,6 @@ inline Vector<T> Sin(
 }
 
 
-/**
- Returns the point by point subtraction of the two vectors.
- Equivalent to Matlab's vector_a-vector_b.
- */
-template<class T>
-inline Vector<T> Subtract(
-  const Vector<T>& vector_a,
-  const Vector<T>& vector_b) noexcept
-{
-  return Add(vector_a, Opposite(vector_b));
-}
-
-
-/**
- Returns the point by point multiplication of the two vectors.
- Equivalent to Matlab's vector_a.*vector_b.
- */
-template<class T>
-inline Vector<T> Multiply(
-  const Vector<T>& vector_a,
-  const Vector<T>& vector_b) noexcept
-{
-  ASSERT(vector_a.length() == vector_b.length());
-  Vector<T> output(vector_a.length());
-  for (size_t i=0; i<vector_a.length(); ++i)
-  {
-    output[i] = vector_a[i]*vector_b[i];
-  }
-  return output;
-}
   
 /**
  Returns the point by point multiplication of the two vectors.
@@ -304,25 +270,6 @@ Vector<Complex<T>> Conj(
   ForEach(input, operation, output);
   return std::move(output);
 }
-
-/** Transform real vector into complex vector with null imaginary part */
-template<typename T>
-Vector<Complex<T>>
-ComplexVector(const Vector<T>& input) noexcept
-{
-  Vector<Complex<T>> output(input.length());
-  for (Int i=0; i<(Int)input.length(); ++i)
-  {
-    output[i] = Complex<T>(input[i], 0.0);
-  }
-  return std::move(output);
-}
-
-//template<typename T, typename U>
-//inline void ForEach(
-//  const Vector<T>& input_vector,
-//  std::function<U(T)> operation,
-//  Vector<U>& output_vector) noexcept
 
 /** Equivalent to Matlab's real(input). */
 template<typename T>
@@ -436,9 +383,6 @@ inline Vector<T> Log10(
   }
   return output;
 }
-
-
-bool PointWiseOpTest();
 
 } /**< namespace mcl */
 

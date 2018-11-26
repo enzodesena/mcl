@@ -9,14 +9,15 @@
 
 #include "randomop.hpp"
 #include "comparisonop.hpp"
-#include "mcltypes.hpp"
+#include "statisticsop.hpp"
 #include <vector>
 #include <cassert>
-#include "vectorop.hpp"
 
-namespace mcl {
+namespace mcl
+{
 
-bool RandomGeneratorTest() {
+inline bool RandomGeneratorTest()
+{
   
   RandomGenerator rand_gen;
 

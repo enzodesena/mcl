@@ -12,11 +12,7 @@
 #include <fstream>
 #include <iostream>
 #include <iomanip>
-#include "mcltypes.hpp"
 #include "matrix.hpp"
-#include "comparisonop.hpp"
-#include "basicop.hpp"
-#include "elementaryop.hpp"
 
 #if MCL_LOAD_EIGEN
   #include <Eigen/Dense>
@@ -24,11 +20,6 @@
 
 namespace mcl {
 
-// Forward declaration
-Vector<std::string> Split(
-  const std::string& string,
-  char delim) noexcept;
-  
   
 template<class T>
 void Print(
@@ -224,47 +215,6 @@ bool IsEqual(
 }
 
 
-template<typename T>
-Matrix<T> Cov(
-  const Vector<T>& x,
-  const Vector<T>& y) noexcept
-{
-  Vector<Vector<T>> input(2);
-  input[0] = x;
-  input[1] = y;
-  return Cov(input);
-}
-
-template<typename T>
-Matrix<T> Cov(
-  const Vector<Vector<T> >& input) noexcept
-{
-  const size_t N = input.length();
-  Matrix<T> output(N, N);
-  for (size_t i=0; i<N; ++i)
-  {
-    for (size_t j=0; j<N; ++j)
-    {
-      output.SetElement(i, j, CovElement(input[i], input[j]));
-    }
-  }
-  return output;
-}
-  
-template<typename T>
-T CovElement(
-  const Vector<T>& x,
-  const Vector<T>& y) noexcept
-{
-  ASSERT(x.length() == y.length());
-  const size_t N = x.length();
-  
-  T output = Sum(Multiply(AddScalar(x, -Mean(x)), AddScalar(y, -Mean(y))));
-  // In case N>1 use the unbiased estimator of covariance.
-  output = (N > 1) ? output/((T) (N-1)) : output/((T) (N));
-  return output;
-}
-
 
 /** Writes the vector to a file. The separator is endline. */
 template<typename T>
@@ -278,7 +228,4 @@ inline void Save(
   matrix.Save(file_name, precision);
 }
 
-bool MatrixOpTest();
-  
-  
 } // namespace mcl

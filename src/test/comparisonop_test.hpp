@@ -6,14 +6,17 @@
  Authors: Enzo De Sena, enzodesena@gmail.com
  */
 
+#pragma once
 
 #include "comparisonop.hpp"
 #include <cassert>
 
-namespace mcl {
+namespace mcl
+{
   
 
-bool ComparisonOpTest() {
+inline bool ComparisonOpTest()
+{
   ASSERT(IsEqual(0.2, 0.2));
   ASSERT(IsEqual(-0.25, -0.25));
   

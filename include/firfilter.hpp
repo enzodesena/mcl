@@ -7,12 +7,9 @@
  */
 
 #pragma once
-#include <vector>
 
-#include "mcltypes.hpp"
-#include "mclintrinsics.hpp"
 #include "digitalfilter.hpp"
-#include "vectorop.hpp"
+#include "mclintrinsics.hpp"
 
 namespace mcl {
 /** FIR Filter */
@@ -275,12 +272,6 @@ public:
 
 
   
-
-
-
-/** Tests */
-bool FirFilterTest();
-void FirSpeedTests();
   
 } // namespace mcl
 

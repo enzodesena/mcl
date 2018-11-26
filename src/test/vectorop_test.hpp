@@ -8,15 +8,15 @@
 
 
 #include "vectorop.hpp"
-#include "vector.hpp"
 #include "comparisonop.hpp"
-//#include "mcltypes.hpp"
 
-namespace mcl {
+namespace mcl
+{
 
 
   
-bool VectorOpTest() {
+inline bool VectorOpTest()
+{
 
   Vector<double> myvector_a(3);
   myvector_a[0] = 0.1;
@@ -95,9 +95,6 @@ bool VectorOpTest() {
   vector_c[0] = -0.3;
   vector_c[1] = 0.3;
   vector_c[2] = 2.4;
-
-  Real vector_c_mean = Mean(vector_c);
-  ASSERT(IsApproximatelyEqual(vector_c_mean, 0.8, VERY_SMALL));
 
   ASSERT(IsApproximatelyEqual(Sum(vector_c), -0.3+0.3+2.4, VERY_SMALL));
 
@@ -280,18 +277,6 @@ bool VectorOpTest() {
 
 
 
-  Vector<Vector<Real>> vectors(3);
-  vectors[0] = vector_q; // -1.2, 4.5
-  vectors[1] = vector_o; // 1.0, 2.5, 4.2
-  vectors[2] = vector_m; // 0.0, -1.0, -2.0
-
-  Vector<Real> add_vectors = AddVectors(vectors);
-  ASSERT(add_vectors.length() == 3);
-  Vector<Real> add_vectors_cmp(3);
-  add_vectors_cmp[0] = -1.2+1.0;
-  add_vectors_cmp[1] = 4.5+2.5-1.0;
-  add_vectors_cmp[2] = 4.2-2.0;
-  ASSERT(IsEqual(add_vectors_cmp, add_vectors));
 
   Vector<Real> colonop_a = ColonOperator<Real>(2, 4);
   Vector<Real> colonop_a_cmp = Zeros<Real>(3);
@@ -321,7 +306,7 @@ bool VectorOpTest() {
 
   // Test Poly
 
-  Vector<Complex<Real>> poly_a = Poly(ComplexVector(Ones<Real>(3)));
+  Vector<Complex<Real>> poly_a = Poly(CastToComplex(Ones<Real>(3)));
   Vector<Complex<Real>> poly_a_cmp = Zeros<Complex<Real>>(4);
   poly_a_cmp[0] = Complex<Real>(1.0, 0.0);
   poly_a_cmp[1] = Complex<Real>(-3.0, 0.0);
@@ -412,12 +397,6 @@ bool VectorOpTest() {
   ASSERT(Dot(vector_g, vector_v) == -9.350);
 
 
-  // Testing Std
-  ASSERT(IsApproximatelyEqual(Std(vector_v), 2.443358344574123));
-  ASSERT(IsApproximatelyEqual(Std(colonop_b_cmp), 1.290994448735806));
-
-  // Testing var
-  ASSERT(IsApproximatelyEqual(Var(vector_v), 5.96999999999999));
 
   // Testing colon operator
   Vector<Real> vector_z = ColonOperator(0.0, 2.0, 4.0);
@@ -452,23 +431,6 @@ bool VectorOpTest() {
   vector_ab_cmp[7] = 0.00075;
   vector_ab_cmp[8] = 0.001;
   ASSERT(IsEqual(vector_ab, vector_ab_cmp));
-
-  // Testing summation
-  Vector<Real> vector_zb = AddScalar(vector_z, 1.5);
-  ASSERT(vector_zb.length() == 3);
-  Vector<Real> vector_zb_cmp(3);
-  vector_zb_cmp[0] = 1.5;
-  vector_zb_cmp[1] = 3.5;
-  vector_zb_cmp[2] = 5.5;
-  ASSERT(IsEqual(vector_zb, vector_zb_cmp));
-
-  Vector<Real> vector_zc = AddScalar(vector_z, -1.0);
-  ASSERT(vector_zc.length() == 3);
-  Vector<Real> vector_zc_cmp(3);
-  vector_zc_cmp[0] = -1.0;
-  vector_zc_cmp[1] = 1.0;
-  vector_zc_cmp[2] = 3.0;
-  ASSERT(IsEqual(vector_zc, vector_zc_cmp));
 
   // Testing UnaryVector
   Vector<Real> vector_zd = UnaryVector<Real>(-1.0);
@@ -570,52 +532,6 @@ bool VectorOpTest() {
   ASSERT(IsApproximatelyEqual(Norm(vector_ba, 2.4), 6.056130782634900));
 
 
-  Vector<Real> vector_bc(4);
-  vector_bc[0] = 0.0;
-  vector_bc[1] = 1.0;
-  vector_bc[2] = -0.5;
-  vector_bc[3] = -0.0;
-  Vector<Real> vector_bb_result(4);
-  MultiplyAdd(vector_ba, 0.5, vector_bc, vector_bb_result);
-  Vector<Real> vector_bb_result_cmp(4);
-  vector_bb_result_cmp[0] = -1.2*0.5+0.0;
-  vector_bb_result_cmp[1] = 2.3*0.5+1.0;
-  vector_bb_result_cmp[2] = 3.4*0.5-0.5;
-  vector_bb_result_cmp[3] = -5.0*0.5+0.0;
-  ASSERT(IsEqual(vector_bb_result, vector_bb_result_cmp));
-
-  Vector<Real> weights_uniform_a = Multiply<Real>(Ones<Real>(4), 1.0/4.0);
-  ASSERT(Mean(vector_ba) == Mean(vector_ba, weights_uniform_a));
-  Vector<Real> weights_uniform_b = Multiply<Real>(Ones<Real>(4), 1.0);
-  ASSERT(Mean(vector_ba) == Mean(vector_ba, weights_uniform_b));
-  Vector<Real> weights_uniform_c = Zeros<Real>(4);
-  weights_uniform_c[0] = 0.5;
-  weights_uniform_c[2] = 0.5;
-  ASSERT(Mean(vector_ba, weights_uniform_c) == 1.1);
-
-
-  ASSERT(! IsNonNegative(vector_ba));
-  Vector<Real> weights_ba_var = Zeros<Real>(4);
-  weights_ba_var[0] = 0.2;
-  weights_ba_var[1] = 0.3;
-  weights_ba_var[2] = 0.6;
-  weights_ba_var[3] = 0.5;
-  ASSERT(IsApproximatelyEqual(Var(vector_ba, weights_ba_var), 13.319335937500000));
-
-
-  Vector<Real> vector_aaa(4);
-  vector_aaa[0] = 1;
-  vector_aaa[1] = 2;
-  vector_aaa[2] = 1.5;
-  vector_aaa[3] = -1;
-  
-  Vector<Real> vector_bbb(4);
-  vector_bbb[0] = 0.5;
-  vector_bbb[1] = -1;
-  vector_bbb[2] = 2;
-  vector_bbb[3] = -3;
-  
-  ASSERT(IsApproximatelyEqual(Corr(vector_aaa, vector_bbb), 0.689797863572754));
 
 
 //

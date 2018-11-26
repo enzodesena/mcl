@@ -10,35 +10,23 @@
 
 
 #include "elementaryop.hpp"
-#include "pointwiseop.hpp"
-#include "basicop.hpp"
-#include "mclintrinsics.hpp"
-#include "vector.hpp"
 
 namespace mcl {
 
 
-
-// Forward declarations
 template<typename T>
-inline Vector<T> Pow(
-  const Vector<T>& input,
-  const T exponent) noexcept;
-
-template<typename T>
-inline T Mod(
-  const T x,
-  const T y) noexcept;
-  
-template<class T>
-inline T Min(
-  const T scalar_a,
-  const T scalar_b) noexcept;
-  
-template<class T>
-inline T Max(
-  const Vector<T>& input) noexcept;
-// End of forward declarations
+bool IsReal(
+  const Vector<T>& vector) noexcept
+{
+  for (auto& element : vector)
+  {
+    if (! IsReal(element))
+    {
+      return false;
+    }
+  }
+  return true;
+}
   
   
 template<typename T, typename U>
@@ -131,68 +119,6 @@ template <class T>
 }
 
 
-
-template<typename T>
-inline Vector<T> Add(
-  const Vector<T>& input_a,
-  const Vector<T>& input_b) noexcept
-{
-  Vector<T> output(input_a.length());
-  Add(input_a, input_b, output);
-  return std::move(output);
-}
-
-
-/**
- Returns the point by point multiplication of the vector with the gain.
- Equivalent to Matlab's vector_a.*gain.
- */
-template<typename T>
-inline Vector<T> Multiply(
-  const Vector<T>& input,
-  const T gain) noexcept
-{
-  Vector<T> output(input.length());
-  Multiply(input, gain, output);
-  return std::move(output);
-}
-
-
-  
-  
-
- 
-/**
- Returns the point by point addition of the two vectors.
- Equivalent to Matlab's vector_a+vector_b.
- */
-template<typename T>
-inline void AddScalar(
-  const Vector<T>& input,
-  const T scalar,
-  Vector<T>& output) noexcept
-{
-  auto input_iter = input.begin();
-  auto output_iter = output.begin();
-  while (output_iter != output.end())
-  {
-    *(output_iter++) = *(input_iter++) + scalar;
-  }
-}
-
-/**
- Returns the point by point addition of the two vectors.
- Equivalent to Matlab's vector_a+vector_b.
- */
-template<typename T>
-inline Vector<T> AddScalar(
-  const Vector<T>& vector,
-  const T scalar) noexcept
-{
-  Vector<T> output(vector.length());
-  AddScalar(vector, scalar, output);
-  return std::move(output);
-}
 
 /**
  Returns the subset of elements with indexes from_index and to_index.
@@ -322,57 +248,7 @@ Vector<T> Conv(
   return output;
 }
 
-/**
- Adds all the vectors and zero-pads short vectors if they have different
- lengths.
- */
-template<class T>
-Vector<T>
-AddVectors(
-  const Vector<Vector<T>>& vectors) noexcept
-{
-  // Get maximum length
-  Vector<size_t> vector_lengths(vectors.length());
-  for (size_t i=0; i<vectors.length(); ++i)
-  {
-    vector_lengths[i] = vectors[i].length();
-  }
-  size_t max_length(Max(vector_lengths));
-  Vector<T> output = Zeros<T>(max_length);
-  Vector<T> temp(max_length);
-  for (auto& vector : vectors)
-  {
-    if (vector.length() == max_length)
-    {
-      output = Add(output, vector);
-    }
-    else
-    {
-      ZeroPad(vector, temp);
-      output = Add(output, temp);
-    }
-  }
-  return std::move(output);
-}
-//
-///**
-// Adds two vectors and zero-pads the shorter one if they have different
-// lengths.
-// */
-//template<class T>
-//Vector<T> AddVectors(const Vector<T>& vector_a,
-//                          const Vector<T>& vector_b) noexcept {
-//  // Get maximum length
-//  Int max_length(Max((Int)vector_a.length(), (Int)vector_b.length()));
-//
-//  Vector<T> output = Zeros<T>(max_length);
-//  output = Add(output, ZeroPad(vector_a, max_length));
-//  output = Add(output, ZeroPad(vector_b, max_length));
-//
-//  return output;
-//}
-//
-//
+
 /** Interleaves two vectors, with the first element of `vector_a` going
  first.*/
 template<class T>
@@ -653,88 +529,7 @@ T Sum(const Vector<T>& input) noexcept
 }
 
 
-template <typename T>
-/** Equivalent to Matlab's mean(input) */
-T Mean(const Vector<T>& input) noexcept
-{
-  return Sum(input) / ((T) input.length());
-}
 
-
-
-
-/**
- Returns the geometric mean of the input vector. Equivalent
- to Matlab's geomean(input)
- **/
-template<typename T>
-T Geomean(
-  const Vector<T>& input) noexcept
-{
-// TODO: Throw error for negative entries
-  return Pow(Prod(input), 1.0/((T)input.length()));
-}
-
-/**
- Weighted mean. Not implemented in Matlab (but should be). The weights are
- normalised inside the function. Hence Mean(input, ones(N)) gives the same
- result as Mean(input, ones(N)/N).
- */
-template<typename T>
-T Mean(
-  const Vector<T>& input,
-  const Vector<T>& weights) noexcept
-{
-  ASSERT(input.length() == weights.length());
-  ASSERT(IsNonNegative(weights));
-  
-  // Normalise the weigths
-  Vector<T> normalised_weights = Multiply(weights, 1.0/Sum(weights));
-  ASSERT(Sum(normalised_weights) == 1.0);
-  return Sum(Multiply(input, normalised_weights));
-}
-
-/**
- Returns the standard deviation of the `input` vector. Equivalent to Matlab's
- std(input). This includes the correction for having an unbiased estimator.
- */
-template<typename T>
-T Std(
-  const Vector<T>& input) noexcept
-{
-  return sqrt(Var(input));
-}
-
-/** Var (unbiased estimator) */
-template<typename T>
-T Var(
-  const Vector<T>& input) noexcept
-{
-  T mean = Mean(input);
-  T output(0.0);
-  for (size_t i=0; i<input.length(); ++i)
-  {
-    output += pow(input[i] - mean,2.0);
-  }
-  return output/((T) (input.length()-1));
-}
-
-
-/** Weighted var (biased estimator) */
-template<typename T>
-T Var(
-  const Vector<T>& input,
-  const Vector<T>& weights) noexcept
-{
-  ASSERT(IsNonNegative(weights));
-
-  T weighted_mean = Mean(input, weights);
-  Vector<T> tt = AddScalar(input, -weighted_mean);
-  Vector<T> temp = Pow(tt, 2.0);
-  Vector<T> norm_weights = Multiply<T>(weights, 1.0/Sum(weights));
-
-  return (Sum(Multiply(norm_weights, temp)));
-}
 
 /** Converts roots to polynomial. Equivalent to Matlab's poly(roots) */
 template<typename T>
@@ -761,28 +556,10 @@ template<typename T>
 Vector<Complex<T>> Poly(
   const Vector<T> roots) noexcept
 {
-  return Poly(ComplexVector(roots));
+  return Poly(CastToComplex(roots));
 }
 
 
-//
-///** Returns true if all elements are non negative */
-//bool IsNonNegative(const Vector<T>& input) noexcept;
-//
-//Matrix<T> Cov(const Vector<T>& x,
-//                         const Vector<T>& y) noexcept;
-//
-//Matrix<T> Cov(const Vector<Vector<T> >& input) noexcept;
-//
-//T CovElement(const Vector<T>& x,
-//                        const Vector<T>& y) noexcept;
-//
-///**
-// Returns a vector containing the cumulative sum of
-// the elements of X. Equivalent to Matlab's cumsum(input)
-// */
-//Vector<T> CumSum(const Vector<T>& input) noexcept;
-//
 /** Splits signal up into (overlapping) frames */
 template<typename T>
 Vector<Vector<T> > Enframe(
@@ -830,31 +607,6 @@ Vector<T> OverlapAdd(
 
 
 
-template<typename TOrigin, typename TDestination>
-Vector<TDestination> Cast(
-  const Vector<TOrigin>& vector) noexcept
-{
-  const size_t length = vector.length();
-  Vector<TDestination> output(length);
-  for (size_t i=0; i<length; ++i)
-  {
-    output[i] = static_cast<TDestination>(vector[i]);
-  }
-  return output;
-}
-
-template<typename T>
-Vector<Complex<T>> CastToComplex(
-  Vector<T> input) noexcept
-{
-  Vector<Complex<T>> output(input.length());
-  for (Int i=0; i<(Int)input.length(); ++i)
-  {
-    output[i] = Complex<T>(input[i], 0.0);
-  }
-  return output;
-}
-
 
 template<typename T>
 Vector<T> CumSum(
@@ -886,19 +638,6 @@ inline Vector<std::string> Split(
 }
   
   
-/** Returns the Pearson linear correlation between `vector_a` and `vector_b` */
-template<typename T>
-T Corr(
-  const Vector<T>& x,
-  const Vector<T>& y) noexcept
-{
-  
-  T pearson_num_lin = Sum(mcl::Multiply(
-    AddScalar(x,-Mean(x)),
-    AddScalar(y,-Mean(y))));
-  T pearson_den_lin = sqrt(Sum(Pow(AddScalar(x, -Mean(x)),2.0)))*
-    sqrt(Sum(Pow(AddScalar(y, -Mean(y)),2.0)));
-  return pearson_num_lin/pearson_den_lin;
-}
+
 
 } /**< namespace mcl */

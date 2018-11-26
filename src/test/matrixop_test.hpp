@@ -9,9 +9,11 @@
 
 #include "matrixop.hpp"
 
-namespace mcl {
+namespace mcl
+{
   
-bool MatrixOpTest() {
+inline bool MatrixOpTest()
+{
     
   Matrix<Real> matrix_a(3,2);
   matrix_a.SetElement(0, 1, 1.0);
@@ -164,28 +166,6 @@ bool MatrixOpTest() {
   ASSERT(Max(matrix_h) == 2);
   
   
-  // Testing covariance matrix
-  Vector<Real> vector_e(4);
-  vector_e[0] = -0.3;
-  vector_e[1] = 30.3;
-  vector_e[2] = 2.4;
-  vector_e[3] = 12.4;
-
-  Vector<Real> vector_f(4);
-  vector_f[0] = 2.5;
-  vector_f[1] = 1.3;
-  vector_f[2] = -2.4;
-  vector_f[3] = -1.0;
-  
-  ASSERT(! IsEqual(Cov(vector_e, vector_f), Cov(vector_f, vector_e)));
-  Matrix<Real> cov_e_f = Cov(vector_e, vector_f);
-  ASSERT(IsApproximatelyEqual(cov_e_f.GetElement(0,0), Var(vector_e)));
-  ASSERT(IsApproximatelyEqual(cov_e_f.GetElement(0,0), 191.9800000000000));
-  ASSERT(IsApproximatelyEqual(cov_e_f.GetElement(1,1), 4.886666666666667));
-  ASSERT(IsApproximatelyEqual(cov_e_f.GetElement(1,1), Var(vector_f)));
-  ASSERT(IsApproximatelyEqual(cov_e_f.GetElement(0,0), Var(vector_e)));
-  ASSERT(IsApproximatelyEqual(cov_e_f.GetElement(0,1), cov_e_f.GetElement(1,0)));
-  ASSERT(IsApproximatelyEqual(cov_e_f.GetElement(0,1), 5.333333333333333));
   
   return true;
 }

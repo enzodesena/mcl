@@ -8,17 +8,11 @@
 
 #pragma once
 
-#include <array>
 #include <vector>
 #include "mcltypes.hpp"
 
 namespace mcl
 {
-
-/** Test function for the functions in this file */
-bool VectorOpTest();
-
-
 
 template<typename T>
 class Vector : private std::vector<T>
@@ -100,6 +94,33 @@ public:
     std::vector<T>::assign(num_elements, value);
   }
 };
+
+
+
+template<typename TOrigin, typename TDestination>
+Vector<TDestination> Cast(
+  const Vector<TOrigin>& vector) noexcept
+{
+  const size_t length = vector.length();
+  Vector<TDestination> output(length);
+  for (size_t i=0; i<length; ++i)
+  {
+    output[i] = static_cast<TDestination>(vector[i]);
+  }
+  return output;
+}
+
+template<typename T>
+Vector<Complex<T>> CastToComplex(
+  Vector<T> input) noexcept
+{
+  Vector<Complex<T>> output(input.length());
+  for (Int i=0; i<(Int)input.length(); ++i)
+  {
+    output[i] = Complex<T>(input[i], 0.0);
+  }
+  return output;
+}
 
 //
 //template<typename T>

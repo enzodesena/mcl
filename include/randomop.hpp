@@ -10,7 +10,6 @@
 
 // Using TR1 and old c++ library
 
-#include "mcltypes.hpp"
 #include "vector.hpp"
 #include <random>
 
@@ -105,11 +104,6 @@ private:
   
   
 };
-
-/**
- Testing
- */
-bool RandomGeneratorTest();
 
 } // namespace mcl
 

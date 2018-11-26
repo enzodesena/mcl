@@ -8,16 +8,14 @@
 
 #include "iirfilter.hpp"
 #include "firfilter.hpp"
-#include "mcltypes.hpp"
-//#include "maxgradientfilter.hpp"
-#include "comparisonop.hpp"
+#include "butter.hpp"
 #include "randomop.hpp"
-#include "butter.h"
-#include "vectorop.hpp"
 
-namespace mcl {
+namespace mcl
+{
 
-bool IirFilterTest() {
+inline bool IirFilterTest()
+{
   DigitalFilter<Real> filter_a(GainFilter<Real>(1.0));
   Vector<Real> output_value(1);
   filter_a.Filter(UnaryVector<Real>(1.2), output_value);
@@ -95,7 +93,7 @@ bool IirFilterTest() {
   ASSERT(IsApproximatelyEqual(B_d, filter_l.B(), VERY_SMALL));
   ASSERT(IsApproximatelyEqual(A_d, filter_l.A(), VERY_SMALL));
 
-  Vector<Real> signal_d = mcl::Zeros<Real>(4);
+  Vector<Real> signal_d = Zeros<Real>(4);
   signal_d[0] = 0.989949493661167;
   Vector<Real> signal_d_out_cmp(4);
   signal_d_out_cmp[0] = 0.984197179938686;
@@ -125,7 +123,7 @@ bool IirFilterTest() {
 //
   // Testing butterworth filter
   IirFilter<Real> butter_a = Butter<Real>(3, 0.2, 0.45);
-  Vector<Real> butter_a_num_cmp = mcl::Zeros<Real>(7);
+  Vector<Real> butter_a_num_cmp = Zeros<Real>(7);
   butter_a_num_cmp[0] = 0.031689343849711;
   butter_a_num_cmp[2] = -0.095068031549133;
   butter_a_num_cmp[4] = 0.095068031549133;
@@ -145,7 +143,7 @@ bool IirFilterTest() {
 
 
   IirFilter<Real> butter_b = Butter<Real>(2, 0.12, 0.79);
-  Vector<Real> butter_b_num_cmp = mcl::Zeros<Real>(5);
+  Vector<Real> butter_b_num_cmp = Zeros<Real>(5);
   butter_b_num_cmp[0] = 0.469043625796947;
   butter_b_num_cmp[2] = -0.938087251593893;
   butter_b_num_cmp[4] = 0.469043625796947;
@@ -167,7 +165,7 @@ bool IirFilterTest() {
 
   // Testing octave filter
   IirFilter<Real> octave_a = OctaveFilter(3, 4000.0, 44100.0);
-  Vector<Real> octave_a_num_cmp = mcl::Zeros<Real>(7);
+  Vector<Real> octave_a_num_cmp = Zeros<Real>(7);
   octave_a_num_cmp[0] = 0.005020133201471;
   octave_a_num_cmp[2] = -0.015060399604412;
   octave_a_num_cmp[4] = 0.015060399604412;
@@ -213,11 +211,8 @@ bool IirFilterTest() {
 }
   
   
-bool FirFilterTest() {
-  using mcl::IsEqual;
-  
-
-
+inline bool FirFilterTest()
+{
   Vector<Real>  ir = {0.1, 0.2, 0.3};
   FirFilter<Real> filter_lasplita(ir);
   Vector<Real> input = {1, 2, 3, 4, 5, 6, 7};
@@ -326,7 +321,7 @@ bool FirFilterTest() {
 
   filter_l.Reset();
   for (Int i=0; i<(Int)input_b.length(); ++i) {
-    ASSERT(mcl::IsApproximatelyEqual(filter_l.Filter(input_b[i]), output_b_cmp[i]));
+    ASSERT(IsApproximatelyEqual(filter_l.Filter(input_b[i]), output_b_cmp[i]));
   }
 
 //#ifdef MCL_APPLE_ACCELERATE
@@ -375,15 +370,15 @@ bool FirFilterTest() {
 
   //
   filter_m.Reset();
-  ASSERT(mcl::IsEqual(filter_m.Filter(input_c[0]), output_c_cmp[0]));
-  ASSERT(mcl::IsApproximatelyEqual(filter_m.Filter(input_c[1]), output_c_cmp[1]));
-  ASSERT(mcl::IsApproximatelyEqual(filter_m.Filter(input_c[2]), output_c_cmp[2]));
+  ASSERT(IsEqual(filter_m.Filter(input_c[0]), output_c_cmp[0]));
+  ASSERT(IsApproximatelyEqual(filter_m.Filter(input_c[1]), output_c_cmp[1]));
+  ASSERT(IsApproximatelyEqual(filter_m.Filter(input_c[2]), output_c_cmp[2]));
   Vector<Real> input_c_sub_ab(input_c.begin()+3, input_c.begin()+19);
   Vector<Real> output_c_cmp_sub_ab(output_c_cmp.begin()+3, output_c_cmp.begin()+19);
   Vector<Real> output_ccc(input_c_sub_ab.length());
   filter_m.Filter(input_c_sub_ab, output_ccc);
-  ASSERT(mcl::IsApproximatelyEqual(output_ccc, output_c_cmp_sub_ab, VERY_SMALL));
-  ASSERT(mcl::IsApproximatelyEqual(filter_m.Filter(input_c[19]), output_c_cmp[19]));
+  ASSERT(IsApproximatelyEqual(output_ccc, output_c_cmp_sub_ab, VERY_SMALL));
+  ASSERT(IsApproximatelyEqual(filter_m.Filter(input_c[19]), output_c_cmp[19]));
 
 
   //
@@ -393,7 +388,7 @@ bool FirFilterTest() {
   Vector<Real> output_k_cmp = {0.663736090000000, 1.475910520000000, 1.027407440000000, 1.718367160000000, 2.701277000000000, 1.457092690000000, 1.310138610000000, 1.865475550000000, 1.799813030000000, 2.038904730000000, 1.799667500000000, 2.276484260000000, 3.165878180000000, 2.139907940000000, 2.199456410000000, 2.390277390000000, 1.622509220000000, 2.184069510000000, 2.164136180000000, 2.090582990000000};
   Vector<Real> output_k(input_k.length());
   filter_k.Filter(input_k, output_k);
-  ASSERT(mcl::IsApproximatelyEqual(output_k, output_k_cmp, VERY_SMALL));
+  ASSERT(IsApproximatelyEqual(output_k, output_k_cmp, VERY_SMALL));
 
   //
   filter_k.Reset();
@@ -442,15 +437,15 @@ bool FirFilterTest() {
   ASSERT(IsApproximatelyEqual(filter_k.Filter(input_k[19]), output_k_cmp[19]));
 
   // Testing slow update of filter
-  FirFilter<Real> filter_t(mcl::UnaryVector<Real>(1.0));
+  FirFilter<Real> filter_t(UnaryVector<Real>(1.0));
   ASSERT(IsApproximatelyEqual(filter_t.Filter(0.76), 0.76));
   ASSERT(IsApproximatelyEqual(filter_t.Filter(1.0), 1.0));
-  filter_t.SetImpulseResponse(mcl::UnaryVector<Real>(0.3), 1);
+  filter_t.SetImpulseResponse(UnaryVector<Real>(0.3), 1);
   ASSERT(IsApproximatelyEqual(filter_t.Filter(1.0), 0.5*1.0+0.5*0.3));
   ASSERT(IsApproximatelyEqual(filter_t.Filter(1.0), 0.3));
 
 
-  //
+
 //  MaxGradientFilter filter_y(1.0);
 //  ASSERT(IsApproximatelyEqual(filter_y.Filter(0.0), 0.0));
 //  ASSERT(IsApproximatelyEqual(filter_y.Filter(1.0), 1.0));
@@ -471,53 +466,56 @@ bool FirFilterTest() {
 
   return true;
 }
-//
-//void FirFilter::SpeedTests() {
-//
-//  mcl::RandomGenerator random_generator;
-//
-//  Vector<Real> impulse_response = random_generator.Rand(1024);
-//  FirFilter<Real> fir_filter(impulse_response);
-//  Vector<Real> input = random_generator.Rand(44100.0);
-//
-//  clock_t launch=clock();
-//  for (Int i = 0; i<20; i++) {
-//    fir_filter.Filter(mcl::GetSegment(input, i, 2205));
-//  }
-//  clock_t done=clock();
-//
-//  std::cout<<"Fir filter speed (batch; filter length is not power of 2): "<<
-//  (done - launch) / ((Real) CLOCKS_PER_SEC)*100<<"% \n";
-//
-//  launch=clock();
-//  for (Int i=0; i<(Int)input.length(); ++i) {
-//    fir_filter.Filter(input[i]);
-//  }
-//  done=clock();
-//
-//  std::cout<<"Fir filter speed (sequential; filter length is not power of 2): "<<
-//  (done - launch) / ((Real) CLOCKS_PER_SEC)*100<<"% \n";
-//
-//  FirFilter<Real> fir_filter_b(random_generator.Rand(1024));
-//
-//  launch=clock();
-//  for (Int i = 0; i<20; i++) {
-//    fir_filter_b.Filter(mcl::GetSegment(input, i, 2205));
-//  }
-//  done=clock();
-//
-//  std::cout<<"Fir filter speed (batch; filter length is power of 2): "<<
-//  (done - launch) / ((Real) CLOCKS_PER_SEC)*100<<"% \n";
-//
-//  launch=clock();
-//  for (Int i=0; i<(Int)input.length(); ++i) {
-//    fir_filter_b.Filter(input[i]);
-//  }
-//  done=clock();
-//
-//  std::cout<<"Fir filter speed (sequential; filter length is power of 2): "<<
-//  (done - launch) / ((Real) CLOCKS_PER_SEC)*100<<"% \n";
-//
-//}
+
+inline void FirFilterSpeedTests() {
+
+  RandomGenerator random_generator;
+
+  Vector<Real> impulse_response = random_generator.Rand(1024);
+  FirFilter<Real> fir_filter(impulse_response);
+  Vector<Real> input = random_generator.Rand(44100);
+  Vector<Real> output(2205);
+  
+  clock_t launch=clock();
+  for (Int i = 0; i<20; i++) {
+    fir_filter.Filter(GetSegment(input, i, 2205), output);
+  }
+  clock_t done=clock();
+
+  std::cout<<"Fir filter speed (batch; filter length is not power of 2): "<<
+  (done - launch) / ((Real) CLOCKS_PER_SEC)*100<<"% \n";
+
+  launch=clock();
+  for (Int i=0; i<(Int)input.length(); ++i) {
+    fir_filter.Filter(input[i]);
+  }
+  done=clock();
+
+  std::cout<<"Fir filter speed (sequential; filter length is not power of 2): "<<
+  (done - launch) / ((Real) CLOCKS_PER_SEC)*100<<"% \n";
+
+  FirFilter<Real> fir_filter_b(random_generator.Rand(1024));
+
+  Vector<Real> output_b(2205);
+  
+  launch=clock();
+  for (Int i = 0; i<20; i++) {
+    fir_filter_b.Filter(GetSegment(input, i, 2205), output_b);
+  }
+  done=clock();
+
+  std::cout<<"Fir filter speed (batch; filter length is power of 2): "<<
+  (done - launch) / ((Real) CLOCKS_PER_SEC)*100<<"% \n";
+
+  launch=clock();
+  for (Int i=0; i<(Int)input.length(); ++i) {
+    fir_filter_b.Filter(input[i]);
+  }
+  done=clock();
+
+  std::cout<<"Fir filter speed (sequential; filter length is power of 2): "<<
+  (done - launch) / ((Real) CLOCKS_PER_SEC)*100<<"% \n";
+
+}
 
 } // namespace mcl

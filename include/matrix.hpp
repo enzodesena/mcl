@@ -12,10 +12,7 @@
 #include <fstream>
 #include <iostream>
 #include <iomanip>
-#include "mcltypes.hpp"
-#include "comparisonop.hpp"
 #include "basicop.hpp"
-#include "elementaryop.hpp"
 
 #if MCL_LOAD_EIGEN
   #include <Eigen/Dense>
@@ -23,10 +20,6 @@
 
 namespace mcl {
 
-// Forward declaration
-Vector<std::string> Split(
-  const std::string& string,
-  char delim) noexcept;
   
 /** Matrix class */
 template<class T>

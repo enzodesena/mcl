@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include "mcltypes.hpp"
 #include "comparisonop.hpp"
 
 namespace mcl {
@@ -437,8 +436,31 @@ inline bool IsApproximatelyEqual(
     mcl::IsApproximatelyEqual(point_a.y(), point_b.y(), precision) &&
     mcl::IsApproximatelyEqual(point_a.z(), point_b.z(), precision);
 }
-
-bool PointTest();
   
+  
+template<typename T>
+inline bool IsEqual(
+  const Point<T>& point_a,
+  const Point<T>& point_b)
+{
+  return
+    point_a.x() == point_b.x() &&
+    point_a.y() == point_b.y() &&
+    point_a.z() == point_b.z();
+}
+
+
+template<typename T>
+inline bool IsEqual(
+  const Vector<Point<T>>& points_a,
+  const Vector<Point<T>>& points_b) noexcept
+{
+  const Int num_points = (Int)points_a.length();
+  if (num_points != (Int)points_b.length()) { return false; }
+  for (Int i=0; i<num_points; ++i) {
+    if (! IsEqual(points_a[i], points_b[i])) { return false; }
+  }
+  return true;
+}
   
 } // namespace mcl

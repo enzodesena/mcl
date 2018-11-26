@@ -10,18 +10,10 @@
 
 #pragma once
 
-#include "mcltypes.hpp"
 #include "point.hpp"
-#include "constants.hpp"
 #include "elementaryop.hpp"
-#include <cassert>
 
 namespace mcl {
-  
-// Forward declarations
-template<typename T>
-struct Point;
-// End of forward declarations
   
 /** Enum describing the angles ordering convention for Euler angles */
 enum EulerOrder {
@@ -336,7 +328,5 @@ inline bool IsApproximatelyEqual(
     IsApproximatelyEqual(quat_a.y(), quat_b.y()) &&
     IsApproximatelyEqual(quat_a.z(), quat_b.z());
 }
-
-bool QuaternionTest();
   
 } // namespace mcl

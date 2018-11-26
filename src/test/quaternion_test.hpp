@@ -12,13 +12,12 @@
 #include "mcltypes.hpp"
 #include "point.hpp"
 #include "vectorop.hpp"
-#include "constants.hpp"
 #include <vector>
 
 namespace mcl
 {
 
-bool QuaternionTest()
+inline bool QuaternionTest()
 {
   
   Quaternion q(0.1, 0.2, 0.3, 0.4);

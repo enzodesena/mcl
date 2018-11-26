@@ -8,19 +8,11 @@
 
 #pragma once
 
-#include "mcltypes.hpp"
-#include "vector.hpp"
-#include "elementaryop.hpp"
+#include "mclintrinsics.hpp"
 #include "kissfft.hh"
 
 namespace mcl {
 
-// Forward declarations
-template<typename T>
-bool IsApproximatelyReal(
-  const Vector<T>& vector,
-  const T precision) noexcept;
-// End of forward declarations
 
 /**
  Performs the fft of the input signal.
@@ -151,7 +143,7 @@ inline Vector<Complex<T>> Hilbert(
   const Vector<T>& input) noexcept
 {
   Int n = input.length();
-  Vector<Complex<T>> x = Fft(ComplexVector(input), n);
+  Vector<Complex<T>> x = Fft(CastToComplex(input), n);
   Vector<Complex<T>> h = Zeros<Complex<T>>(n);
   
   if (n > 0 && 2*floor(n/2) == n)
@@ -191,7 +183,7 @@ inline Vector<T> RCeps(
   //    error(generatemsgid('ZeroInFFT'),...
   //          'The Fourier transform of X contains zeros. Therefore, the T cepstrum of X does not exist.');
   //  end
-  return RealPart(Ifft(ComplexVector(Log(fftxabs)), n));
+  return RealPart(Ifft(CastToComplex(Log(fftxabs)), n));
 }
 
 /** 
@@ -209,7 +201,7 @@ inline Vector<T> MinPhase(
     Multiply(Ones<T>((n+odd)/2-1), (T) 2.0));
   Vector<T> wn_2 = Concatenate(wn_1, Ones<T>(1-(Int)Rem((Int)n,(Int)2)));
   Vector<T> wn = Concatenate(wn_2, Zeros<T>((n+odd)/2-1));
-  return RealPart(Ifft(Exp(Fft(ComplexVector(Multiply(wn, RCeps(x))),n)),n));
+  return RealPart(Ifft(Exp(Fft(CastToComplex(Multiply(wn, RCeps(x))),n)),n));
 }
 
   
@@ -226,8 +218,8 @@ inline Vector<T> XCorr(
   ASSERT(vector_a.length() == vector_b.length());
   Int M = (Int)vector_a.length();
   Int n_fft = (UInt) pow(2.0, NextPow2(2*M-1));
-  Vector<Complex<T>> x = Fft(ComplexVector(vector_a), n_fft);
-  Vector<Complex<T>> y = Fft(ComplexVector(vector_b), n_fft);
+  Vector<Complex<T>> x = Fft(CastToComplex(vector_a), n_fft);
+  Vector<Complex<T>> y = Fft(CastToComplex(vector_b), n_fft);
   Vector<Complex<T>> c = Ifft(Multiply(x, Conj(y)), n_fft);
   
   // Ignore residual imaginary part
@@ -246,8 +238,6 @@ inline Vector<T> XCorr(
   }
   return output;
 }
-
-bool TransformOpTest();
 
 } /**< namespace mcl */
 

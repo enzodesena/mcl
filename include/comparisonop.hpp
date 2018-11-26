@@ -27,26 +27,12 @@
 #endif
 #endif
 
-#include "mcltypes.hpp"
-#include "quaternion.hpp"
 #include "vector.hpp"
 #include <vector>
 #include <functional>
 
 namespace mcl {
 
-// Forward declarations
-template<typename T>
-class Quaternion;
-template<typename T>
-struct Point;
-
-template<typename T, typename U>
-inline void ForEach(
-  const Vector<T>& input_vector,
-  std::function<U(T)> operation,
-  Vector<U>& output_vector) noexcept;
-// End of formard declarations
 
 ////////////////////////////////////////////////////////////////////////////////
 // Comparisons on trivial types
@@ -311,34 +297,6 @@ bool AreAllSmallerOrEqual(
 }
 
 
-
-
-template<typename T>
-inline bool IsEqual(
-  const Point<T>& point_a,
-  const Point<T>& point_b)
-{
-  return
-    point_a.x() == point_b.x() &&
-    point_a.y() == point_b.y() &&
-    point_a.z() == point_b.z();
-}
-
-
-template<typename T>
-inline bool IsEqual(
-  const Vector<Point<T>>& points_a,
-  const Vector<Point<T>>& points_b) noexcept
-{
-  const Int num_points = (Int)points_a.length();
-  if (num_points != (Int)points_b.length()) { return false; }
-  for (Int i=0; i<num_points; ++i) {
-    if (! IsEqual(points_a[i], points_b[i])) { return false; }
-  }
-  return true;
-}
-  
-
 /** Returns true if num is nan */
 template<typename T>
 inline Vector<bool> IsNan(Vector<T> input) noexcept
@@ -349,16 +307,47 @@ inline Vector<bool> IsNan(Vector<T> input) noexcept
 }
 
 
+/**
+ Returns true if the imaginary part is exactly zero
+ (tests equality with the type's 0).
+ */
+template<typename T>
+bool IsReal(
+  const Complex<T>& input) noexcept
+{
+  return input.imag() == T(0.0);
+}
 
-/** Returns true if any one of the bools is true */
-//inline bool Any(
-//  Vector<bool> input) noexcept
-//{
-//  return AreAllConditionsTrue<bool>(input, [] (bool element) { return !element; });
-//}
+
+/**
+ Returns true if the imaginary part is approximately zero. The precision used
+ is VERY_SMALL in equality operations, hence use only for testing.
+ */
+template<typename T>
+bool IsApproximatelyReal(
+  const Complex<T>& input,
+  const T precision = VERY_SMALL) noexcept
+{
+  return IsApproximatelyEqual(input.imag(), T(0.0), precision);
+}
 
 
-bool ComparisonOpTest();
+template<typename T>
+bool IsApproximatelyReal(
+  const Vector<Complex<T>>& vector,
+  const T precision = VERY_SMALL) noexcept
+{
+  for (auto& element : vector)
+  {
+    if (! IsApproximatelyReal(element, precision))
+    {
+      return false;
+    }
+  }
+  return true;
+}
+
+
   
   
   

@@ -8,9 +8,7 @@
 
 #pragma once
 
-#include "mcltypes.hpp"
 #include "comparisonop.hpp"
-#include "vectorop.hpp"
 
 namespace mcl {
   
@@ -324,73 +322,7 @@ inline T LinearInterpolation(
 }
   
   
-/**
- Returns true if the imaginary part is exactly zero
- (tests equality with the type's 0).
- */
-template<typename T>
-bool IsReal(
-  const Complex<T>& input) noexcept
-{
-  return input.imag() == T(0.0);
-}
 
-template<typename T>
-bool IsReal(
-  const Vector<T>& vector) noexcept
-{
-  for (auto& element : vector)
-  {
-    if (! IsReal(element))
-    {
-      return false;
-    }
-  }
-  return true;
-}
-
-/** 
- Returns true if the imaginary part is approximately zero. The precision used
- is VERY_SMALL in equality operations, hence use only for testing.
- */
-template<typename T>
-bool IsApproximatelyReal(
-  const Complex<T>& input,
-  const T precision = VERY_SMALL) noexcept
-{
-  return IsApproximatelyEqual(input.imag(), T(0.0), precision);
-}
-
-
-template<typename T>
-bool IsApproximatelyReal(
-  const Vector<Complex<T>>& vector,
-  const T precision = VERY_SMALL) noexcept
-{
-  for (auto& element : vector)
-  {
-    if (! IsApproximatelyReal(element, precision))
-    {
-      return false;
-    }
-  }
-  return true;
-}
-
-  
-/** 
- Calculates the entropy of a discreate random variable with given `pdf'.
- It normalises the pdf if its sum is not 1.
- Note: this function is identical to Matlab's only for uint8 values.
- */
-template<typename T>
-T Entropy(
-  const Vector<T> pdf,
-  T base) noexcept
-{
-  Vector<T> normalised_pdf(Multiply(pdf, 1.0/Sum(pdf)));
-  return -Sum(Multiply(pdf, Log(pdf)))/log(base);
-}
   
 
   
@@ -434,9 +366,7 @@ inline Complex<T> SphericalHarmonic(
   return boost::math::spherical_harmonic<T,T>((int) n, (int) m, theta, phi);
 }
 #endif
-  
-  
-bool ElementaryOpTest();
+
   
   
 } /**< namespace mcl  */

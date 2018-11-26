@@ -9,11 +9,12 @@
 #include "point.hpp"
 #include <cmath>
 #include <cassert>
-#include "comparisonop.hpp"
 
-namespace mcl {
+namespace mcl
+{
 
-bool PointTest() {
+inline bool PointTest()
+{
   const Real pi = 4*atan(1);
   using mcl::IsApproximatelyEqual;
   

@@ -9,8 +9,6 @@
 #pragma once
 
 #include "vector.hpp"
-#include "vectorop.hpp"
-#include "mcltypes.hpp"
 
 namespace mcl
 {

@@ -10,12 +10,13 @@
 #include "pointwiseop.hpp"
 #include "comparisonop.hpp"
 #include "vectorop.hpp"
-#include "mcltypes.hpp"
 #include <vector>
 
-namespace mcl {
+namespace mcl
+{
   
-bool PointWiseOpTest() {
+inline bool PointWiseOpTest()
+{
   
   Vector<Complex<Real>> vector_a(3);
   vector_a[0] = Complex<Real>(1.0, 0.0);
@@ -40,29 +41,6 @@ bool PointWiseOpTest() {
   vector_b[2] = Complex<Real>(-1.0, -0.5);
   
   
-  Vector<Complex<Real>> mult_vector = Multiply(vector_a, vector_b);
-  Vector<Complex<Real>> mult_vector_cmp(3);
-  mult_vector_cmp[0] = Complex<Real>(0.5, 1.0);
-  mult_vector_cmp[1] = Complex<Real>(1.0, 0.2);
-  mult_vector_cmp[2] = Complex<Real>(-0.75, -1.0);
-  
-  ASSERT(IsEqual(mult_vector, mult_vector_cmp));
-  
-  Vector<Complex<Real>> add_vector = Add(vector_a, vector_b);
-  Vector<Complex<Real>> add_vector_cmp(3);
-  add_vector_cmp[0] = Complex<Real>(1.5, 1.0);
-  add_vector_cmp[1] = Complex<Real>(0.2, 0.0);
-  add_vector_cmp[2] = Complex<Real>(0.0, 0.0);
-  
-  ASSERT(IsEqual(add_vector, add_vector_cmp));
-  
-  Vector<Complex<Real>> sub_vector = Subtract(vector_a, vector_b);
-  Vector<Complex<Real>> sub_vector_cmp(3);
-  sub_vector_cmp[0] = Complex<Real>(0.5, -1.0);
-  sub_vector_cmp[1] = Complex<Real>(-0.2, +2.0);
-  sub_vector_cmp[2] = Complex<Real>(2.0, 1.0);
-  
-  ASSERT(IsEqual(sub_vector, sub_vector_cmp));
 
   
   
