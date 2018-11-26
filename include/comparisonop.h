@@ -238,66 +238,66 @@ inline bool IsApproximatelyEqual(
     [precision] (T a, T b) { return IsApproximatelyEqual(a, b, precision); });
 }
 
-
-template<typename T>
-inline Vector<bool> IsNan(
-  const Vector<T>& input) noexcept
-{
-  Vector<T> output(input.length());
-  ForEach(input, [] (T element) { return IsNan(element); }, output);
-  return std::move(output);
-}
-
-
-/** Returns opposite bool as input */
-inline Vector<bool> Not(
-  const Vector<bool>& input) noexcept
-{
-  Vector<bool> output(input.length());
-  ForEach<bool, bool>(
-    input,
-    [] (const bool value) { return !value; },
-    output);
-  return output;
-}
-
-
-/** Returns true if all bools are true */
-inline bool AreAllTrue(
-  const Vector<bool>& input) noexcept
-{
-  return AreAllConditionsTrue<bool>(
-    input,
-    [] (const bool element) { return element; });
-}
-
-
-
-inline bool None(
-  Vector<bool> input) noexcept
-{
-  return AreAllTrue(Not(input));
-}
-
-
-
-inline bool Any(
-  const Vector<bool>& input) noexcept
-{
-  return IsAnyConditionTrue<bool>(
-    input,
-    [] (const bool element) { return element; });
-}
-
-
-template<typename T>
-inline Vector<bool> IsInf(
-  const Vector<T>& input) noexcept
-{
-  Vector<T> output(input.length());
-  ForEach(input, [] (T element) { return IsInf(element); }, output);
-  return std::move(output);
-}
+//
+//template<typename T>
+//inline Vector<bool> IsNan(
+//  const Vector<T>& input) noexcept
+//{
+//  Vector<T> output(input.length());
+//  ForEach(input, [] (T element) { return IsNan(element); }, output);
+//  return std::move(output);
+//}
+//
+//
+///** Returns opposite bool as input */
+//inline Vector<bool> Not(
+//  const Vector<bool>& input) noexcept
+//{
+//  Vector<bool> output(input.length());
+//  ForEach<bool, bool>(
+//    input,
+//    [] (const bool value) { return !value; },
+//    output);
+//  return output;
+//}
+//
+//
+///** Returns true if all bools are true */
+//inline bool AreAllTrue(
+//  const Vector<bool>& input) noexcept
+//{
+//  return AreAllConditionsTrue<bool>(
+//    input,
+//    [] (const bool element) { return element; });
+//}
+//
+//
+//
+//inline bool None(
+//  Vector<bool> input) noexcept
+//{
+//  return AreAllTrue(Not(input));
+//}
+//
+//
+//
+//inline bool Any(
+//  const Vector<bool>& input) noexcept
+//{
+//  return IsAnyConditionTrue<bool>(
+//    input,
+//    [] (const bool element) { return element; });
+//}
+//
+//
+//template<typename T>
+//inline Vector<bool> IsInf(
+//  const Vector<T>& input) noexcept
+//{
+//  Vector<T> output(input.length());
+//  ForEach(input, [] (T element) { return IsInf(element); }, output);
+//  return std::move(output);
+//}
 
 template<typename T>
 bool AreAllSmallerOrEqual(
@@ -365,10 +365,7 @@ template<typename T>
 inline Vector<bool> IsNan(Vector<T> input) noexcept
  {
   Vector<bool> output(input.length());
-  for (size_t i=0; i<input.length(); ++i)
-  {
-    output[i] = IsNan(input[i]);
-  }
+  ForEach(input, [] (bool e) { return IsNan(e); }, output);
   return output;
 }
 
@@ -376,11 +373,11 @@ inline Vector<bool> IsNan(Vector<T> input) noexcept
 
 /** Returns true if any one of the bools is true */
 
-inline bool Any(
-  Vector<bool> input) noexcept
-{
-  return AreAllConditionsTrue<bool>(input, [] (bool element) { return !element; });
-}
+//inline bool Any(
+//  Vector<bool> input) noexcept
+//{
+//  return AreAllConditionsTrue<bool>(input, [] (bool element) { return !element; });
+//}
 
 ///** Opposite of All: returns true if none of the inputs are true */
 //bool None(Vector<bool> input);

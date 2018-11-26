@@ -26,9 +26,6 @@ class Vector : private std::vector<T>
 public:
   using Iterator = typename std::vector<T>::iterator;
   using ConstIterator = typename std::vector<T>::const_iterator;
-  using std::vector<T>::begin;
-  using std::vector<T>::end;
-//  using std::vector<T>::data;
   
   Vector() noexcept : std::vector<T>()
   {
@@ -47,6 +44,26 @@ public:
     : std::vector<T>(iter_begin, iter_end)
   {
   }
+  
+  Iterator begin() noexcept
+  {
+    return std::vector<T>::begin();
+  }
+
+  Iterator end() noexcept
+  {
+    return std::vector<T>::end();
+  }
+
+  ConstIterator begin() const noexcept
+  {
+    return std::vector<T>::begin();
+  }
+
+  ConstIterator end() const noexcept
+  {
+    return std::vector<T>::end();
+  }
 
   Vector(
     std::initializer_list<T> list)
@@ -59,21 +76,19 @@ public:
     return this->size();
   }
   
-  using std::vector<T>::operator[];
+  inline T& operator[](
+    const size_t index) noexcept
+  {
+    ASSERT(index>=0 && index < length());
+    return std::vector<T>::data()[index];
+  }
   
-//  inline T& operator[](
-//    const size_t index) noexcept
-//  {
-//    ASSERT(index>=0 && index < length());
-//    return std::vector<T>::data()[index];
-//  }
-//  
-//  inline const T& operator[](
-//    const size_t index) const noexcept
-//  {
-//    ASSERT(index>=0 && index < length());
-//    return std::vector<T>::data()[index];
-//  }
+  inline const T& operator[](
+    const size_t index) const noexcept
+  {
+    ASSERT(index>=0 && index < length());
+    return std::vector<T>::data()[index];
+  }
   
   inline void PushBack(const T& element) noexcept
   {
@@ -83,7 +98,7 @@ public:
 
 //
 //template<typename T>
-//class Vector<T,kReference> {
+//class VectorRef<T> {
 //private:
 //  Vector<T>& other_vector_;
 //  size_t start_;
@@ -91,7 +106,7 @@ public:
 //public:
 //  using Iterator = typename std::vector<T>::iterator;
 //  using ConstIterator = typename std::vector<T>::const_iterator;
-//  
+//
 //  inline size_t length() const noexcept
 //  {
 //    // The default for `num_elements_` is std::numeric_limits<size_t>::max(),
@@ -105,27 +120,27 @@ public:
 //    // operator with an index ending up outside the vector.
 //    return std::min(other_vector_.length(), length_);
 //  }
-//  
+//
 //  inline Iterator begin() noexcept
 //  {
 //    return other_vector_.begin() + start_;
 //  }
-//  
+//
 //  inline ConstIterator begin() const noexcept
 //  {
 //    return other_vector_.begin() + start_;
 //  }
-//  
+//
 //  inline Iterator end() noexcept
 //  {
 //    return other_vector_.end() + start_ - (other_vector_.length() - length());
 //  }
-//  
+//
 //  inline ConstIterator end() const noexcept
 //  {
 //    return other_vector_.end() + start_ - (other_vector_.length() - length());
 //  }
-//  
+//
 //  Vector(
 //    Vector<T>& other_vector,
 //    size_t start = 0,
@@ -141,7 +156,7 @@ public:
 //    ASSERT(start >= 0 && start < other_vector.length());
 //    ASSERT((start+this->length()) <= other_vector.length());
 //  }
-//  
+//
 //  inline T& operator[](
 //    const size_t index) noexcept
 //  {
@@ -150,7 +165,7 @@ public:
 //    ASSERT(other_index>=0 && other_index < other_vector_.length());
 //    return other_vector_[other_index];
 //  }
-//  
+//
 //  inline const T& operator[](
 //    const size_t index) const noexcept
 //  {
