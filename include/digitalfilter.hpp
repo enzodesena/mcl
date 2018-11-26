@@ -116,7 +116,7 @@ private:
 
   };
 
-  std::unique_ptr<DigitalFilterConcept> self_; // Concept is drawable object
+  std::unique_ptr<DigitalFilterConcept> self_; // Concept is filterable object
 };
 
   
@@ -139,44 +139,29 @@ public:
   virtual Int num_filters() = 0;
 };
 
-//template<typename T>
-//class GainFilter : public DigitalFilter<T> {
-//private:
-//  T gain_;
-//public:
-//  GainFilter(
-//    const T gain)
-//    : gain_(gain)
-//  {
-//  }
-//  
-//  void Filter(
-//    const Vector<T>& input,
-//    Vector<T>& output) noexcept
-//  {
-//    ASSERT(input.length() == output.length());
-//    Multiply(input, input.length(), gain_, output);
-//  }
-//  
-//  void Reset()
-//  {
-//  }
-//};
-//
-//template<typename T>
-//class IdenticalFilter : public DigitalFilter<T> {
-//public:
-//  void Filter(
-//    const Vector<T>& input,
-//    Vector<T>& output) noexcept
-//  {
-//    output = input;
-//  }
-//  
-//  void Reset()
-//  {
-//  }
-//};
-//  
+template<typename T>
+class GainFilter {
+private:
+  T gain_;
+public:
+  GainFilter(
+    const T gain)
+    : gain_(gain)
+  {
+  }
+  
+  void Filter(
+    const Vector<T>& input,
+    Vector<T>& output) noexcept
+  {
+    ASSERT(input.length() == output.length());
+    Multiply(input, gain_, output);
+  }
+  
+  void Reset()
+  {
+  }
+};
+
   
 } // namespace mcl

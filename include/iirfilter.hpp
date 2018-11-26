@@ -327,25 +327,8 @@ public:
 //};
   
 
-/** Constructs a filter for which output==gain*input always. */
-template<typename T>
-inline IirFilter<T> GainFilter(
-  const T gain) noexcept
-{
-  Vector<T> B(1);
-  Vector<T> A(1);
-  B[0] = 1.0*gain;
-  A[0] = 1.0;
-  return IirFilter<T>(B,A);
-}
 
 
-/** Constructs a filter for which output==input always. */
-template<typename T>
-inline IirFilter<T> IdenticalFilter() noexcept
-{
-  return GainFilter(1.0);
-}
 
 /**
  Get wall filters of type wall_type and for FS given by sampling_frequency

@@ -16,7 +16,7 @@
 
 namespace mcl {
 
-bool RandomGenerator::Test() {
+bool RandomGeneratorTest() {
   
   RandomGenerator rand_gen;
 

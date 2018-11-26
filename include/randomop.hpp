@@ -98,10 +98,6 @@ public:
     generator_.seed(seed);
   }
   
-  /** 
-   Testing
-   */
-  static bool Test();
 private:
   std::default_random_engine generator_;
   std::normal_distribution<double> distribution_norm_;
@@ -109,6 +105,11 @@ private:
   
   
 };
+
+/**
+ Testing
+ */
+bool RandomGeneratorTest();
 
 } // namespace mcl
 

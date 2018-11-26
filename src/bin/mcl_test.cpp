@@ -35,7 +35,7 @@ int main (int argc, char * const argv[]) {
   ComparisonOpTest();
   PointTest();
   IirFilterTest();
-  RandomGenerator::Test();
+  RandomGeneratorTest();
   std::cout<<"All tests succeded!\n";
 #else
   std::cout<<"Not running tests since NDEBUG is defined and asserts are ignored.\n";

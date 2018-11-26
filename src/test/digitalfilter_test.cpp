@@ -18,11 +18,15 @@
 namespace mcl {
 
 bool IirFilterTest() {
-  IirFilter<Real> filter_a = IdenticalFilter<Real>();
-  ASSERT(IsApproximatelyEqual(filter_a.Filter(1.2), 1.2));
+  DigitalFilter<Real> filter_a(GainFilter<Real>(1.0));
+  Vector<Real> output_value(1);
+  filter_a.Filter(UnaryVector<Real>(1.2), output_value);
+  ASSERT(IsApproximatelyEqual(output_value[0], 1.2));
   
-  IirFilter<Real> filter_b = GainFilter<Real>(0.76);
-  ASSERT(IsApproximatelyEqual(filter_b.Filter(1.2), 0.912));
+  DigitalFilter<Real> filter_b(GainFilter<Real>(0.76));
+  Vector<Real> output_value_b(1);
+  filter_b.Filter(UnaryVector<Real>(1.2), output_value_b);
+  ASSERT(IsApproximatelyEqual(output_value_b[0], 0.912));
   
   Vector<Real> B(4);
   Vector<Real> A(4);
