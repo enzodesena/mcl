@@ -66,142 +66,145 @@ bool IirFilterTest() {
   input_a[1] = -3.5;
   input_a[2] = 5.6;
   input_a[3] = 2.3;
-//
-//  // Testing pinkifier filter
-//  IirFilter<Real> pinkifier = PinkifierFilter<Real>();
-//  Vector<Real> output_e = pinkifier.Filter(input_a);
-//  Vector<Real> output_e_cmp(input_a.length());
-//  output_e_cmp[0] = 0.600000000000000;
-//  output_e_cmp[1] = -3.152233220000000;
-//  output_e_cmp[2] = 3.815449359516707;
-//  output_e_cmp[3] = 4.322130531286722;
-//  ASSERT(IsApproximatelyEqual(output_e, output_e_cmp, VERY_SMALL));
-//
-//
-//
-//  Vector<Real> B_d(3);
-//  B_d[0] = 1.0;
-//  B_d[1] = -2.0;
-//  B_d[2] = 1.0;
-//  Vector<Real> A_d(3);
-//  A_d[0] = 1.005844676087000;
-//  A_d[1] = -1.999977314492666;
-//  A_d[2] = 0.994178009420333;
-//  IirFilter<Real> filter_l(B_d, A_d);
-//  ASSERT(IsApproximatelyEqual(B_d, filter_l.B(), VERY_SMALL));
-//  ASSERT(IsApproximatelyEqual(A_d, filter_l.A(), VERY_SMALL));
-//
-//  Vector<Real> signal_d = mcl::Zeros<Real>(4);
-//  signal_d[0] = 0.989949493661167;
-//  Vector<Real> signal_d_out_cmp(4);
-//  signal_d_out_cmp[0] = 0.984197179938686;
-//  signal_d_out_cmp[1] = -0.011459974617699;
-//  signal_d_out_cmp[2] = -0.011370929428126;
-//  signal_d_out_cmp[3] = -0.011282404149780;
-//  Vector<Real> output_d = filter_l.Filter(signal_d);
-//  ASSERT(IsApproximatelyEqual(output_d, signal_d_out_cmp, VERY_SMALL));
-//
-//  // Testing Reset()
-//  filter_l.Reset();
-//  ASSERT(IsApproximatelyEqual(filter_l.Filter(0.0), 0.0, VERY_SMALL));
-//
-//  Vector<Real> impulse_resp_2(3);
-//  impulse_resp_2[0] = 0.2;
-//  impulse_resp_2[1] = -0.1;
-//  impulse_resp_2[2] = 2.5;
-////
-////  FirFilter filter_m(impulse_resp_2);
-////  ASSERT(! IsApproximatelyEqual(filter_m.Filter(1.0), 0.0));
-////  filter_m.Reset();
-////  ASSERT(IsApproximatelyEqual(filter_m.Filter(0.0), 0.0));
-////
-////
-//  // Testing butterworth filter
-//  IirFilter<Real> butter_a = Butter<Real>(3, 0.2, 0.45);
-//  Vector<Real> butter_a_num_cmp = mcl::Zeros<Real>(7);
-//  butter_a_num_cmp[0] = 0.031689343849711;
-//  butter_a_num_cmp[2] = -0.095068031549133;
-//  butter_a_num_cmp[4] = 0.095068031549133;
-//  butter_a_num_cmp[6] = -0.031689343849711;
-//
-//  Vector<Real> butter_a_den_cmp(7);
-//  butter_a_den_cmp[0] = 1.000000000000000;
-//  butter_a_den_cmp[1] = -2.521796622886441;
-//  butter_a_den_cmp[2] = 3.643067063269880;
-//  butter_a_den_cmp[3] = -3.325285581665978;
-//  butter_a_den_cmp[4] = 2.149206132889376;
-//  butter_a_den_cmp[5] = -0.850496842492471;
-//  butter_a_den_cmp[6] = 0.197825187264320;
-//
-//  ASSERT(IsApproximatelyEqual(butter_a.B(), butter_a_num_cmp, VERY_SMALL));
-//  ASSERT(IsApproximatelyEqual(butter_a.A(), butter_a_den_cmp, VERY_SMALL));
-//
-//
-//  IirFilter<Real> butter_b = Butter<Real>(2, 0.12, 0.79);
-//  Vector<Real> butter_b_num_cmp = mcl::Zeros<Real>(5);
-//  butter_b_num_cmp[0] = 0.469043625796947;
-//  butter_b_num_cmp[2] = -0.938087251593893;
-//  butter_b_num_cmp[4] = 0.469043625796947;
-//
-//
-//  Vector<Real> butter_b_den_cmp(5);
-//  butter_b_den_cmp[0] = 1.000000000000000;
-//  butter_b_den_cmp[1] = -0.388787442245741;
-//  butter_b_den_cmp[2] = -0.583519141064213;
-//  butter_b_den_cmp[3] = 0.041607774454425;
-//  butter_b_den_cmp[4] = 0.243288940651677;
-//
-//  ASSERT(IsApproximatelyEqual(butter_b.B(), butter_b_num_cmp, VERY_SMALL));
-//  ASSERT(IsApproximatelyEqual(butter_b.A(), butter_b_den_cmp, VERY_SMALL));
-//
-//  IirFilter<Real> filter_i;
-//  ASSERT(IsApproximatelyEqual(filter_i.Filter(1.2), 1.2));
-//  ASSERT(IsApproximatelyEqual(filter_i.Filter(-0.2), -0.2));
-//
-//  // Testing octave filter
-//  IirFilter<Real> octave_a = OctaveFilter(3, 4000.0, 44100.0);
-//  Vector<Real> octave_a_num_cmp = mcl::Zeros<Real>(7);
-//  octave_a_num_cmp[0] = 0.005020133201471;
-//  octave_a_num_cmp[2] = -0.015060399604412;
-//  octave_a_num_cmp[4] = 0.015060399604412;
-//  octave_a_num_cmp[6] = -0.005020133201471;
-//
-//  Vector<Real> octave_a_den_cmp(7);
-//  octave_a_den_cmp[0] = 1.000000000000000;
-//  octave_a_den_cmp[1] = -4.397041740651781;
-//  octave_a_den_cmp[2] = 8.729527405676500;
-//  octave_a_den_cmp[3] = -9.889119467962011;
-//  octave_a_den_cmp[4] = 6.737413381809715;
-//  octave_a_den_cmp[5] = -2.619423015108258;
-//  octave_a_den_cmp[6] = 0.460896610043675;
-//
-//  ASSERT(IsApproximatelyEqual(octave_a.B(), octave_a_num_cmp, VERY_SMALL));
-//  ASSERT(IsApproximatelyEqual(octave_a.A(), octave_a_den_cmp, VERY_SMALL));
-//
-//
-//  // Testing iir filter bank
-//  IirFilterBank octave_bank_a = OctaveFilterBank(3, 1, 4000.0, 44100.0);
-//  ASSERT(IsApproximatelyEqual(octave_bank_a.Filter(1.25)[0], octave_a.Filter(1.25)));
-//  ASSERT(IsApproximatelyEqual(octave_bank_a.Filter(0.25)[0], octave_a.Filter(0.25)));
-//  ASSERT(IsApproximatelyEqual(octave_bank_a.Filter(5.0)[0], octave_a.Filter(5.0)));
-//  ASSERT(octave_bank_a.Filter(1.25).length() == 1);
-//  ASSERT(octave_bank_a.num_filters() == 1);
-//
-//  IirFilterBank octave_bank_b = OctaveFilterBank(3, 2, 2000.0, 44100.0);
-//  octave_a.Reset();
-//  ASSERT(IsApproximatelyEqual(octave_bank_b.Filter(1.25)[1], octave_a.Filter(1.25)));
-//  ASSERT(IsApproximatelyEqual(octave_bank_b.Filter(0.25)[1], octave_a.Filter(0.25)));
-//  ASSERT(IsApproximatelyEqual(octave_bank_b.Filter(5.0)[1], octave_a.Filter(5.0)));
-//  ASSERT(octave_bank_b.Filter(1.25).length() == 2);
-//  ASSERT(octave_bank_b.num_filters() == 2);
-//
-//  octave_a.Reset();
-//  octave_bank_b.Reset();
-//  ASSERT(IsApproximatelyEqual(octave_bank_b.Filter(1.25)[1], octave_a.Filter(1.25)));
-//  ASSERT(IsApproximatelyEqual(octave_bank_b.Filter(0.25)[1], octave_a.Filter(0.25)));
-//  ASSERT(IsApproximatelyEqual(octave_bank_b.Filter(5.0)[1], octave_a.Filter(5.0)));
-//  ASSERT(octave_bank_b.Filter(1.25).length() == 2);
 
+  // Testing pinkifier filter
+  IirFilter<Real> pinkifier = PinkifierFilter<Real>();
+  Vector<Real> output_e = pinkifier.Filter(input_a);
+  Vector<Real> output_e_cmp(input_a.length());
+  output_e_cmp[0] = 0.600000000000000;
+  output_e_cmp[1] = -3.152233220000000;
+  output_e_cmp[2] = 3.815449359516707;
+  output_e_cmp[3] = 4.322130531286722;
+  ASSERT(IsApproximatelyEqual(output_e, output_e_cmp, VERY_SMALL));
+
+
+
+  Vector<Real> B_d(3);
+  B_d[0] = 1.0;
+  B_d[1] = -2.0;
+  B_d[2] = 1.0;
+  Vector<Real> A_d(3);
+  A_d[0] = 1.005844676087000;
+  A_d[1] = -1.999977314492666;
+  A_d[2] = 0.994178009420333;
+  IirFilter<Real> filter_l(B_d, A_d);
+  ASSERT(IsApproximatelyEqual(B_d, filter_l.B(), VERY_SMALL));
+  ASSERT(IsApproximatelyEqual(A_d, filter_l.A(), VERY_SMALL));
+
+  Vector<Real> signal_d = mcl::Zeros<Real>(4);
+  signal_d[0] = 0.989949493661167;
+  Vector<Real> signal_d_out_cmp(4);
+  signal_d_out_cmp[0] = 0.984197179938686;
+  signal_d_out_cmp[1] = -0.011459974617699;
+  signal_d_out_cmp[2] = -0.011370929428126;
+  signal_d_out_cmp[3] = -0.011282404149780;
+  
+  DigitalFilter<Real> filter_poly(filter_l);
+  Vector<Real> output_d(signal_d.length());
+  filter_poly.Filter(signal_d, output_d);
+  ASSERT(IsApproximatelyEqual(output_d, signal_d_out_cmp, VERY_SMALL));
+
+  // Testing Reset()
+  filter_l.Reset();
+  ASSERT(IsApproximatelyEqual(filter_l.Filter(0.0), 0.0, VERY_SMALL));
+
+  Vector<Real> impulse_resp_2(3);
+  impulse_resp_2[0] = 0.2;
+  impulse_resp_2[1] = -0.1;
+  impulse_resp_2[2] = 2.5;
+//
+//  FirFilter filter_m(impulse_resp_2);
+//  ASSERT(! IsApproximatelyEqual(filter_m.Filter(1.0), 0.0));
+//  filter_m.Reset();
+//  ASSERT(IsApproximatelyEqual(filter_m.Filter(0.0), 0.0));
+//
+//
+  // Testing butterworth filter
+  IirFilter<Real> butter_a = Butter<Real>(3, 0.2, 0.45);
+  Vector<Real> butter_a_num_cmp = mcl::Zeros<Real>(7);
+  butter_a_num_cmp[0] = 0.031689343849711;
+  butter_a_num_cmp[2] = -0.095068031549133;
+  butter_a_num_cmp[4] = 0.095068031549133;
+  butter_a_num_cmp[6] = -0.031689343849711;
+
+  Vector<Real> butter_a_den_cmp(7);
+  butter_a_den_cmp[0] = 1.000000000000000;
+  butter_a_den_cmp[1] = -2.521796622886441;
+  butter_a_den_cmp[2] = 3.643067063269880;
+  butter_a_den_cmp[3] = -3.325285581665978;
+  butter_a_den_cmp[4] = 2.149206132889376;
+  butter_a_den_cmp[5] = -0.850496842492471;
+  butter_a_den_cmp[6] = 0.197825187264320;
+
+  ASSERT(IsApproximatelyEqual(butter_a.B(), butter_a_num_cmp, VERY_SMALL));
+  ASSERT(IsApproximatelyEqual(butter_a.A(), butter_a_den_cmp, VERY_SMALL));
+
+
+  IirFilter<Real> butter_b = Butter<Real>(2, 0.12, 0.79);
+  Vector<Real> butter_b_num_cmp = mcl::Zeros<Real>(5);
+  butter_b_num_cmp[0] = 0.469043625796947;
+  butter_b_num_cmp[2] = -0.938087251593893;
+  butter_b_num_cmp[4] = 0.469043625796947;
+
+
+  Vector<Real> butter_b_den_cmp(5);
+  butter_b_den_cmp[0] = 1.000000000000000;
+  butter_b_den_cmp[1] = -0.388787442245741;
+  butter_b_den_cmp[2] = -0.583519141064213;
+  butter_b_den_cmp[3] = 0.041607774454425;
+  butter_b_den_cmp[4] = 0.243288940651677;
+
+  ASSERT(IsApproximatelyEqual(butter_b.B(), butter_b_num_cmp, VERY_SMALL));
+  ASSERT(IsApproximatelyEqual(butter_b.A(), butter_b_den_cmp, VERY_SMALL));
+
+  IirFilter<Real> filter_i;
+  ASSERT(IsApproximatelyEqual(filter_i.Filter(1.2), 1.2));
+  ASSERT(IsApproximatelyEqual(filter_i.Filter(-0.2), -0.2));
+
+  // Testing octave filter
+  IirFilter<Real> octave_a = OctaveFilter(3, 4000.0, 44100.0);
+  Vector<Real> octave_a_num_cmp = mcl::Zeros<Real>(7);
+  octave_a_num_cmp[0] = 0.005020133201471;
+  octave_a_num_cmp[2] = -0.015060399604412;
+  octave_a_num_cmp[4] = 0.015060399604412;
+  octave_a_num_cmp[6] = -0.005020133201471;
+
+  Vector<Real> octave_a_den_cmp(7);
+  octave_a_den_cmp[0] = 1.000000000000000;
+  octave_a_den_cmp[1] = -4.397041740651781;
+  octave_a_den_cmp[2] = 8.729527405676500;
+  octave_a_den_cmp[3] = -9.889119467962011;
+  octave_a_den_cmp[4] = 6.737413381809715;
+  octave_a_den_cmp[5] = -2.619423015108258;
+  octave_a_den_cmp[6] = 0.460896610043675;
+
+  ASSERT(IsApproximatelyEqual(octave_a.B(), octave_a_num_cmp, VERY_SMALL));
+  ASSERT(IsApproximatelyEqual(octave_a.A(), octave_a_den_cmp, VERY_SMALL));
+
+
+  // Testing iir filter bank
+  IirFilterBank octave_bank_a = OctaveFilterBank(3, 1, 4000.0, 44100.0);
+  ASSERT(IsApproximatelyEqual(octave_bank_a.Filter(1.25)[0], octave_a.Filter(1.25)));
+  ASSERT(IsApproximatelyEqual(octave_bank_a.Filter(0.25)[0], octave_a.Filter(0.25)));
+  ASSERT(IsApproximatelyEqual(octave_bank_a.Filter(5.0)[0], octave_a.Filter(5.0)));
+  ASSERT(octave_bank_a.Filter(1.25).length() == 1);
+  ASSERT(octave_bank_a.num_filters() == 1);
+
+  IirFilterBank octave_bank_b = OctaveFilterBank(3, 2, 2000.0, 44100.0);
+  octave_a.Reset();
+  ASSERT(IsApproximatelyEqual(octave_bank_b.Filter(1.25)[1], octave_a.Filter(1.25)));
+  ASSERT(IsApproximatelyEqual(octave_bank_b.Filter(0.25)[1], octave_a.Filter(0.25)));
+  ASSERT(IsApproximatelyEqual(octave_bank_b.Filter(5.0)[1], octave_a.Filter(5.0)));
+  ASSERT(octave_bank_b.Filter(1.25).length() == 2);
+  ASSERT(octave_bank_b.num_filters() == 2);
+
+  octave_a.Reset();
+  octave_bank_b.Reset();
+  ASSERT(IsApproximatelyEqual(octave_bank_b.Filter(1.25)[1], octave_a.Filter(1.25)));
+  ASSERT(IsApproximatelyEqual(octave_bank_b.Filter(0.25)[1], octave_a.Filter(0.25)));
+  ASSERT(IsApproximatelyEqual(octave_bank_b.Filter(5.0)[1], octave_a.Filter(5.0)));
+  ASSERT(octave_bank_b.Filter(1.25).length() == 2);
+  
   return true;
 }
   
@@ -209,25 +212,25 @@ bool IirFilterTest() {
 bool FirFilterTest() {
   using mcl::IsEqual;
   
-//
-//
-//  Vector<Real>  ir = {0.1, 0.2, 0.3};
-//  FirFilter<Real> filter_lasplita(ir);
-//  Vector<Real> input = {1, 2, 3, 4, 5, 6, 7};
-//  Vector<Real> output_lasplita_a(3,0.0);
-//  Vector<Real> cmp_lasplita_a = { 0.1, 0.4, 1.0 };
-//#ifdef MCL_APPLE_ACCELERATE
-////  filter_lasplita.FilterAppleDsp(&input.data()[0], 3, output_lasplita_a);
-////  ASSERT(IsEqual(cmp_lasplita_a, output_lasplita_a));
-//#endif
-//
-//  Vector<Real> output_lasplita_b(4, 0.0);
-//  Vector<Real> cmp_lasplita_b = { 1.6, 2.2, 2.8, 3.4 };
-//#ifdef MCL_APPLE_ACCELERATE
-////  filter_lasplita.FilterAppleDsp(&input.data()[3], 4, output_lasplita_b);
-////  ASSERT(IsEqual(cmp_lasplita_b, output_lasplita_b));
-//#endif
-//
+
+
+  Vector<Real>  ir = {0.1, 0.2, 0.3};
+  FirFilter<Real> filter_lasplita(ir);
+  Vector<Real> input = {1, 2, 3, 4, 5, 6, 7};
+  Vector<Real> output_lasplita_a(3,0.0);
+  Vector<Real> cmp_lasplita_a = { 0.1, 0.4, 1.0 };
+#ifdef MCL_APPLE_ACCELERATE
+//  filter_lasplita.FilterAppleDsp(&input.data()[0], 3, output_lasplita_a);
+//  ASSERT(IsEqual(cmp_lasplita_a, output_lasplita_a));
+#endif
+
+  Vector<Real> output_lasplita_b(4, 0.0);
+  Vector<Real> cmp_lasplita_b = { 1.6, 2.2, 2.8, 3.4 };
+#ifdef MCL_APPLE_ACCELERATE
+//  filter_lasplita.FilterAppleDsp(&input.data()[3], 4, output_lasplita_b);
+//  ASSERT(IsEqual(cmp_lasplita_b, output_lasplita_b));
+#endif
+
 //  filter_lasplita.Reset();
 //  Vector<Real,kReference> refa(input, 0, 3);
 //  Vector<Real,kReference> refb(input, 0, 3);

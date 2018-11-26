@@ -59,19 +59,21 @@ public:
     return this->size();
   }
   
-  inline T& operator[](
-    const size_t index) noexcept
-  {
-    ASSERT(index>=0 && index < length());
-    return std::vector<T>::data()[index];
-  }
+  using std::vector<T>::operator[];
   
-  inline const T& operator[](
-    const size_t index) const noexcept
-  {
-    ASSERT(index>=0 && index < length());
-    return std::vector<T>::data()[index];
-  }
+//  inline T& operator[](
+//    const size_t index) noexcept
+//  {
+//    ASSERT(index>=0 && index < length());
+//    return std::vector<T>::data()[index];
+//  }
+//  
+//  inline const T& operator[](
+//    const size_t index) const noexcept
+//  {
+//    ASSERT(index>=0 && index < length());
+//    return std::vector<T>::data()[index];
+//  }
   
   inline void PushBack(const T& element) noexcept
   {

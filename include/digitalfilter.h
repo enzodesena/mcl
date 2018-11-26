@@ -15,92 +15,109 @@
 namespace mcl
 {
 
+template<typename T>
+class DigitalFilterInterface
+{
+  public:
+  virtual void Filter(
+    const Vector<T>& input,
+    Vector<T>& output) noexcept = 0;
 
-//class DigitalFilter
-//{
-//public:
-//  template<typename DigitalFilterType>
-//  DigitalFilter(DigitalFilterType x)
-//    : self_(std::make_unique<DigitalFilterModel<DigitalFilterType>>(std::move(x)))
-//  {
-//  }
-//  
-//  DigitalFilter(
-//    const DigitalFilter& x)
-//    : self_(x.self_->copy_())
-//  {
-//  }
-//  
-//  DigitalFilter(
-//    DigitalFilter&& x) noexcept = default;
-//  
-//  DigitalFilter& operator=(
-//    const DigitalFilter& x) noexcept
-//  {
-//    DigitalFilter tmp(x);
-//    *this = std::move(tmp); // Using move assignment operator
-//    return *this;
-//  }
-//  
-//  /** Move assignment operator */
-//  DigitalFilter& operator=(
-//    DigitalFilter&& x) noexcept = default;
-//  
-//  
-//  template<typename T, size_t input_length, size_t output_length>
-//  void Filter(
-//    const Vector<T,input_length>& input,
-//    Vector<T,output_length>& output) noexcept
-//  {
-//    self_->Filter_(input, output);
-//  }
-//  
-//  void Reset() noexcept
-//  {
-//    self_->Reset_();
-//  }
-//private:
-//  struct DigitalFilterConcept {
-//    virtual ~DigitalFilterConcept() = default;
-//    template<typename T, size_t input_length, size_t output_length>
-//    virtual void Filter_(
-//      const Vector<T,input_length>& input,
-//      Vector<T,output_length>& output) = 0;
-//    virtual void Reset_() = 0;
-//    virtual std::unique_ptr<DigitalFilterConcept> copy_() = 0;
-//  };
-//  
-//  template<typename DigitalFilterType>
-//  struct DigitalFilterModel final : DigitalFilterConcept
-//  {
-//    DigitalFilterModel(DigitalFilterType x)
-//      : data_(std::move(x))
-//    {
-//    }
-//    
-//    std::unique_ptr<DigitalFilterConcept> copy_() override
-//    {
-//      return std::make_unique<DigitalFilterModel>(*this);
-//    }
-//    
-//    template<typename T, size_t input_length, size_t output_length>
-//    void Filter_(
-//      const Vector<T,input_length>& input,
-//      Vector<T,output_length>& output) noexcept override
-//    {
-//      data_.Filter(out, position);
-//    }
-//    
-//    void Reset_() override noexcept
-//    {
-//      data_.Reset();
-//    }
-//    
-//    DigitalFilterType data_;
-//  };
-//  
-//  std::unique_ptr<DigitalFilterConcept> self_; // Concept is drawable object
-//};
+  virtual void Reset() noexcept = 0;
+};
+
+
+template<typename T>
+class DigitalFilter
+{
+public:
+  template<typename DigitalFilterT>
+  DigitalFilter(DigitalFilterT x)
+    : self_(std::make_unique<DigitalFilterModel<DigitalFilterT>>(std::move(x)))
+  {
+  }
+
+  DigitalFilter(
+    const DigitalFilter& x)
+    : self_(x.self_->copy_())
+  {
+  }
+
+  DigitalFilter(
+    DigitalFilter&& x) noexcept = default;
+
+  DigitalFilter& operator=(
+    const DigitalFilter& x) noexcept
+  {
+    DigitalFilter tmp(x);
+    *this = std::move(tmp); // Using move assignment operator
+    return *this;
+  }
+
+  /** Move assignment operator */
+  DigitalFilter& operator=(
+    DigitalFilter&& x) noexcept = default;
+
+
+  void Filter(
+    const Vector<double>& input,
+    Vector<double>& output) noexcept
+  {
+    self_->Filter_(input, output);
+  }
+  
+  void Filter(
+    const Vector<float>& input,
+    Vector<float>& output) noexcept
+  {
+    self_->Filter_(input, output);
+  }
+
+  void Reset() noexcept
+  {
+    self_->Reset_();
+  }
+private:
+  struct DigitalFilterConcept {
+    virtual ~DigitalFilterConcept() = default;
+    virtual void Filter_(
+      const Vector<T>& input,
+      Vector<T>& output) = 0;
+    virtual void Reset_() = 0;
+    virtual std::unique_ptr<DigitalFilterConcept> copy_() = 0;
+  };
+
+  template<typename DigitalFilterT>
+  struct DigitalFilterModel final : DigitalFilterConcept
+  {
+    DigitalFilterT data_;
+    
+    DigitalFilterModel(DigitalFilterT x)
+      : data_(std::move(x))
+    {
+    }
+
+    std::unique_ptr<DigitalFilterConcept> copy_() override
+    {
+      return std::make_unique<DigitalFilterModel>(*this);
+    }
+
+    void Filter_(
+      const Vector<T>& input,
+      Vector<T>& output) noexcept override
+    {
+      data_.Filter(input, output);
+    }
+
+    void Reset_() noexcept override
+    {
+      data_.Reset();
+    }
+
+  };
+
+  std::unique_ptr<DigitalFilterConcept> self_; // Concept is drawable object
+};
 
   
   

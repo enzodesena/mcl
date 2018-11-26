@@ -166,9 +166,9 @@ inline bool IsAnyConditionTrue(
   const Vector<T>& vector,
   std::function<bool(T)> condition_checker) noexcept
 {
-  for (const auto& element : vector)
+  for (size_t i=0; i<vector.length(); ++i)
   {
-    if (condition_checker(element))
+    if (condition_checker(vector[i]))
     {
       return true;
     }
@@ -182,11 +182,11 @@ inline bool IsAnyConditionTrue(
 template<typename T>
 inline bool AreAllConditionsTrue(
   const Vector<T>& vector,
-  std::function<bool(T)> condition_checker) noexcept
+  std::function<bool(const T)> condition_checker) noexcept
 {
-  for (const auto& element : vector)
+  for (size_t i=0; i<vector.length(); ++i)
   {
-    if (! condition_checker(element))
+    if (! condition_checker(vector[i]))
     {
       return false;
     }
@@ -254,7 +254,10 @@ inline Vector<bool> Not(
   const Vector<bool>& input) noexcept
 {
   Vector<bool> output(input.length());
-  ForEach<bool, bool>(input, [] (bool value) { return !value; }, output);
+  ForEach<bool, bool>(
+    input,
+    [] (const bool value) { return !value; },
+    output);
   return output;
 }
 
@@ -265,7 +268,7 @@ inline bool AreAllTrue(
 {
   return AreAllConditionsTrue<bool>(
     input,
-    [] (bool element) { return element; });
+    [] (const bool element) { return element; });
 }
 
 
@@ -281,7 +284,9 @@ inline bool None(
 inline bool Any(
   const Vector<bool>& input) noexcept
 {
-  return IsAnyConditionTrue<bool>(input, [] (bool element) { return element; });
+  return IsAnyConditionTrue<bool>(
+    input,
+    [] (const bool element) { return element; });
 }
 
 

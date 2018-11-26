@@ -17,7 +17,7 @@ namespace mcl {
   
 /** IIR Filter */
 template<typename T>
-class IirFilter {
+class IirFilter : public DigitalFilterInterface<T> {
 public:
   /** Constructs a default filter, i.e. identical filter*/
   IirFilter()
@@ -62,7 +62,7 @@ public:
    (1) Filter(0.5)==0 and then
    (2) Filter(0.0)==0.5
    */
-  T Filter(
+  T FilterSample(
     const T input) noexcept
   {
     // Speed up return for simple gain filters
@@ -88,8 +88,11 @@ public:
     return output;
   }
   
-//  using DigitalFilter<T>::FilterSerial;
-  
+  T Filter(
+    const T input) noexcept
+  {
+    return FilterSample(input);
+  }
   
   void Filter(
     const Vector<T>& input,
@@ -101,11 +104,20 @@ public:
     }
     else
     {
-      FilterSerial(input, output);
+      ForEach<T,T>(
+        input,
+        [this] (T element) { return this->FilterSample(element); },
+        output);
     }
   }
   
-//  using DigitalFilter<T>::Filter;
+  Vector<T> Filter(
+    const Vector<T>& input) noexcept
+  {
+    Vector<T> output(input.length());
+    Filter(input, output);
+    return std::move(output);
+  }
   
   /** Returns the order of the filter. */
   Int order() const noexcept
@@ -187,10 +199,9 @@ public:
     return Multiply(A_, A0_);
   }
   
-  void Reset()
+  void Reset() noexcept
   {
-    const size_t size = B_.length();
-    for (size_t i=0; i<size; ++i) { state_[i] = 0.0; }
+    SetToZero(state_);
   }
   
 private:
