@@ -425,6 +425,19 @@ Point<T> IntersectionPlaneLine(
   }
 }
 
+
+template<typename T>
+inline bool IsApproximatelyEqual(
+  const Point<T>& point_a,
+  const Point<T>& point_b,
+  const T precision = VERY_SMALL) noexcept
+{
+  return
+    mcl::IsApproximatelyEqual(point_a.x(), point_b.x(), precision) &&
+    mcl::IsApproximatelyEqual(point_a.y(), point_b.y(), precision) &&
+    mcl::IsApproximatelyEqual(point_a.z(), point_b.z(), precision);
+}
+
 bool PointTest();
   
   

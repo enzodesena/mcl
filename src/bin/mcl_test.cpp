@@ -14,7 +14,6 @@
 #include "elementaryop.h"
 #include "quaternion.h"
 #include "transformop.h"
-#include "statisticsop.h"
 #include "firfilter.h"
 #include "randomop.h"
 #include "iirfilter.h"
@@ -33,7 +32,6 @@ int main (int argc, char * const argv[]) {
   PointWiseOpTest();
   TransformOpTest();
   MatrixOpTest();
-  StatisticsOpTest();
   ComparisonOpTest();
   PointTest();
   IirFilterTest();

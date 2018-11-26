@@ -885,5 +885,20 @@ inline Vector<std::string> Split(
   return elems;
 }
   
+  
+/** Returns the Pearson linear correlation between `vector_a` and `vector_b` */
+template<typename T>
+T Corr(
+  const Vector<T>& x,
+  const Vector<T>& y) noexcept
+{
+  
+  T pearson_num_lin = Sum(mcl::Multiply(
+    AddScalar(x,-Mean(x)),
+    AddScalar(y,-Mean(y))));
+  T pearson_den_lin = sqrt(Sum(Pow(AddScalar(x, -Mean(x)),2.0)))*
+    sqrt(Sum(Pow(AddScalar(y, -Mean(y)),2.0)));
+  return pearson_num_lin/pearson_den_lin;
+}
 
 } /**< namespace mcl */

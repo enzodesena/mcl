@@ -603,6 +603,21 @@ bool VectorOpTest() {
   ASSERT(IsApproximatelyEqual(Var(vector_ba, weights_ba_var), 13.319335937500000));
 
 
+  Vector<Real> vector_aaa(4);
+  vector_aaa[0] = 1;
+  vector_aaa[1] = 2;
+  vector_aaa[2] = 1.5;
+  vector_aaa[3] = -1;
+  
+  Vector<Real> vector_bbb(4);
+  vector_bbb[0] = 0.5;
+  vector_bbb[1] = -1;
+  vector_bbb[2] = 2;
+  vector_bbb[3] = -3;
+  
+  ASSERT(IsApproximatelyEqual(Corr(vector_aaa, vector_bbb), 0.689797863572754));
+
+
 //
 //  // Cumsum
 //  //  Vector<Real> vector_e(4);

@@ -311,6 +311,32 @@ Quaternion<T> QuatInverse(
 }
 
 
+
+template<typename T>
+inline bool IsEqual(
+  const Quaternion<T>& q_a,
+  const Quaternion<T>& q_b) noexcept
+{
+  return q_a.w() == q_b.w() && q_a.x() == q_b.x() &
+    q_a.y() == q_b.y() && q_a.z() == q_b.z();
+}
+
+
+
+
+template<typename T>
+inline bool IsApproximatelyEqual(
+  const Quaternion<T>& quat_a,
+  const Quaternion<T>& quat_b,
+  const T precision = VERY_SMALL)
+{
+  return
+    IsApproximatelyEqual(quat_a.w(), quat_b.w()) &&
+    IsApproximatelyEqual(quat_a.x(), quat_b.x()) &&
+    IsApproximatelyEqual(quat_a.y(), quat_b.y()) &&
+    IsApproximatelyEqual(quat_a.z(), quat_b.z());
+}
+
 bool QuaternionTest();
   
 } // namespace mcl
