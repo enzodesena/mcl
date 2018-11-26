@@ -275,7 +275,7 @@ inline Int NextPow2(
 inline Int Next2(
   const Int input) noexcept
 {
-  return pow(2, NextPow2(input));
+  return static_cast<Int>(pow(2, NextPow2(input)));
 }
   
 /** Converts a string to a double */
