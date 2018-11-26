@@ -53,7 +53,7 @@ inline void Add(
     &input_a[0], 1,
     &input_b[0], 1,
     &output[0], 1,
-    output.length());
+    output.size());
 #else
   AddSerial(input_a, input_b, output);
 #endif
@@ -70,7 +70,7 @@ inline void Add(
     &input_a[0], 1,
     &input_b[0], 1,
     &output[0], 1,
-    output.length());
+    output.size());
 #else
   AddSerial(input_a, input_b, output);
 #endif
@@ -91,7 +91,7 @@ inline void Multiply(
   vDSP_vmulD(&input[0], 1,
              &gain, 0,
              &output[0], 1,
-             output.length());
+             output.size());
 #else
   MultiplySerial(input, gain, output);
 #endif
@@ -112,7 +112,7 @@ inline void Multiply(
     &input[0], 1,
     &gain, 0,
     &output[0], 1,
-    output.length());
+    output.size());
 #else
   MultiplySerial(input, gain, output);
 #endif
@@ -137,7 +137,7 @@ inline void Multiply(
     &input_a[0], 1,
     &input_b[0], 1,
     &output[0], 1,
-    output.length());
+    output.size());
 #else
   MultiplySerial(input_a, input_b, output);
 #endif
@@ -153,7 +153,7 @@ inline void Multiply(
     &input_a[0], 1,
     &input_b[0], 1,
     &output[0], 1,
-    output.length());
+    output.size());
 #else
   MultiplySerial(input_a, input_b, output);
 #endif
@@ -180,7 +180,7 @@ inline void MultiplyAdd(
     &gain, 0,
     &input_to_add[0], 1,
     &output[0], 1,
-    output.length());
+    output.size());
 #else
   MultiplyAddSerial(input_to_multiply, gain, input_to_add, output);
 #endif
@@ -199,7 +199,7 @@ inline void MultiplyAdd(
     &gain, 0,
     &input_to_add[0], 1,
     &output[0], 1,
-    output.length());
+    output.size());
 #else
   MultiplyAddSerial(input_to_multiply, gain, input_to_add, output);
 #endif
@@ -229,9 +229,9 @@ inline void ConvSerial(
   const Vector<T>& kernel,
   Vector<T>& output) noexcept
 {
-  const size_t N = output.length();
-  const size_t P = kernel.length();
-  ASSERT(N+P >= 1 && input.length() >= N+P-1);
+  const size_t N = output.size();
+  const size_t P = kernel.size();
+  ASSERT(N+P >= 1 && input.size() >= N+P-1);
   for (size_t n=0; n<N; ++n)
   {
     for (size_t p=0; p<P; ++p)
@@ -251,10 +251,10 @@ inline void ConvApple(
 {
   vDSP_convD(
     &padded_input[0], 1,
-    &coefficients[0]+coefficients.length()-1, -1,
+    &coefficients[0]+coefficients.size()-1, -1,
     &output[0], 1,
-    output.length(),
-    coefficients.length());
+    output.size(),
+    coefficients.size());
 }
 #endif
 
@@ -267,10 +267,10 @@ inline void ConvApple(
 {
   vDSP_conv(
     &input[0], 1,
-    &coefficients[0]+coefficients.length()-1, -1,
+    &coefficients[0]+coefficients.size()-1, -1,
     &output[0], 1,
-    output.length(),
-    coefficients.length());
+    output.size(),
+    coefficients.size());
 }
 #endif
 
@@ -377,7 +377,7 @@ inline void Conv(
   const Vector<T>& kernel,
   Vector<T>& output) noexcept
 {
-  ASSERT(input.length() >= kernel.length()+output.length()-1);
+  ASSERT(input.size() >= kernel.size()+output.size()-1);
 #if defined(MCL_APPLE_ACCELERATE_MMA) && MCL_APPLE_ACCELERATE_MMA
   MathIntrinsics<T>::ConvApple(input, kernel, output);
 #elif defined(MCL_AVX_ACCELERATE) && MCL_AVX_ACCELERATE
@@ -397,7 +397,7 @@ inline Vector<T> Add(
   const Vector<T>& input_a,
   const Vector<T>& input_b) noexcept
 {
-  Vector<T> output(input_a.length());
+  Vector<T> output(input_a.size());
   Add(input_a, input_b, output);
   return std::move(output);
 }
@@ -412,7 +412,7 @@ inline Vector<T> Multiply(
   const Vector<T>& input,
   const T gain) noexcept
 {
-  Vector<T> output(input.length());
+  Vector<T> output(input.size());
   Multiply(input, gain, output);
   return std::move(output);
 }
@@ -423,7 +423,7 @@ inline Vector<T> Multiply(
   const Vector<T>& input_a,
   const Vector<T>& input_b) noexcept
 {
-  Vector<T> output(input_a.length());
+  Vector<T> output(input_a.size());
   Multiply(input_a, input_b, output);
   return std::move(output);
 }
@@ -458,7 +458,7 @@ inline Vector<T> AddScalar(
   const Vector<T>& vector,
   const T scalar) noexcept
 {
-  Vector<T> output(vector.length());
+  Vector<T> output(vector.size());
   AddScalar(vector, scalar, output);
   return std::move(output);
 }
@@ -474,17 +474,17 @@ AddVectors(
   const Vector<Vector<T>>& vectors) noexcept
 {
   // Get maximum length
-  Vector<size_t> vector_lengths(vectors.length());
-  for (size_t i=0; i<vectors.length(); ++i)
+  Vector<size_t> vector_lengths(vectors.size());
+  for (size_t i=0; i<vectors.size(); ++i)
   {
-    vector_lengths[i] = vectors[i].length();
+    vector_lengths[i] = vectors[i].size();
   }
   size_t max_length(Max(vector_lengths));
   Vector<T> output = Zeros<T>(max_length);
   Vector<T> temp(max_length);
   for (auto& vector : vectors)
   {
-    if (vector.length() == max_length)
+    if (vector.size() == max_length)
     {
       output = Add(output, vector);
     }

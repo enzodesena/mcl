@@ -66,7 +66,7 @@ inline bool VectorOpTest()
   ASSERT(IsEqual(UnaryVector(2.2), Flip(UnaryVector(2.2))));
 
   Vector<Real> vector_l = LinSpace(0.0, 2.0, 3);
-  ASSERT(vector_l.length() == 3);
+  ASSERT(vector_l.size() == 3);
   Vector<Real> vector_l_cmp(3);
   vector_l_cmp[0] = 0.0;
   vector_l_cmp[1] = 1.0;
@@ -74,7 +74,7 @@ inline bool VectorOpTest()
   ASSERT(IsEqual(vector_l_cmp, vector_l));
 
   Vector<Real> vector_m = LinSpace(0.0, -2.0, 3);
-  ASSERT(vector_m.length() == 3);
+  ASSERT(vector_m.size() == 3);
   Vector<Real> vector_m_cmp(3);
   vector_m_cmp[0] = 0.0;
   vector_m_cmp[1] = -1.0;
@@ -82,7 +82,7 @@ inline bool VectorOpTest()
   ASSERT(IsEqual(vector_m_cmp, vector_m));
 
   Vector<Real> vector_n = LinSpace(1.0, 2.0, 4);
-  ASSERT(vector_n.length() == 4);
+  ASSERT(vector_n.size() == 4);
   Vector<Real> vector_n_cmp(4);
   vector_n_cmp[0] = 1.0;
   vector_n_cmp[1] = 1.33333333333333333333;
@@ -148,14 +148,14 @@ inline bool VectorOpTest()
 
   ASSERT(Sum(vector_e) == -0.3+30.3+2.4+12.4);
   
-  ASSERT(Downsample(vector_f, 2).length() == 2);
-  ASSERT(Downsample(vector_f, 3).length() == 2);
-  ASSERT(Downsample(vector_f, 4).length() == 1);
-  ASSERT(Downsample(vector_f, 10).length() == 1);
-  ASSERT(Downsample(pad_vector_c_cmp, 2).length() == 3);
-  ASSERT(Downsample(pad_vector_c_cmp, 3).length() == 2);
-  ASSERT(Downsample(pad_vector_c_cmp, 4).length() == 2);
-  ASSERT(Downsample(pad_vector_c_cmp, 5).length() == 1);
+  ASSERT(Downsample(vector_f, 2).size() == 2);
+  ASSERT(Downsample(vector_f, 3).size() == 2);
+  ASSERT(Downsample(vector_f, 4).size() == 1);
+  ASSERT(Downsample(vector_f, 10).size() == 1);
+  ASSERT(Downsample(pad_vector_c_cmp, 2).size() == 3);
+  ASSERT(Downsample(pad_vector_c_cmp, 3).size() == 2);
+  ASSERT(Downsample(pad_vector_c_cmp, 4).size() == 2);
+  ASSERT(Downsample(pad_vector_c_cmp, 5).size() == 1);
 
   Vector<Real> cmp_downsample_f(2);
   cmp_downsample_f[0] = 2.5;
@@ -168,7 +168,7 @@ inline bool VectorOpTest()
   ASSERT(IsEqual(cmp_downsample_f_3, Downsample(vector_f, 3)));
 
   Vector<Real> vector_f_sub_0_2 = Subset(vector_f, 0, 2);
-  ASSERT(vector_f_sub_0_2.length() == 3);
+  ASSERT(vector_f_sub_0_2.size() == 3);
   Vector<Real> vector_f_sub_0_2_cmp(3);
   vector_f_sub_0_2_cmp[0] = 2.5;
   vector_f_sub_0_2_cmp[1] = 1.3;
@@ -176,7 +176,7 @@ inline bool VectorOpTest()
   ASSERT(IsEqual(vector_f_sub_0_2_cmp, vector_f_sub_0_2));
 
   Vector<Real> vector_f_sub_1_2 = Subset(vector_f, 1, 2);
-  ASSERT(vector_f_sub_1_2.length() == 2);
+  ASSERT(vector_f_sub_1_2.size() == 2);
   Vector<Real> vector_f_sub_1_2_cmp(2);
   vector_f_sub_1_2_cmp[0] = 1.3;
   vector_f_sub_1_2_cmp[1] = -2.4;
@@ -197,7 +197,7 @@ inline bool VectorOpTest()
   Vector<Real> vector_g_h = Concatenate(vector_g, vector_h);
   ASSERT(vector_g[0] == 2.5);
   ASSERT(vector_h[1] == 1.3);
-  ASSERT(vector_g_h.length() == 6);
+  ASSERT(vector_g_h.size() == 6);
   ASSERT(vector_g_h[0] == 2.5);
   ASSERT(vector_g_h[1] == 0.0);
   ASSERT(vector_g_h[3] == -2.5);
@@ -249,7 +249,7 @@ inline bool VectorOpTest()
   ASSERT(IsEqual(Conv(vector_p, vector_q), Conv(vector_q,vector_p)));
 
   Vector<Real> conv_p_q = Conv(vector_p, vector_q);
-  ASSERT(conv_p_q.length() == 4);
+  ASSERT(conv_p_q.size() == 4);
   Vector<Real> conv_p_q_cmp(4);
   conv_p_q_cmp[0] = 0.0;
   conv_p_q_cmp[1] = -1.2;
@@ -263,7 +263,7 @@ inline bool VectorOpTest()
   vector_r[1] = 6.0;
 
   Vector<Real> conv_q_r = Conv(vector_r, vector_q);
-  ASSERT(conv_q_r.length() == 3);
+  ASSERT(conv_q_r.size() == 3);
   Vector<Real> conv_q_r_cmp(3);
   conv_q_r_cmp[0] = -3.6;
   conv_q_r_cmp[1] = 6.3;
@@ -344,7 +344,7 @@ inline bool VectorOpTest()
   vector_i[2] = 4.0;
 
   Vector<Real> vector_i_restr_1 = Elements(vector_i, 1, 2);
-  ASSERT(vector_i_restr_1.length() == 2);
+  ASSERT(vector_i_restr_1.size() == 2);
   Vector<Real> vector_i_restr_1_cmp(2);
   vector_i_restr_1_cmp[0] = -0.5;
   vector_i_restr_1_cmp[1] = 4.0;
@@ -356,14 +356,14 @@ inline bool VectorOpTest()
   vector_v[2] = 4.0;
 
   Vector<Real> vector_v_restr_1 = Elements(vector_v, 1, 2);
-  ASSERT(vector_v_restr_1.length() == 2);
+  ASSERT(vector_v_restr_1.size() == 2);
   Vector<Real> vector_v_restr_1_cmp(2);
   vector_v_restr_1_cmp[0] = -0.5;
   vector_v_restr_1_cmp[1] = 4.0;
   ASSERT(IsEqual(vector_v_restr_1, vector_v_restr_1_cmp));
 
   Vector<Real> vector_v_restr_2 = Elements(vector_v, 0, 0);
-  ASSERT(vector_v_restr_2.length() == 1);
+  ASSERT(vector_v_restr_2.size() == 1);
   Vector<Real> vector_v_restr_2_cmp(1);
   vector_v_restr_2_cmp[0] = 0.1;
   ASSERT(IsEqual(vector_v_restr_2, vector_v_restr_2_cmp));
@@ -434,16 +434,16 @@ inline bool VectorOpTest()
 
   // Testing UnaryVector
   Vector<Real> vector_zd = UnaryVector<Real>(-1.0);
-  ASSERT(vector_zd.length() == 1);
+  ASSERT(vector_zd.size() == 1);
   ASSERT(vector_zd[0] == -1.0);
 
   Vector<Int> vector_ze = UnaryVector<Int>(-2);
-  ASSERT(vector_ze.length() == 1);
+  ASSERT(vector_ze.size() == 1);
   ASSERT(vector_ze[0] == -2);
 
   // Testing BinaryVector
   Vector<Real> vector_zf = BinaryVector<Real>(-1.0, 2.0);
-  ASSERT(vector_zf.length() == 2);
+  ASSERT(vector_zf.size() == 2);
   ASSERT(vector_zf[0] == -1.0);
   ASSERT(vector_zf[1] == 2.0);
 
@@ -514,8 +514,8 @@ inline bool VectorOpTest()
   ASSERT(IsApproximatelyEqual(vector_tukey_1, vector_tukey_1_cmp, VERY_SMALL));
 
 //  Vector<Real> aa = TukeyWin<Real>(1, 0.6);
-  ASSERT(TukeyWin(1, 0.6).length() == 1);
-  ASSERT(TukeyWin(0, 0.6).length() == 0);
+  ASSERT(TukeyWin(1, 0.6).size() == 1);
+  ASSERT(TukeyWin(0, 0.6).size() == 0);
   ASSERT(IsEqual(TukeyWin(1, 0.6), UnaryVector<Real>(1.0)));
 
   ASSERT(IsEqual(TukeyWin(6, 0.0), Ones<Real>(6)));
@@ -582,7 +582,7 @@ inline bool VectorOpTest()
 //  Vector<Real> vector = LinSpace(1, 10, 10);
 //  Vector<Real> window = {0.2, 0.4};
 //  Vector<Vector<Real> > output_3 = Enframe(vector, window, 3);
-//  ASSERT(output_3.length() == 3);
+//  ASSERT(output_3.size() == 3);
 //  Vector<Real> output_3_0_cmp = {0.2, 0.8};
 //  Vector<Real> output_3_1_cmp = {0.8, 2.0};
 //  Vector<Real> output_3_2_cmp = {1.4, 3.2};
@@ -592,7 +592,7 @@ inline bool VectorOpTest()
 //
 //
 //  Vector<Vector<Real> > output_full = Enframe(Ones<Real>(4), window, 2);
-//  ASSERT(output_full.length()==2);
+//  ASSERT(output_full.size()==2);
 //  Vector<Real> output_full_0_cmp = {0.2, 0.4};
 //  Vector<Real> output_full_1_cmp = {0.2, 0.4};
 //  ASSERT(IsEqual(output_full[0], output_full_0_cmp));
@@ -604,7 +604,7 @@ inline bool VectorOpTest()
 //  window_b[] = 0.4);
 //  window_b[] = -0.3);
 //  Vector<Vector<Real> > output_1 = Enframe(vector, window_b, 1);
-//  ASSERT(output_1.length() == 8);
+//  ASSERT(output_1.size() == 8);
 //  Vector<Real> output_1_0_cmp = {0.2000,   0.8000,   -0.9000};
 //  Vector<Real> output_1_1_cmp = {0.4000,   1.2000,   -1.2000};
 //  Vector<Real> output_1_2_cmp = {0.6000,   1.6000,   -1.5000};
@@ -646,7 +646,7 @@ inline bool VectorOpTest()
   // Testing vector reference
 //  Vector<Real> referenced(3,0.0);
 //  referenced[1] = 2.0;
-//  ASSERT(referenced.length() == 3);
+//  ASSERT(referenced.size() == 3);
 //  ASSERT(referenced[0] == 0.0);
 //  ASSERT(referenced[1] == 2.0);
 //  ASSERT(referenced[2] == 0.0);
@@ -660,27 +660,27 @@ inline bool VectorOpTest()
 //  ASSERT(referenced[0] == 1.0);
 //  ASSERT(referenced[1] == 3.0);
 //  ASSERT(referenced[2] == 5.0);
-//  ASSERT(reference.length() == 3);
+//  ASSERT(reference.size() == 3);
 //  
 //  Vector<Real,kReference> reference_b(referenced, 0);
-//  ASSERT(reference_b.length() == 3);
+//  ASSERT(reference_b.size() == 3);
 //  ASSERT(reference_b[0] == 1.0);
 //  ASSERT(reference_b[1] == 3.0);
 //  ASSERT(reference_b[2] == 5.0);
 //  referenced[] = 7.0);
-//  ASSERT(reference_b.length() == 4); // The length of the reference has increased along with the referenced
+//  ASSERT(reference_b.size() == 4); // The length of the reference has increased along with the referenced
 //  
 //  
 //  Vector<Real,kReference> reference_c(referenced, 0, 4);
-//  ASSERT(reference_c.length() == 4);
+//  ASSERT(reference_c.size() == 4);
 //  referenced[] = 9.0);
-//  ASSERT(reference_c.length() == 4); // In this case the lenght did not increase, because specified a length
+//  ASSERT(reference_c.size() == 4); // In this case the lenght did not increase, because specified a length
 //  ASSERT(reference_c[0] == 1.0);
 //  ASSERT(reference_c[1] == 3.0);
 //  ASSERT(reference_c[2] == 5.0);
 //  
 //  Vector<Real,kReference> reference_d(referenced, 2, 2);
-//  ASSERT(reference_d.length() == 2);
+//  ASSERT(reference_d.size() == 2);
 //  ASSERT(reference_d[0] == 5.0);
 //  ASSERT(reference_d[1] == 7.0);
   

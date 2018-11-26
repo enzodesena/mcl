@@ -89,8 +89,8 @@ inline bool BasicOpTest()
   ASSERT(IsEqual(vector_l_peaks_2, vector_l_peaks_2_cmp));
   
   // Checks that it behaves like matlab
-  ASSERT(FindPeaksIndexes(Ones<Real>(3)).length() == 0);
-  ASSERT(FindPeaksIndexes(Zeros<Real>(3)).length() == 0);
+  ASSERT(FindPeaksIndexes(Ones<Real>(3)).size() == 0);
+  ASSERT(FindPeaksIndexes(Zeros<Real>(3)).size() == 0);
   
   
   Vector<UInt> vector_m(4);

@@ -51,7 +51,7 @@ private:
     
     // Stage 3
     // Append input signal
-    for (size_t i=(length_-1); i<(length_-1+input.length()); ++i)
+    for (size_t i=(length_-1); i<(length_-1+input.size()); ++i)
     {
       extended_input[i] = input[i-(length_-1)];
     }
@@ -64,8 +64,8 @@ private:
   void UpdateCoefficients() noexcept
   {
     ASSERT(update_index_>=0 && update_index_<=update_length_);
-    ASSERT(impulse_response_.length() == impulse_response_old_.length());
-    ASSERT(impulse_response_.length() == coefficients_.length());
+    ASSERT(impulse_response_.size() == impulse_response_old_.size());
+    ASSERT(impulse_response_.size() == coefficients_.size());
     T weight_new = ((T)update_index_+T(1))/((T)update_length_+T(1));
     T weight_old = T(1)-weight_new;
     Multiply(impulse_response_, weight_new, coefficients_);
@@ -105,15 +105,15 @@ public:
   /** Constructs an FIR filter with impulse response B. */
   FirFilter(
     const Vector<T>& B) noexcept
-    : delay_line_(B.length())
+    : delay_line_(B.size())
     , coefficients_(B)
     , impulse_response_(B)
     , impulse_response_old_(B)
     , update_index_(0)
     , update_length_(0)
     , updating_(false)
-    , counter_(B.length()-1)
-    , length_(B.length())
+    , counter_(B.size()-1)
+    , length_(B.size())
   {
     SetToZero(delay_line_);
   }
@@ -176,10 +176,10 @@ public:
       return;
     }
   
-    if (impulse_response.length() != length_)
+    if (impulse_response.size() != length_)
     {
       // If the impulse response changes length, then reset everything.
-      length_ = impulse_response.length();
+      length_ = impulse_response.size();
       delay_line_.Assign(length_, 0.0);
       counter_ = length_-1;
       impulse_response_ = impulse_response;
@@ -205,7 +205,7 @@ public:
         impulse_response_old_ = coefficients_;
       }
     }
-    ASSERT(impulse_response_.length() == impulse_response_old_.length());
+    ASSERT(impulse_response_.size() == impulse_response_old_.size());
   }
   
   /** Resets the state of the filter */
@@ -238,15 +238,15 @@ public:
     const Vector<T>& input,
     Vector<T>& output) noexcept
   {
-    ASSERT(input.length() == output.length());
-    const size_t num_samples = input.length();
+    ASSERT(input.size() == output.size());
+    const size_t num_samples = input.size();
     if (updating_)
     {
       UpdateCoefficients();
     }
     if (length_ == 1)
     {
-      delay_line_[0] = input[input.length()-1];
+      delay_line_[0] = input[input.size()-1];
       Multiply(input, coefficients_, output);
       return;
     }

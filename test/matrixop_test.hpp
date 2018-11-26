@@ -118,8 +118,8 @@ inline bool MatrixOpTest()
 #if MCL_LOAD_EIGEN
   // Testing eigenvalues and eigenvectors
   EigOutput eig_e = Eig(matrix_e);
-  ASSERT(eig_e.eigen_values.length() == 2);
-  ASSERT(eig_e.eigen_vectors.length() == 2);
+  ASSERT(eig_e.eigen_values.size() == 2);
+  ASSERT(eig_e.eigen_vectors.size() == 2);
   
   ASSERT(IsEqual(eig_e.eigen_values[0], Complex(-1.449489742783179, 0.0)));
   ASSERT(IsEqual(eig_e.eigen_values[1], Complex(3.449489742783178, 0.0)));
@@ -152,7 +152,7 @@ inline bool MatrixOpTest()
   matrix_g.SetElement(0, 1, 1.0);
   matrix_g.SetElement(2, 1, 1.5);
   Vector<Real> serial_g = matrix_g.Serial();
-  ASSERT(serial_g.length() == 6);
+  ASSERT(serial_g.size() == 6);
   Vector<Real> serial_g_cmp(6, 0.0);
   serial_g_cmp[3] = 1.0;
   serial_g_cmp[5] = 1.5;

@@ -45,7 +45,7 @@ inline bool TransformOpTest()
   // Check that when n_points is larger than the size of the vector,
   // then the result is the fft of a zero padded version of the input vector.
   Vector<Complex<Real>> fft_vector_a_4 = Fft(vector_a, 4);
-  ASSERT(fft_vector_a_4.length() == 4);
+  ASSERT(fft_vector_a_4.size() == 4);
   Vector<Complex<Real>> fft_vector_a_4_cmp(4);
   fft_vector_a_4_cmp[0] = Complex<Real>(2.0000, 1.5000);
   fft_vector_a_4_cmp[1] = Complex<Real>(1.0000, -0.5000);

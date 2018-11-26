@@ -152,7 +152,7 @@ public:
     const Vector<T>& input,
     Vector<T>& output) noexcept
   {
-    ASSERT(input.length() == output.length());
+    ASSERT(input.size() == output.size());
     Multiply(input, gain_, output);
   }
   

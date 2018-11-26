@@ -19,7 +19,7 @@ template <typename T>
 /** Equivalent to Matlab's mean(input) */
 T Mean(const Vector<T>& input) noexcept
 {
-  return Sum(input) / ((T) input.length());
+  return Sum(input) / ((T) input.size());
 }
 
 
@@ -32,7 +32,7 @@ T Geomean(
   const Vector<T>& input) noexcept
 {
 // TODO: Throw error for negative entries
-  return Pow(Prod(input), 1.0/((T)input.length()));
+  return Pow(Prod(input), 1.0/((T)input.size()));
 }
 
 
@@ -46,7 +46,7 @@ T Mean(
   const Vector<T>& input,
   const Vector<T>& weights) noexcept
 {
-  ASSERT(input.length() == weights.length());
+  ASSERT(input.size() == weights.size());
   ASSERT(IsNonNegative(weights));
   
   // Normalise the weigths
@@ -75,11 +75,11 @@ T Var(
 {
   T mean = Mean(input);
   T output(0.0);
-  for (size_t i=0; i<input.length(); ++i)
+  for (size_t i=0; i<input.size(); ++i)
   {
     output += pow(input[i] - mean,2.0);
   }
-  return output/((T) (input.length()-1));
+  return output/((T) (input.size()-1));
 }
 
 
@@ -145,7 +145,7 @@ template<typename T>
 Matrix<T> Cov(
   const Vector<Vector<T> >& input) noexcept
 {
-  const size_t N = input.length();
+  const size_t N = input.size();
   Matrix<T> output(N, N);
   for (size_t i=0; i<N; ++i)
   {
@@ -162,8 +162,8 @@ T CovElement(
   const Vector<T>& x,
   const Vector<T>& y) noexcept
 {
-  ASSERT(x.length() == y.length());
-  const size_t N = x.length();
+  ASSERT(x.size() == y.size());
+  const size_t N = x.size();
   
   T output = Sum(Multiply(AddScalar(x, -Mean(x)), AddScalar(y, -Mean(y))));
   // In case N>1 use the unbiased estimator of covariance.

@@ -21,7 +21,7 @@ inline void ForEach(
   std::function<U(T)> operation,
   Vector<U>& output_vector) noexcept
 {
-  ASSERT(input_vector.length() == output_vector.length());
+  ASSERT(input_vector.size() == output_vector.size());
   auto input_iter = input_vector.begin();
   auto output_iter = output_vector.begin();
   while (input_iter != input_vector.end())
@@ -46,8 +46,8 @@ inline void ForEach(
   std::function<T(T,T)> pointwise_operation,
   Vector<T>& output) noexcept
 {
-  ASSERT(input_a.length() == input_b.length());
-  ASSERT(input_a.length() == output.length());
+  ASSERT(input_a.size() == input_b.size());
+  ASSERT(input_a.size() == output.size());
   auto input_a_iter = input_a.begin();
   auto input_b_iter = input_b.begin();
   auto output_iter = output.begin();
@@ -67,10 +67,10 @@ inline void MultiplySerial(
   const T gain,
   Vector<T>& output) noexcept
 {
-  ASSERT(input.length() == output.length());
+  ASSERT(input.size() == output.size());
 //  auto input_iter(input.begin());
 //  auto output_iter(input.begin());
-  for (size_t i = 0; i<output.length(); ++i)
+  for (size_t i = 0; i<output.size(); ++i)
   {
     output[i] = input[i] * gain;
 //    *(output_iter++) = *(input_iter++) * gain;
@@ -103,8 +103,8 @@ inline Vector<T> MultiplySerial(
   const Vector<T>& vector_a,
   const Vector<T>& vector_b) noexcept
 {
-  ASSERT(vector_a.length() == vector_b.length());
-  Vector<T> output(vector_a.length());
+  ASSERT(vector_a.size() == vector_b.size());
+  Vector<T> output(vector_a.size());
   MultiplySerial(vector_a, vector_b, output);
   
   return output;
@@ -118,8 +118,8 @@ inline void MultiplyAddSerial(
   const Vector<T>& input_to_add,
   Vector<T>& output) noexcept
 {
-  ASSERT(input_to_multiply.length() == input_to_add.length());
-  ASSERT(input_to_add.length() == output.length());
+  ASSERT(input_to_multiply.size() == input_to_add.size());
+  ASSERT(input_to_add.size() == output.size());
   auto input_to_multiply_iter(input_to_multiply.begin());
   auto input_to_add_iter(input_to_add.begin());
   auto output_iter(output.begin());
@@ -143,8 +143,8 @@ inline void AddSerial(
   const Vector<T>& input_b,
   Vector<T>& output) noexcept
 {
-  ASSERT(input_a.length() == input_a.length());
-  ASSERT(input_a.length() == output.length());
+  ASSERT(input_a.size() == input_a.size());
+  ASSERT(input_a.size() == output.size());
   auto input_a_iter = input_a.begin();
   auto input_b_iter = input_b.begin();
   auto output_iter = output.begin();
@@ -162,7 +162,7 @@ inline void ForEach(
   T (*operation)(T),
   Vector<T>& output_vector)
 {
-  ASSERT(input_vector.length() == output_vector.length());
+  ASSERT(input_vector.size() == output_vector.size());
   auto input_iter = input_vector.begin();
   auto output_iter = output_vector.begin();
   while (input_iter != input_vector.end())
@@ -181,7 +181,7 @@ inline Vector<T> Opposite(
     std::is_same<T, Complex<double>>::value ||
     std::is_same<T, Complex<float>>::value ||
     std::is_signed<T>::value, "");
-  Vector<T> output(input.length());
+  Vector<T> output(input.size());
   T (*operation)(T) = [] (T value) -> T { return -value; };
   ForEach(input, operation, output);
   return std::move(output);
@@ -193,7 +193,7 @@ template<typename T>
 inline Vector<T> Inverse(
   const Vector<T>& input) noexcept
 {
-  Vector<T> output(input.length());
+  Vector<T> output(input.size());
   T (*operation) (T value) = [] (T value) { return T(1.0) / value; };
   ForEach(input, operation, output);
   return std::move(output);
@@ -203,7 +203,7 @@ template<typename T>
 inline Vector<T> HalfWave(
   const Vector<T>& input) noexcept
 {
-  Vector<T> output(input.length());
+  Vector<T> output(input.size());
   T (*operation) (T value) = [] (T value) { return mcl::Max(T(0.0), value); };
   ForEach(input, operation, output);
   return output;
@@ -213,7 +213,7 @@ template<typename T>
 inline Vector<T> Cos(
   const Vector<T>& input) noexcept
 {
-  Vector<T> output(input.length());
+  Vector<T> output(input.size());
   T (*operation) (T value) = [] (T value) { return cos(value); };
   ForEach(input, operation, output);
   return output;
@@ -223,7 +223,7 @@ template<typename T>
 inline Vector<T> Sin(
   const Vector<T>& input) noexcept
 {
-  Vector<T> output(input.length());
+  Vector<T> output(input.size());
   T (*operation) (T value) = [] (T value) { return sin(value); };
   ForEach(input, operation, output);
   return output;
@@ -238,9 +238,9 @@ inline Vector<T> Sin(
 template<class T>
 Vector<T> Divide(const Vector<T>& vector_a,
                       const Vector<T>& vector_b) noexcept {
-  ASSERT(vector_a.length() == vector_b.length());
-  Vector<T> output((Int)vector_a.length());
-  for (Int i=0; i<(Int)vector_a.length(); ++i) {
+  ASSERT(vector_a.size() == vector_b.size());
+  Vector<T> output((Int)vector_a.size());
+  for (Int i=0; i<(Int)vector_a.size(); ++i) {
     output[i] = vector_a[i]/vector_b[i];
   }
   return output;
@@ -250,8 +250,8 @@ Vector<T> Divide(const Vector<T>& vector_a,
 /** Equivalent to Matlab's exp(vector). */
 template<class T>
 Vector<T> Exp(const Vector<T>& vector) noexcept {
-  Int n(vector.length());
-  Vector<T> output(vector.length());
+  Int n(vector.size());
+  Vector<T> output(vector.size());
   for (Int i=0; i<n; ++i) { output[i] = exp(vector[i]); }
   return output;
 }
@@ -264,7 +264,7 @@ template<typename T>
 Vector<Complex<T>> Conj(
   const Vector<Complex<T>>& input) noexcept
 {
-  Vector<Complex<T>> output(input.length());
+  Vector<Complex<T>> output(input.size());
   Complex<T> (*operation) (Complex<T>) =
     [] (Complex<T> value) { return Conj(value); };
   ForEach(input, operation, output);
@@ -276,7 +276,7 @@ template<typename T>
 Vector<T> RealPart(
   const Vector<Complex<T>>& input) noexcept
 {
-  Vector<T> output(input.length());
+  Vector<T> output(input.size());
   T (*operation) (Complex<T>) = [] (Complex<T> value) { return value.real(); };
   ForEach<Complex<T>,T>(input, operation, output);
   return std::move(output);
@@ -287,7 +287,7 @@ template<typename T>
 Vector<T> Imag(
   const Vector<Complex<T>>& input) noexcept
 {
-  Vector<T> output(input.length());
+  Vector<T> output(input.size());
   ForEach(input, &std::imag, output);
   return std::move(output);
 }
@@ -302,8 +302,8 @@ inline Vector<T> Pow(
   const Vector<T>& input,
   const T exponent) noexcept
 {
-  Vector<T> output(input.length());
-  for (size_t i=0; i<input.length(); ++i)
+  Vector<T> output(input.size());
+  for (size_t i=0; i<input.size(); ++i)
   {
     output[i] = Pow(input[i], exponent);
   }
@@ -316,7 +316,7 @@ inline Vector<T> Pow(
 inline Vector<double> Abs(
   const Vector<double>& input) noexcept
 {
-  Vector<double> output(input.length());
+  Vector<double> output(input.size());
   ForEach(input, &std::fabs, output);
   return output;
 }
@@ -326,7 +326,7 @@ inline Vector<double> Abs(
 inline Vector<float> Abs(
   const Vector<float>& input) noexcept
 {
-  Vector<float> output(input.length());
+  Vector<float> output(input.size());
   ForEach(input, &std::abs, output);
   return output;
 }
@@ -336,7 +336,7 @@ template<typename T>
 inline Vector<double> Abs(
   const Vector<Complex<T>>& input) noexcept
 {
-  Vector<T> output(input.length());
+  Vector<T> output(input.size());
   T (*operation) (Complex<T>) = [] (Complex<T> value) { return mcl::Abs(value); };
   ForEach<Complex<T>,T>(input, operation, output);
   return std::move(output);
@@ -359,8 +359,8 @@ template<typename T>
 inline Vector<T> Log(
   const Vector<T>& vector) noexcept
 {
-  Vector<T> output(vector.length());
-  for (size_t i=0; i<vector.length(); ++i)
+  Vector<T> output(vector.size());
+  for (size_t i=0; i<vector.size(); ++i)
   {
     output[i] = log(vector[i]);
   }
@@ -376,8 +376,8 @@ template<typename T>
 inline Vector<T> Log10(
   const Vector<T>& vector) noexcept
 {
-  Vector<T> output(vector.length());
-  for (size_t i=0; i<vector.length(); ++i)
+  Vector<T> output(vector.size());
+  for (size_t i=0; i<vector.size(); ++i)
   {
     output[i] = log10(vector[i]);
   }

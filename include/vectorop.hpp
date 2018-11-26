@@ -36,7 +36,7 @@ inline void ForEach(
   U (*operation)(T, T),
   Vector<U>& output_vector)
 {
-  ASSERT(input_vector.length() == output_vector.length());
+  ASSERT(input_vector.size() == output_vector.size());
   auto input_iter = input_vector.begin();
   auto output_iter = output_vector.begin();
   while (input_iter != input_vector.end())
@@ -64,7 +64,7 @@ bool IsNonNegative(
 /** Equivalent to Matlab's length(input). */
 template<typename T>
 size_t Length(const Vector<T>& input) noexcept {
-  return input.length();
+  return input.size();
 }
 
 
@@ -130,8 +130,8 @@ Vector<T> Subset(
     const Vector<T>& input,
     const size_t from_index,
     const size_t to_index) noexcept {
-  ASSERT(from_index < input.length());
-  ASSERT(to_index < input.length());
+  ASSERT(from_index < input.size());
+  ASSERT(to_index < input.size());
   ASSERT(from_index <= to_index);
   Vector<T> output(to_index-from_index+1);
   for (size_t i = from_index; i<=to_index; ++i) {
@@ -150,7 +150,7 @@ Vector<T> Concatenate(
   const Vector<T>& vector_a,
   const Vector<T>& vector_b) noexcept
 {
-  Vector<T> output(vector_a.length() + vector_b.length());
+  Vector<T> output(vector_a.size() + vector_b.size());
   auto output_iter = output.begin();
   for (auto& element : vector_a)
   {
@@ -195,8 +195,8 @@ template<typename T>
 Vector<T> Flip(
   const Vector<T>& input) noexcept
 {
-  if (input.length() <= 1) { return input; }
-  Vector<T> output(input.length());
+  if (input.size() <= 1) { return input; }
+  Vector<T> output(input.size());
   auto input_iter = input.end()-1; // Start from last element of vector
   auto output_iter = output.begin();
   while (output_iter != output.end()) {
@@ -214,7 +214,7 @@ Vector<T> CircShift(
   const Vector<T>& vector,
   Int num_positions) noexcept
 {
-  Int N(static_cast<Int>(vector.length()));
+  Int N(static_cast<Int>(vector.size()));
   Vector<T> output(N);
   for (Int i=0; i<N; ++i)
   {
@@ -230,8 +230,8 @@ Vector<T> Conv(
   const Vector<T>& vector_a,
   const Vector<T>& vector_b) noexcept
 {
-  size_t N_a = vector_a.length();
-  size_t N_b = vector_b.length();
+  size_t N_a = vector_a.size();
+  size_t N_b = vector_b.size();
   size_t out_length = N_a+N_b-1;
 
   Vector<T> moving_vector_temp = Concatenate(Zeros<T>(N_b-1), Flip(vector_a));
@@ -256,10 +256,10 @@ Vector<T> Interleave(
   const Vector<T>& vector_a,
   const Vector<T>& vector_b) noexcept
 {
-  ASSERT(vector_a.length() == vector_b.length());
+  ASSERT(vector_a.size() == vector_b.size());
 
   Vector<T> output;
-  for (Int i=0; i<(Int)vector_a.length(); ++i)
+  for (Int i=0; i<(Int)vector_a.size(); ++i)
   {
     output.push_back(vector_a[i]);
     output.push_back(vector_b[i]);
@@ -277,7 +277,7 @@ Vector<T> Downsample(
 {
   ASSERT(downsampling_factor >= 1);
   Vector<T> output;
-  for (size_t i=0; i<vector.length(); i += downsampling_factor)
+  for (size_t i=0; i<vector.size(); i += downsampling_factor)
   {
     output.PushBack(vector[i]);
   }
@@ -354,7 +354,7 @@ Vector<T> GetSegment(
   const size_t subset_length,
   bool zeropad_if_shorter = false) noexcept
 {
-  const size_t size = vector.length();
+  const size_t size = vector.size();
 
   const size_t from_sample = subset_id * subset_length;
   if (from_sample >= size)
@@ -404,8 +404,8 @@ T Dot(
   const Vector<T>& vector_a,
   const Vector<T>& vector_b) noexcept
 {
-  const size_t num_elements = vector_a.length();
-  ASSERT(vector_a.length() == vector_b.length());
+  const size_t num_elements = vector_a.size();
+  ASSERT(vector_a.size() == vector_b.size());
   T output = (T) 0.0;
   for (size_t i=0; i<num_elements; ++i)
   {
@@ -417,7 +417,7 @@ T Dot(
 template<typename T>
 T Norm(const Vector<T>& vector, T l_norm = 2.0) noexcept
 {
-const size_t num_elements = vector.length();
+const size_t num_elements = vector.size();
   T output = 0.0;
   for (size_t i=0; i<num_elements; ++i) {
     output += std::pow(std::fabs(vector[i]), l_norm);
@@ -569,12 +569,12 @@ Vector<Vector<T> > Enframe(
 {
   Vector<Vector<T>> output;
   size_t i = 0;
-  while ((i + window.length())<=input.length()) {
+  while ((i + window.size())<=input.size()) {
     size_t from_sample = i;
-    size_t to_sample = i + window.length()-1;
+    size_t to_sample = i + window.size()-1;
     
-    ASSERT(from_sample>=0 && from_sample<input.length());
-    ASSERT(to_sample>=0 && to_sample<input.length());
+    ASSERT(from_sample>=0 && from_sample<input.size());
+    ASSERT(to_sample>=0 && to_sample<input.size());
     
     output.PushBack(Multiply(Elements(input, from_sample, to_sample), window));
     
@@ -589,15 +589,15 @@ Vector<T> OverlapAdd(
   const Vector<T>& window,
   const size_t frame_increment) noexcept
 {
-  const size_t num_frames = frames.length();
-  Vector<T> output(window.length()+(num_frames-1)*frame_increment);
+  const size_t num_frames = frames.size();
+  Vector<T> output(window.size()+(num_frames-1)*frame_increment);
   for (Int frame_i=0; frame_i<num_frames; ++frame_i)
   {
-    if (frames[frame_i].length() != window.length())
+    if (frames[frame_i].size() != window.size())
     {
       ASSERT_WITH_MESSAGE(false, "Frame length different from window length");
     }
-    for (Int k=0; k<(Int)window.length(); ++k)
+    for (Int k=0; k<(Int)window.size(); ++k)
     {
       output[frame_i*frame_increment+k] += window[k] * frames[frame_i][k];
     }
@@ -612,8 +612,8 @@ template<typename T>
 Vector<T> CumSum(
   const Vector<T>& input) noexcept
 {
-  const size_t N = input.length();
-  Vector<T> output(input.length());
+  const size_t N = input.size();
+  Vector<T> output(input.size());
   output[N-1] = Sum(input);
   for (size_t i=N-2; i>=0; --i)
   {

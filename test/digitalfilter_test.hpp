@@ -72,7 +72,7 @@ inline bool IirFilterTest()
   // Testing pinkifier filter
   IirFilter<Real> pinkifier = PinkifierFilter<Real>();
   Vector<Real> output_e = pinkifier.Filter(input_a);
-  Vector<Real> output_e_cmp(input_a.length());
+  Vector<Real> output_e_cmp(input_a.size());
   output_e_cmp[0] = 0.600000000000000;
   output_e_cmp[1] = -3.152233220000000;
   output_e_cmp[2] = 3.815449359516707;
@@ -102,7 +102,7 @@ inline bool IirFilterTest()
   signal_d_out_cmp[3] = -0.011282404149780;
   
   DigitalFilter<Real> filter_poly(filter_l);
-  Vector<Real> output_d(signal_d.length());
+  Vector<Real> output_d(signal_d.size());
   filter_poly.Filter(signal_d, output_d);
   ASSERT(IsApproximatelyEqual(output_d, signal_d_out_cmp, VERY_SMALL));
 
@@ -189,7 +189,7 @@ inline bool IirFilterTest()
   ASSERT(IsApproximatelyEqual(octave_bank_a.Filter(1.25)[0], octave_a.Filter(1.25)));
   ASSERT(IsApproximatelyEqual(octave_bank_a.Filter(0.25)[0], octave_a.Filter(0.25)));
   ASSERT(IsApproximatelyEqual(octave_bank_a.Filter(5.0)[0], octave_a.Filter(5.0)));
-  ASSERT(octave_bank_a.Filter(1.25).length() == 1);
+  ASSERT(octave_bank_a.Filter(1.25).size() == 1);
   ASSERT(octave_bank_a.num_filters() == 1);
 
   IirFilterBank octave_bank_b = OctaveFilterBank(3, 2, 2000.0, 44100.0);
@@ -197,7 +197,7 @@ inline bool IirFilterTest()
   ASSERT(IsApproximatelyEqual(octave_bank_b.Filter(1.25)[1], octave_a.Filter(1.25)));
   ASSERT(IsApproximatelyEqual(octave_bank_b.Filter(0.25)[1], octave_a.Filter(0.25)));
   ASSERT(IsApproximatelyEqual(octave_bank_b.Filter(5.0)[1], octave_a.Filter(5.0)));
-  ASSERT(octave_bank_b.Filter(1.25).length() == 2);
+  ASSERT(octave_bank_b.Filter(1.25).size() == 2);
   ASSERT(octave_bank_b.num_filters() == 2);
 
   octave_a.Reset();
@@ -205,7 +205,7 @@ inline bool IirFilterTest()
   ASSERT(IsApproximatelyEqual(octave_bank_b.Filter(1.25)[1], octave_a.Filter(1.25)));
   ASSERT(IsApproximatelyEqual(octave_bank_b.Filter(0.25)[1], octave_a.Filter(0.25)));
   ASSERT(IsApproximatelyEqual(octave_bank_b.Filter(5.0)[1], octave_a.Filter(5.0)));
-  ASSERT(octave_bank_b.Filter(1.25).length() == 2);
+  ASSERT(octave_bank_b.Filter(1.25).size() == 2);
   
   return true;
 }
@@ -252,7 +252,7 @@ inline bool FirFilterTest()
 
   FirFilter<Real> filter_a;
   filter_a.SetImpulseResponse(impulse_resp);
-  Vector<Real> output_aa(impulse.length());
+  Vector<Real> output_aa(impulse.size());
   filter_a.Filter(impulse, output_aa);
   ASSERT(IsEqual(output_aa, impulse_resp));
 
@@ -268,7 +268,7 @@ inline bool FirFilterTest()
   output_a_cmp[1] = -0.7600;
   output_a_cmp[2] = 2.9700;
   output_a_cmp[3] = -8.8500;
-  Vector<Real> output_a(input_a.length());
+  Vector<Real> output_a(input_a.size());
   filter_b.Filter(input_a, output_a);
   ASSERT(IsApproximatelyEqual(output_a, output_a_cmp, VERY_SMALL));
 
@@ -315,19 +315,19 @@ inline bool FirFilterTest()
   FirFilter<Real> filter_l(impulse_resp_b);
   Vector<Real> input_b = {0.3377, 0.9001, 0.3692, 0.1112, 0.7803, 0.3897, 0.2417, 0.4039, 0.0965, 0.1320, 0.9421, 0.9561};
   Vector<Real> output_b_cmp = {0.033770000000000, 0.191320000000000, 0.239410000000000, 0.347100000000000, -0.401980000000000, -3.356590000000000, -2.252110000000000, -1.824530000000000, -4.816670000000000, -2.178800000000000, -2.260530000000000, -3.104640000000000};
-  Vector<Real> output_b(input_b.length());
+  Vector<Real> output_b(input_b.size());
   filter_l.Filter(input_b, output_b);
   ASSERT(IsApproximatelyEqual(output_b_cmp, output_b, VERY_SMALL));
 
   filter_l.Reset();
-  for (Int i=0; i<(Int)input_b.length(); ++i) {
+  for (Int i=0; i<(Int)input_b.size(); ++i) {
     ASSERT(IsApproximatelyEqual(filter_l.Filter(input_b[i]), output_b_cmp[i]));
   }
 
 //#ifdef MCL_APPLE_ACCELERATE
 //  FirFilter<Real> filter_la(impulse_resp_b);
-//  Real cmp_la[input_b.length()];
-//  filter_la.FilterAppleDsp(input_b.data(), input_b.length(), cmp_la);
+//  Real cmp_la[input_b.size()];
+//  filter_la.FilterAppleDsp(input_b.data(), input_b.size(), cmp_la);
 //  ASSERT(IsEqual(output_b_cmp, cmp_la));
 //
 //  FirFilter<Real> filter_lasplit(impulse_resp_b);
@@ -340,7 +340,7 @@ inline bool FirFilterTest()
 //#endif
 
   FirFilter<Real> filter_lb(impulse_resp_b);
-  Vector<Real> cmp_lb(input_b.length(), 0.0);
+  Vector<Real> cmp_lb(input_b.size(), 0.0);
   filter_lb.Filter(input_b, cmp_lb);
   ASSERT(IsApproximatelyEqual(output_b_cmp, cmp_lb, VERY_SMALL));
 
@@ -348,7 +348,7 @@ inline bool FirFilterTest()
   Vector<Real> impulse_resp_c = {0.6948, 0.3171, 0.9502, 0.0344, 0.4387, 0.3816, 0.7655, 0.7952, 0.1869, 0.4898, 0.4456, 0.6463, 0.7094, 0.7547, 0.2760, 0.6797};
   FirFilter<Real> filter_m(impulse_resp_c);
   Vector<Real> output_c_cmp = {0.566053560000000, 0.887691210000000, 1.149596720000000, 1.563618860000000, 1.238274470000000, 1.848822500000000, 1.881767519999999, 2.373108650000000, 2.702443100000000, 3.155909820000000, 3.544349419999999, 3.760939330000000, 3.860796740000000, 5.071760400000001, 5.228588220000000, 5.070855620000001, 5.216075850000000, 4.336750739999999, 5.636061180000000,5.665156830000000};
-  Vector<Real> output_c(input_c.length());
+  Vector<Real> output_c(input_c.size());
   filter_m.Filter(input_c, output_c);
   ASSERT(IsApproximatelyEqual(output_c_cmp, output_c, VERY_SMALL));
 
@@ -357,14 +357,14 @@ inline bool FirFilterTest()
   filter_m.Reset();
   Vector<Real> input_c_sub_a(input_c.begin(), input_c.begin()+16);
   Vector<Real> output_c_cmp_sub_a(output_c_cmp.begin(), output_c_cmp.begin()+16);
-  Vector<Real> output_cc(input_c_sub_a.length());
+  Vector<Real> output_cc(input_c_sub_a.size());
   filter_m.Filter(input_c_sub_a, output_cc);
   ASSERT(IsApproximatelyEqual(output_cc, output_c_cmp_sub_a, VERY_SMALL));
   ASSERT(IsApproximatelyEqual(filter_m.Filter(input_c[16]), output_c_cmp[16], VERY_SMALL));
 
   Vector<Real> input_c_sub_b(input_c.begin()+17, input_c.end());
   Vector<Real> output_c_cmp_sub_b(output_c_cmp.begin()+17, output_c_cmp.end());
-  Vector<Real> output_c_sub_b(input_c_sub_b.length());
+  Vector<Real> output_c_sub_b(input_c_sub_b.size());
   filter_m.Filter(input_c_sub_b, output_c_sub_b);
   ASSERT(IsApproximatelyEqual(output_c_sub_b, output_c_cmp_sub_b, VERY_SMALL));
 
@@ -375,7 +375,7 @@ inline bool FirFilterTest()
   ASSERT(IsApproximatelyEqual(filter_m.Filter(input_c[2]), output_c_cmp[2]));
   Vector<Real> input_c_sub_ab(input_c.begin()+3, input_c.begin()+19);
   Vector<Real> output_c_cmp_sub_ab(output_c_cmp.begin()+3, output_c_cmp.begin()+19);
-  Vector<Real> output_ccc(input_c_sub_ab.length());
+  Vector<Real> output_ccc(input_c_sub_ab.size());
   filter_m.Filter(input_c_sub_ab, output_ccc);
   ASSERT(IsApproximatelyEqual(output_ccc, output_c_cmp_sub_ab, VERY_SMALL));
   ASSERT(IsApproximatelyEqual(filter_m.Filter(input_c[19]), output_c_cmp[19]));
@@ -386,13 +386,13 @@ inline bool FirFilterTest()
   FirFilter<Real> filter_k(impulse_response_k);
   Vector<Real> input_k = input_c;
   Vector<Real> output_k_cmp = {0.663736090000000, 1.475910520000000, 1.027407440000000, 1.718367160000000, 2.701277000000000, 1.457092690000000, 1.310138610000000, 1.865475550000000, 1.799813030000000, 2.038904730000000, 1.799667500000000, 2.276484260000000, 3.165878180000000, 2.139907940000000, 2.199456410000000, 2.390277390000000, 1.622509220000000, 2.184069510000000, 2.164136180000000, 2.090582990000000};
-  Vector<Real> output_k(input_k.length());
+  Vector<Real> output_k(input_k.size());
   filter_k.Filter(input_k, output_k);
   ASSERT(IsApproximatelyEqual(output_k, output_k_cmp, VERY_SMALL));
 
   //
   filter_k.Reset();
-  for (Int i=0; i<(Int)input_c.length()-1; ++i) {
+  for (Int i=0; i<(Int)input_c.size()-1; ++i) {
     ASSERT(IsApproximatelyEqual(filter_k.Filter(input_k[i]), output_k_cmp[i]));
   }
 
@@ -405,7 +405,7 @@ inline bool FirFilterTest()
   Vector<Real> output_k_cmp_sub_a = Vector<Real>(output_k_cmp.begin()+2,
                                                            output_k_cmp.begin()+7);
   
-  Vector<Real> output_k_sub_a(input_k_sub_a.length());
+  Vector<Real> output_k_sub_a(input_k_sub_a.size());
   filter_k.Filter(input_k_sub_a, output_k_sub_a);
   ASSERT(IsApproximatelyEqual(output_k_sub_a, output_k_cmp_sub_a, VERY_SMALL));
 
@@ -486,7 +486,7 @@ inline void FirFilterSpeedTests() {
   (done - launch) / ((Real) CLOCKS_PER_SEC)*100<<"% \n";
 
   launch=clock();
-  for (Int i=0; i<(Int)input.length(); ++i) {
+  for (Int i=0; i<(Int)input.size(); ++i) {
     fir_filter.Filter(input[i]);
   }
   done=clock();
@@ -508,7 +508,7 @@ inline void FirFilterSpeedTests() {
   (done - launch) / ((Real) CLOCKS_PER_SEC)*100<<"% \n";
 
   launch=clock();
-  for (Int i=0; i<(Int)input.length(); ++i) {
+  for (Int i=0; i<(Int)input.size(); ++i) {
     fir_filter_b.Filter(input[i]);
   }
   done=clock();

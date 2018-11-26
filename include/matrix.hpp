@@ -52,14 +52,14 @@ public:
   Matrix(
     const Vector<Vector<T> > vectors) noexcept
   {
-    num_rows_ = vectors.length();
+    num_rows_ = vectors.size();
     if (num_rows_ > 0)
     {
-      num_columns_ = vectors[0].length();
+      num_columns_ = vectors[0].size();
       for (size_t i=1; i<num_rows_; ++i)
       {
         // Check that all rows have the same number of columns
-        if ((Int)vectors[i].length() != num_columns_)
+        if ((Int)vectors[i].size() != num_columns_)
         {
           ASSERT_WITH_MESSAGE(false, "One or more rows do not have the same number of columns");
         }
@@ -88,7 +88,7 @@ public:
     size_t index_column,
     Vector<T> column) noexcept
   {
-    ASSERT(column.length() == num_rows_);
+    ASSERT(column.size() == num_rows_);
     ASSERT(index_column < num_columns_);
     for (size_t i=0; i<num_rows_; ++i)
     {
@@ -101,7 +101,7 @@ public:
     size_t index_row,
     Vector<T> row) noexcept
   {
-    ASSERT(row.length() == num_columns_);
+    ASSERT(row.size() == num_columns_);
     ASSERT(index_row < num_rows_);
     data_[index_row] = row;
   }
@@ -206,11 +206,11 @@ public:
       Vector<std::string> elements = Split(line, '\t');
       if (number_of_columns == 0)
       {
-        number_of_columns = (Int) elements.length();
+        number_of_columns = (Int) elements.size();
       }
       else
       {
-        ASSERT(number_of_columns == (Int)elements.length());
+        ASSERT(number_of_columns == (Int)elements.size());
       }
       
       ++number_of_rows;
@@ -227,7 +227,7 @@ public:
     {
       std::getline(in_file, line);
       Vector<std::string> elements = Split(line, '\t');
-      for (Int column=0; column<(Int)elements.length(); ++column)
+      for (Int column=0; column<(Int)elements.size(); ++column)
       {
         matrix.SetElement(row, column, (T) StringToDouble(elements[column]));
       }

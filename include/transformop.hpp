@@ -74,8 +74,8 @@ inline Vector<Vector<Complex<T>>> Rfft(
   const Vector<Vector<T> >& input,
   size_t n_point) noexcept
 {
-  Vector<Vector<Complex<T>>> outputs(input.length());
-  for (size_t i=0; i<input.length(); ++i) {
+  Vector<Vector<Complex<T>>> outputs(input.size());
+  for (size_t i=0; i<input.size(); ++i) {
     outputs[i] = Rfft(input[i], n_point);
   }
   return outputs;
@@ -110,7 +110,7 @@ inline Vector<T> Irfft(
     spectrum = Concatenate(zero_padded,
       Flip(Conj(Elements(zero_padded, 1, (n_point+1)/2-1))));
   }
-  ASSERT(spectrum.length() == n_point);
+  ASSERT(spectrum.size() == n_point);
   Vector<Complex<T>> output = Ifft(spectrum, n_point);
   ASSERT(IsApproximatelyReal(output));
   return RealPart(output);
@@ -127,7 +127,7 @@ inline Vector<Vector<T>> Irfft(
   size_t n_point) noexcept
 {
   Vector<Vector<T>> outputs;
-  for (Int i=0; i<(Int)input.length(); ++i) {
+  for (Int i=0; i<(Int)input.size(); ++i) {
     outputs.PushBack(Irfft(input[i], n_point));
   }
   return outputs;
@@ -142,7 +142,7 @@ template<typename T>
 inline Vector<Complex<T>> Hilbert(
   const Vector<T>& input) noexcept
 {
-  Int n = input.length();
+  Int n = input.size();
   Vector<Complex<T>> x = Fft(CastToComplex(input), n);
   Vector<Complex<T>> h = Zeros<Complex<T>>(n);
   
@@ -215,8 +215,8 @@ inline Vector<T> XCorr(
   const Vector<T>& vector_b)
 {
   // TODO: implement for different sizes
-  ASSERT(vector_a.length() == vector_b.length());
-  Int M = (Int)vector_a.length();
+  ASSERT(vector_a.size() == vector_b.size());
+  Int M = (Int)vector_a.size();
   Int n_fft = (UInt) pow(2.0, NextPow2(2*M-1));
   Vector<Complex<T>> x = Fft(CastToComplex(vector_a), n_fft);
   Vector<Complex<T>> y = Fft(CastToComplex(vector_b), n_fft);
@@ -225,7 +225,7 @@ inline Vector<T> XCorr(
   // Ignore residual imaginary part
   Vector<T> c_T = RealPart(c);
   Vector<T> output = Zeros<T>(2*M-1);
-  Int end = c_T.length();
+  Int end = c_T.size();
   Int maxlag = M-1;
   Int k = 0; // running index
   for (Int i=end-maxlag+1-1; i<=(end-1); ++i)

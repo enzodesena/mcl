@@ -20,7 +20,7 @@ inline bool MclIntrinsicsTest()
   
   // Testing summation
   Vector<Real> vector_zb = AddScalar(vector_z, 1.5);
-  ASSERT(vector_zb.length() == 3);
+  ASSERT(vector_zb.size() == 3);
   Vector<Real> vector_zb_cmp(3);
   vector_zb_cmp[0] = 1.5;
   vector_zb_cmp[1] = 3.5;
@@ -28,7 +28,7 @@ inline bool MclIntrinsicsTest()
   ASSERT(IsEqual(vector_zb, vector_zb_cmp));
 
   Vector<Real> vector_zc = AddScalar(vector_z, -1.0);
-  ASSERT(vector_zc.length() == 3);
+  ASSERT(vector_zc.size() == 3);
   Vector<Real> vector_zc_cmp(3);
   vector_zc_cmp[0] = -1.0;
   vector_zc_cmp[1] = 1.0;
@@ -75,7 +75,7 @@ inline bool MclIntrinsicsTest()
   vectors[2] = vector_m; // 0.0, -1.0, -2.0
 
   Vector<Real> add_vectors = AddVectors(vectors);
-  ASSERT(add_vectors.length() == 3);
+  ASSERT(add_vectors.size() == 3);
   Vector<Real> add_vectors_cmp(3);
   add_vectors_cmp[0] = -1.2+1.0;
   add_vectors_cmp[1] = 4.5+2.5-1.0;

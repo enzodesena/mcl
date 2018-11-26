@@ -152,7 +152,7 @@ inline bool IsAnyConditionTrue(
   const Vector<T>& vector,
   std::function<bool(T)> condition_checker) noexcept
 {
-  for (size_t i=0; i<vector.length(); ++i)
+  for (size_t i=0; i<vector.size(); ++i)
   {
     if (condition_checker(vector[i]))
     {
@@ -170,7 +170,7 @@ inline bool AreAllConditionsTrue(
   const Vector<T>& vector,
   std::function<bool(const T)> condition_checker) noexcept
 {
-  for (size_t i=0; i<vector.length(); ++i)
+  for (size_t i=0; i<vector.size(); ++i)
   {
     if (! condition_checker(vector[i]))
     {
@@ -186,7 +186,7 @@ inline bool AreAllConditionsTrue(
   const Vector<T>& vector_b,
   std::function<bool(T,T)> condition_checker) noexcept
 {
-  if (vector_a.length() != vector_b.length()) return false;
+  if (vector_a.size() != vector_b.size()) return false;
   auto iter_a(vector_a.begin());
   auto iter_b(vector_b.begin());
   while (iter_a != vector_a.end())
@@ -229,7 +229,7 @@ inline bool IsApproximatelyEqual(
 //inline Vector<bool> IsNan(
 //  const Vector<T>& input) noexcept
 //{
-//  Vector<T> output(input.length());
+//  Vector<T> output(input.size());
 //  ForEach(input, [] (T element) { return IsNan(element); }, output);
 //  return std::move(output);
 //}
@@ -239,7 +239,7 @@ inline bool IsApproximatelyEqual(
 //inline Vector<bool> Not(
 //  const Vector<bool>& input) noexcept
 //{
-//  Vector<bool> output(input.length());
+//  Vector<bool> output(input.size());
 //  ForEach<bool, bool>(
 //    input,
 //    [] (const bool value) { return !value; },
@@ -280,7 +280,7 @@ inline bool IsApproximatelyEqual(
 //inline Vector<bool> IsInf(
 //  const Vector<T>& input) noexcept
 //{
-//  Vector<T> output(input.length());
+//  Vector<T> output(input.size());
 //  ForEach(input, [] (T element) { return IsInf(element); }, output);
 //  return std::move(output);
 //}
@@ -301,7 +301,7 @@ bool AreAllSmallerOrEqual(
 template<typename T>
 inline Vector<bool> IsNan(Vector<T> input) noexcept
  {
-  Vector<bool> output(input.length());
+  Vector<bool> output(input.size());
   ForEach(input, [] (bool e) { return IsNan(e); }, output);
   return output;
 }

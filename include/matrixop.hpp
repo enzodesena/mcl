@@ -100,12 +100,12 @@ Vector<T> Multiply(
   const Matrix<T>& matrix_a,
   const Vector<T>& vector) noexcept
 {
-  ASSERT(matrix_a.num_columns() == vector.length());
-  Matrix<T> temp_input((Int) vector.length(), 1);
+  ASSERT(matrix_a.num_columns() == vector.size());
+  Matrix<T> temp_input((Int) vector.size(), 1);
   temp_input.SetColumn(0, vector);
   Matrix<T> temp_output = Multiply(matrix_a, temp_input);
   ASSERT(temp_output.num_columns() == 1);
-  ASSERT(temp_output.num_rows() == vector.length());
+  ASSERT(temp_output.num_rows() == vector.size());
   return temp_output.GetColumn(0);
 }
   
@@ -223,7 +223,7 @@ inline void Save(
   const std::string& file_name,
   const mcl::Int precision = 5)
 {
-  mcl::Matrix<Real> matrix(vector.length(), 1);
+  mcl::Matrix<Real> matrix(vector.size(), 1);
   matrix.SetColumn(0, vector);
   matrix.Save(file_name, precision);
 }

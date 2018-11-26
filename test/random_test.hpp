@@ -22,7 +22,7 @@ inline bool RandomGeneratorTest()
   RandomGenerator rand_gen;
 
   Vector<Real> rand_vector_a = rand_gen.Randn(5);
-  ASSERT(rand_vector_a.length() == 5);
+  ASSERT(rand_vector_a.size() == 5);
   // Check whether seeds are different:
   Vector<Real> rand_vector_b = rand_gen.Randn(5);
   ASSERT(!IsEqual(rand_vector_a, rand_vector_b));
@@ -41,7 +41,7 @@ inline bool RandomGeneratorTest()
   ASSERT(Abs(rand_gen.Rand(1)[0]-0.5) < 0.5);
   ASSERT(Abs(rand_gen.Rand(1)[0]-0.5) < 0.5);
   
-  ASSERT(rand_gen.Rand(5).length() == 5);
+  ASSERT(rand_gen.Rand(5).size() == 5);
   ASSERT(Abs(Mean(rand_gen.Rand(100000))-0.5)<0.05);
   
   // Test integer generator

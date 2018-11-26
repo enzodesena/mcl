@@ -24,7 +24,7 @@ public:
     : B_(mcl::UnaryVector<T>(1.0))
     , A_(mcl::UnaryVector<T>(1.0))
   {
-    Int size = B_.length();
+    Int size = B_.size();
     state_ = Vector<T>(size);
     for (Int i=0; i<size; ++i) { state_[i] = 0.0; }
   }
@@ -40,8 +40,8 @@ public:
     , A_(A)
   {
     // TODO: implement also for B.size != A.size
-    ASSERT(B.length() == A.length());
-    ASSERT(B.length() >= 1);
+    ASSERT(B.size() == A.size());
+    ASSERT(B.size() >= 1);
     
     A0_ = A[0];
     if (! IsApproximatelyEqual(A[0], 1.0, std::numeric_limits<T>::epsilon())) {
@@ -50,7 +50,7 @@ public:
     }
     
     
-    Int size = B.length();
+    Int size = B.size();
     state_ = Vector<T>(size);
     for (Int i=0; i<size; ++i) { state_[i] = 0.0; }
   }
@@ -66,8 +66,8 @@ public:
     const T input) noexcept
   {
     // Speed up return for simple gain filters
-    if (B_.length() == 1) { return input*B_[0]; }
-    size_t size = B_.length();
+    if (B_.size() == 1) { return input*B_[0]; }
+    size_t size = B_.size();
     ASSERT(size >= 1);
     T v = input; // The temporary value in the recursive branch.
     T output(0.0);
@@ -98,7 +98,7 @@ public:
     const Vector<T>& input,
     Vector<T>& output) noexcept
   {
-    if (B_.length() == 1)
+    if (B_.size() == 1)
     {
       Multiply(input, B_[0], output);
     }
@@ -114,7 +114,7 @@ public:
   Vector<T> Filter(
     const Vector<T>& input) noexcept
   {
-    Vector<T> output(input.length());
+    Vector<T> output(input.size());
     Filter(input, output);
     return std::move(output);
   }
@@ -122,7 +122,7 @@ public:
   /** Returns the order of the filter. */
   Int order() const noexcept
   {
-    return Max(B_.length(), A_.length())-1;
+    return Max(B_.size(), A_.size())-1;
   }
   
   /** 
@@ -134,8 +134,8 @@ public:
     const Vector<T>& A) noexcept
   {
     // TODO: implement case where length changes.
-    ASSERT(B_.length() == B.length());
-    ASSERT(A_.length() == A.length());
+    ASSERT(B_.size() == B.size());
+    ASSERT(A_.size() == A.size());
     B_ = B;
     A_ = A;
     A0_ = A[0];
@@ -180,7 +180,7 @@ public:
     const size_t coeff_id,
     const T value) noexcept
   {
-    ASSERT(coeff_id >= 0 &&coeff_id<(Int)A_.length());
+    ASSERT(coeff_id >= 0 &&coeff_id<(Int)A_.size());
     A_[coeff_id] = value;
     if (coeff_id == 0) { A0_ = value; }
   }
@@ -230,14 +230,14 @@ public:
   
   virtual Int num_filters() noexcept
   {
-    return filters_.length();
+    return filters_.size();
   }
   
   /** Returns the output of the filter bank for an input equal to `input`. */
   virtual Vector<T> Filter(
     const T input) noexcept
   {
-    const size_t N = filters_.length();
+    const size_t N = filters_.size();
     Vector<T> outputs(N);
     for (size_t i=0; i<N; ++i)
     {
@@ -250,7 +250,7 @@ public:
   virtual Vector<Vector<T> >
   Filter(const Vector<T>& input)
   {
-    const size_t N = filters_.length();
+    const size_t N = filters_.size();
     Vector<Vector<T> > outputs(N);
     for (size_t i=0; i<N; ++i)
     {
@@ -262,7 +262,7 @@ public:
   /** Resets the state of the filter */
   void Reset()
   {
-    for (size_t i=0; i<filters_.length(); ++i)
+    for (size_t i=0; i<filters_.size(); ++i)
     {
       filters_[i].Reset();
     }

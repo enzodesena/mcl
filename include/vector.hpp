@@ -65,22 +65,22 @@ public:
   {
   }
   
-  inline size_t length() const noexcept
+  inline size_t size() const noexcept
   {
-    return this->size();
+    return std::vector<T>::size();
   }
   
   inline T& operator[](
     const size_t index) noexcept
   {
-    ASSERT(index>=0 && index < length());
+    ASSERT(index>=0 && index < size());
     return std::vector<T>::data()[index];
   }
   
   inline const T& operator[](
     const size_t index) const noexcept
   {
-    ASSERT(index>=0 && index < length());
+    ASSERT(index>=0 && index < size());
     return std::vector<T>::data()[index];
   }
   
@@ -101,7 +101,7 @@ template<typename TOrigin, typename TDestination>
 Vector<TDestination> Cast(
   const Vector<TOrigin>& vector) noexcept
 {
-  const size_t length = vector.length();
+  const size_t length = vector.size();
   Vector<TDestination> output(length);
   for (size_t i=0; i<length; ++i)
   {
@@ -114,8 +114,8 @@ template<typename T>
 Vector<Complex<T>> CastToComplex(
   Vector<T> input) noexcept
 {
-  Vector<Complex<T>> output(input.length());
-  for (Int i=0; i<(Int)input.length(); ++i)
+  Vector<Complex<T>> output(input.size());
+  for (Int i=0; i<(Int)input.size(); ++i)
   {
     output[i] = Complex<T>(input[i], 0.0);
   }
@@ -144,7 +144,7 @@ Vector<Complex<T>> CastToComplex(
 //    // If the length of the other vector is shortened (not possible in the
 //    // current implementation), an assert will happen when using the []
 //    // operator with an index ending up outside the vector.
-//    return std::min(other_vector_.length(), length_);
+//    return std::min(other_vector_.size(), length_);
 //  }
 //
 //  inline Iterator begin() noexcept
@@ -159,12 +159,12 @@ Vector<Complex<T>> CastToComplex(
 //
 //  inline Iterator end() noexcept
 //  {
-//    return other_vector_.end() + start_ - (other_vector_.length() - length());
+//    return other_vector_.end() + start_ - (other_vector_.size() - length());
 //  }
 //
 //  inline ConstIterator end() const noexcept
 //  {
-//    return other_vector_.end() + start_ - (other_vector_.length() - length());
+//    return other_vector_.end() + start_ - (other_vector_.size() - length());
 //  }
 //
 //  Vector(
@@ -177,10 +177,10 @@ Vector<Complex<T>> CastToComplex(
 //  {
 //    if (length_ < std::numeric_limits<size_t>::max()) // TODO: remove this if not debugging
 //    {
-//      ASSERT(length_ <= other_vector.length());
+//      ASSERT(length_ <= other_vector.size());
 //    }
-//    ASSERT(start >= 0 && start < other_vector.length());
-//    ASSERT((start+this->length()) <= other_vector.length());
+//    ASSERT(start >= 0 && start < other_vector.size());
+//    ASSERT((start+this->length()) <= other_vector.size());
 //  }
 //
 //  inline T& operator[](
@@ -188,7 +188,7 @@ Vector<Complex<T>> CastToComplex(
 //  {
 //    ASSERT(index>=0 && index < length());
 //    const size_t other_index(index + start_);
-//    ASSERT(other_index>=0 && other_index < other_vector_.length());
+//    ASSERT(other_index>=0 && other_index < other_vector_.size());
 //    return other_vector_[other_index];
 //  }
 //
@@ -197,7 +197,7 @@ Vector<Complex<T>> CastToComplex(
 //  {
 //    ASSERT(index>=0 && index < length());
 //    const size_t other_index(index + start_);
-//    ASSERT(other_index>=0 && other_index < other_vector_.length());
+//    ASSERT(other_index>=0 && other_index < other_vector_.size());
 //    return other_vector_[other_index];
 //  }
 //};

@@ -455,8 +455,8 @@ inline bool IsEqual(
   const Vector<Point<T>>& points_a,
   const Vector<Point<T>>& points_b) noexcept
 {
-  const Int num_points = (Int)points_a.length();
-  if (num_points != (Int)points_b.length()) { return false; }
+  const Int num_points = (Int)points_a.size();
+  if (num_points != (Int)points_b.size()) { return false; }
   for (Int i=0; i<num_points; ++i) {
     if (! IsEqual(points_a[i], points_b[i])) { return false; }
   }

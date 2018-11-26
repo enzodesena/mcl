@@ -232,7 +232,7 @@ private:
   
   ~Logger()
   {
-    if (log_string_.length() > 0)
+    if (log_string_.size() > 0)
     {
       std::cerr<<"Writing logger out to "<<log_output_file_<<std::endl;
       std::ofstream output_stream(log_output_file_);

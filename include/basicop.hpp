@@ -21,7 +21,7 @@ inline Int MinIndex(
 {
   T min_value = std::numeric_limits<T>::max();
   Int min_index = 0;
-  for (Int i=0; i<(Int)input.length(); ++i)
+  for (Int i=0; i<(Int)input.size(); ++i)
   {
     if (input[i] < min_value)
     {
@@ -80,7 +80,7 @@ inline Vector<size_t> FindPeaksIndexes(
 {
   // Allocate new vectors for the indexes of the local maxima
   Vector<size_t> indexes;
-  for (size_t i=1; i<vector.length()-1; ++i)
+  for (size_t i=1; i<vector.size()-1; ++i)
   {
     if ((vector[i] > min_peak_height) &
         (vector[i] > vector[i-1]) &
@@ -99,8 +99,8 @@ inline Vector<T> FindPeaks(
   const T min_peak_height = std::numeric_limits<T>::min())
 {
   Vector<size_t> indexes = FindPeaksIndexes(vector, min_peak_height);
-  Vector<T> output(indexes.length());
-  for (size_t i=0; i<indexes.length(); ++i)
+  Vector<T> output(indexes.size());
+  for (size_t i=0; i<indexes.size(); ++i)
   {
     output[i] = vector[indexes[i]];
   }
