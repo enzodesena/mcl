@@ -73,39 +73,39 @@ inline T Max(
 }
 
 
-template<typename T>
-inline Vector<size_t> FindPeaksIndexes(
-  const Vector<T>& vector,
-  const T min_peak_height = std::numeric_limits<T>::min())
-{
-  // Allocate new vectors for the indexes of the local maxima
-  Vector<size_t> indexes;
-  for (size_t i=1; i<vector.size()-1; ++i)
-  {
-    if ((vector[i] > min_peak_height) &
-        (vector[i] > vector[i-1]) &
-        (vector[i] > vector[i+1]))
-    {
-      indexes.PushBack(i);
-    }
-  }
-  return indexes;
-}
+//template<typename T>
+//inline Vector<size_t> FindPeaksIndexes(
+//  const Vector<T>& vector,
+//  const T min_peak_height = std::numeric_limits<T>::min())
+//{
+//  // Allocate new vectors for the indexes of the local maxima
+//  Vector<size_t> indexes;
+//  for (size_t i=1; i<vector.size()-1; ++i)
+//  {
+//    if ((vector[i] > min_peak_height) &
+//        (vector[i] > vector[i-1]) &
+//        (vector[i] > vector[i+1]))
+//    {
+//      indexes.PushBack(i);
+//    }
+//  }
+//  return indexes;
+//}
   
 
-template<typename T>
-inline Vector<T> FindPeaks(
-  const Vector<T>& vector,
-  const T min_peak_height = std::numeric_limits<T>::min())
-{
-  Vector<size_t> indexes = FindPeaksIndexes(vector, min_peak_height);
-  Vector<T> output(indexes.size());
-  for (size_t i=0; i<indexes.size(); ++i)
-  {
-    output[i] = vector[indexes[i]];
-  }
-  return output;
-}
+//template<typename T>
+//inline Vector<T> FindPeaks(
+//  const Vector<T>& vector,
+//  const T min_peak_height = std::numeric_limits<T>::min())
+//{
+//  Vector<size_t> indexes = FindPeaksIndexes(vector, min_peak_height);
+//  Vector<T> output(indexes.size());
+//  for (size_t i=0; i<indexes.size(); ++i)
+//  {
+//    output[i] = vector[indexes[i]];
+//  }
+//  return output;
+//}
 
   
   

@@ -88,8 +88,7 @@ inline bool TransformOpTest()
                                       0.122008467928146, 0.122008467928146};
   ASSERT(IsApproximatelyEqual(Irfft(vector_l, 6), vector_l_6_cmp, VERY_SMALL));
   
-  Vector<Complex<Real>> vector_m(vector_l); // Try out with even input
-  vector_m.PushBack(Complex<Real>(3.0, 0.0));
+  Vector<Complex<Real>> vector_m = Concatenate(vector_l, UnaryVector<Complex<Real>>(Complex<Real>(3.0, 0.0)));
   Vector<Real> vector_m_4_cmp = {0.75, -0.75, 0.75, 0.25};
   ASSERT(IsApproximatelyEqual(Irfft(vector_m, 4), vector_m_4_cmp, VERY_SMALL));
   Vector<Real> vector_m_3_cmp = {0.333333333333333, -0.244016935856292,

@@ -270,19 +270,19 @@ Vector<T> Interleave(
 /** Decreases the sampling frequency of the input vector by keeping
  the first sample and then every `downsampling_factor`-th sample after the
  first. */
-template<class T>
-Vector<T> Downsample(
-  const Vector<T>& vector,
-  const Int downsampling_factor) noexcept
-{
-  ASSERT(downsampling_factor >= 1);
-  Vector<T> output;
-  for (size_t i=0; i<vector.size(); i += downsampling_factor)
-  {
-    output.PushBack(vector[i]);
-  }
-  return output;
-}
+//template<class T>
+//Vector<T> Downsample(
+//  const Vector<T>& vector,
+//  const Int downsampling_factor) noexcept
+//{
+//  ASSERT(downsampling_factor >= 1);
+//  Vector<T> output;
+//  for (size_t i=0; i<vector.size(); i += downsampling_factor)
+//  {
+//    output.PushBack(vector[i]);
+//  }
+//  return output;
+//}
 
 /**
  This is equivalent to Matlab's from:to. E.g. 3:5 outputs a vector [3,4,5].
@@ -299,7 +299,7 @@ Vector<T> ColonOperator(
   }
   else
   {
-    const size_t vector_length = Floor(to-from+1);
+    const size_t vector_length = static_cast<size_t>(Floor(to-from+1));
     Vector<T> output(vector_length);
     for (size_t i=0; i<vector_length; ++i)
     {
@@ -321,11 +321,11 @@ Vector<T> ColonOperator(
   const T to) noexcept
 {
   ASSERT(std::isgreater(step, 0));
-  Vector<T> output;
-  output.PushBack(from);
-  size_t i = 1;
-  while (std::islessequal(((T) i)*step+from, to)) {
-    output.PushBack(((T) i++)*step+from);
+  size_t vector_length = mcl::Max<size_t>(static_cast<size_t>(Floor((to-from)/step))+1, 0);
+  Vector<T> output(vector_length);
+  for (size_t i=0; i<vector_length; ++i)
+  {
+    output[i] = static_cast<T>(i)*step+from;
   }
   return output;
 }
@@ -627,12 +627,20 @@ inline Vector<std::string> Split(
   const std::string &s,
   char delim) noexcept
 {
-  Vector<std::string> elems;
   std::stringstream ss(s);
   std::string item;
+  // TODO: fix this hack
+  size_t num_elements = 0;
   while(std::getline(ss, item, delim))
   {
-    elems.PushBack(item);
+    num_elements++;
+  }
+  Vector<std::string> elems(num_elements);
+  std::stringstream ss2(s);
+  for (auto iter = elems.begin(); iter != elems.end(); ++iter)
+  {
+    std::getline(ss2, item, delim);
+    *iter = item;
   }
   return elems;
 }

@@ -41,6 +41,7 @@ int main (int argc, char * const argv[]) {
 #ifndef NDEBUG
   mcl::ComparisonOpTest();
   mcl::RandomGeneratorTest();
+  mcl::MclIntrinsicsTest();
   mcl::FirFilterTest();
   mcl::QuaternionTest();
   mcl::ElementaryOpTest();
@@ -51,7 +52,6 @@ int main (int argc, char * const argv[]) {
   mcl::MatrixOpTest();
   mcl::PointTest();
   mcl::IirFilterTest();
-  mcl::MclIntrinsicsTest();
   mcl::StatisticsOpTest();
   std::cout<<"All tests succeded!\n";
 #else

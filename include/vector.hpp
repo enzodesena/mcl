@@ -15,84 +15,181 @@ namespace mcl
 {
 
 template<typename T>
-class Vector : private std::vector<T>
+class Vector
 {
 public:
   using Iterator = typename std::vector<T>::iterator;
   using ConstIterator = typename std::vector<T>::const_iterator;
   
-  Vector() noexcept : std::vector<T>()
+  Vector() noexcept
+    : data_()
+    , data_ptr_(nullptr)
+    , size_(0)
+    , begin_()
+    , const_begin_()
+    , end_()
+    , const_end_()
+    , owns_data_(true)
   {
   }
   
   Vector(
-    size_t initial_length,
+    size_t size,
     T value = T()) noexcept
-    : std::vector<T>(initial_length, value)
+    : data_(std::vector<T>(size, value))
+    , data_ptr_(data_.data())
+    , size_(data_.size())
+    , begin_(data_.begin())
+    , const_begin_(data_.begin())
+    , end_(data_.end())
+    , const_end_(data_.end())
+    , owns_data_(true)
+  {
+  }
+
+  Vector(
+    std::initializer_list<T> list)
+    : data_(std::vector<T>(list))
+    , data_ptr_(data_.data())
+    , size_(data_.size())
+    , begin_(data_.begin())
+    , const_begin_(data_.begin())
+    , end_(data_.end())
+    , const_end_(data_.end())
+    , owns_data_(true)
   {
   }
 
   Vector(
     ConstIterator iter_begin,
     ConstIterator iter_end) noexcept
-    : std::vector<T>(iter_begin, iter_end)
+    : data_(std::vector<T>(iter_begin, iter_end))
+    , data_ptr_(data_.data())
+    , size_(data_.size())
+    , begin_(data_.begin())
+    , const_begin_(data_.begin())
+    , end_(data_.end())
+    , const_end_(data_.end())
+    , owns_data_(true)
   {
-  }
-  
-  Iterator begin() noexcept
-  {
-    return std::vector<T>::begin();
-  }
-
-  Iterator end() noexcept
-  {
-    return std::vector<T>::end();
-  }
-
-  ConstIterator begin() const noexcept
-  {
-    return std::vector<T>::begin();
-  }
-
-  ConstIterator end() const noexcept
-  {
-    return std::vector<T>::end();
   }
 
   Vector(
-    std::initializer_list<T> list)
-    : std::vector<T>(list)
+    Vector<T>& referenced_vector,
+    size_t first_element_index,
+    size_t size) noexcept
+    : data_()
+    , data_ptr_(referenced_vector.data_.data() + first_element_index)
+    , size_(size)
+    , begin_(referenced_vector.begin() + (data_ptr_-referenced_vector.data_.data()))
+    , const_begin_(referenced_vector.begin() + (data_ptr_-referenced_vector.data_.data()))
+    , end_(begin_ + size_)
+    , const_end_(const_begin_ + size_)
+    , owns_data_(false)
   {
+    ASSERT(first_element_index+size <= referenced_vector.size());
+  }
+  
+  Vector(
+    const Vector& other)
+    : data_(other.data_)
+    , data_ptr_((other.owns_data_) ? data_.data() : other.data_ptr_)
+    , size_(other.size_)
+    , begin_((other.owns_data_) ? data_.begin() : other.begin_)
+    , const_begin_((other.owns_data_) ? data_.begin() : other.const_begin_)
+    , end_((other.owns_data_) ? data_.end() : other.end_)
+    , const_end_((other.owns_data_) ? data_.end() : other.const_end_)
+    , owns_data_(other.owns_data_)
+  {
+  }
+  
+  /** Copy assignment operator. If you are trying to assign the object onto
+   itself, this operator has no effect. Also, there is no effect if you try
+   to assign a buffer that is referencing itself. For
+   instance, if A is a buffer that owns the data, and B is a buffer that
+   refers to A's data, then the assignment A = B has no effect. */
+  Vector& operator=(
+    const Vector& other)
+  {
+    if (this != &other)
+    {
+      if (owns_data_ && other.data_.data() == data_.data())
+      {
+        return *this;
+      }
+      
+      data_ = other.data_;
+      data_ptr_ = (other.owns_data_) ? data_.data() : other.data_ptr_;
+      size_ = other.size_;
+      begin_ = (other.owns_data_) ? data_.begin() : other.begin_;
+      const_begin_ = (other.owns_data_) ? data_.begin() : other.const_begin_;
+      end_ = (other.owns_data_) ? data_.end() : other.end_;
+      const_end_ = (other.owns_data_) ? data_.end() : other.const_end_;
+      owns_data_ = other.owns_data_;
+    }
+    return *this;
+  }
+  
+  ~Vector()
+  {
+    data_ptr_ = nullptr;
+  }
+  
+  inline bool OwnsData() const noexcept
+  {
+    return owns_data_;
+  }
+  
+  inline Iterator begin() noexcept
+  {
+    return begin_;
+  }
+
+  inline ConstIterator begin() const noexcept
+  {
+    return begin_;
+  }
+
+  inline Iterator end() noexcept
+  {
+    return end_;
+  }
+  
+  inline ConstIterator end() const noexcept
+  {
+    return end_;
   }
   
   inline size_t size() const noexcept
   {
-    return std::vector<T>::size();
+    return size_;
   }
   
   inline T& operator[](
     const size_t index) noexcept
   {
     ASSERT(index>=0 && index < size());
-    return std::vector<T>::data()[index];
+    return data_ptr_[index];
   }
   
   inline const T& operator[](
     const size_t index) const noexcept
   {
     ASSERT(index>=0 && index < size());
-    return std::vector<T>::data()[index];
+    return data_ptr_[index];
   }
+private:
+  std::vector<T> data_;
   
-  inline void PushBack(const T& element) noexcept
-  {
-    std::vector<T>::push_back(element);
-  }
+  T* data_ptr_;
+  size_t size_;
   
-  inline void Assign(const size_t num_elements, T value)
-  {
-    std::vector<T>::assign(num_elements, value);
-  }
+  Iterator begin_;
+  Iterator end_;
+  ConstIterator const_begin_;
+  ConstIterator const_end_;
+  
+  bool owns_data_;
 };
 
 
@@ -122,85 +219,6 @@ Vector<Complex<T>> CastToComplex(
   return output;
 }
 
-//
-//template<typename T>
-//class VectorRef<T> {
-//private:
-//  Vector<T>& other_vector_;
-//  size_t start_;
-//  size_t length_;
-//public:
-//  using Iterator = typename std::vector<T>::iterator;
-//  using ConstIterator = typename std::vector<T>::const_iterator;
-//
-//  inline size_t length() const noexcept
-//  {
-//    // The default for `num_elements_` is std::numeric_limits<size_t>::max(),
-//    // which means this reference vector has the same length as the
-//    // `other_vector`.
-//    // If, on the other hand, num_elements_ is a smaller number, it means
-//    // that the length of this reference vector is smaller than the
-//    // length of the `other_vector`.
-//    // If the length of the other vector is shortened (not possible in the
-//    // current implementation), an assert will happen when using the []
-//    // operator with an index ending up outside the vector.
-//    return std::min(other_vector_.size(), length_);
-//  }
-//
-//  inline Iterator begin() noexcept
-//  {
-//    return other_vector_.begin() + start_;
-//  }
-//
-//  inline ConstIterator begin() const noexcept
-//  {
-//    return other_vector_.begin() + start_;
-//  }
-//
-//  inline Iterator end() noexcept
-//  {
-//    return other_vector_.end() + start_ - (other_vector_.size() - length());
-//  }
-//
-//  inline ConstIterator end() const noexcept
-//  {
-//    return other_vector_.end() + start_ - (other_vector_.size() - length());
-//  }
-//
-//  Vector(
-//    Vector<T>& other_vector,
-//    size_t start = 0,
-//    size_t length = std::numeric_limits<size_t>::max()) noexcept
-//    : other_vector_(other_vector)
-//    , start_(start)
-//    , length_(length)
-//  {
-//    if (length_ < std::numeric_limits<size_t>::max()) // TODO: remove this if not debugging
-//    {
-//      ASSERT(length_ <= other_vector.size());
-//    }
-//    ASSERT(start >= 0 && start < other_vector.size());
-//    ASSERT((start+this->length()) <= other_vector.size());
-//  }
-//
-//  inline T& operator[](
-//    const size_t index) noexcept
-//  {
-//    ASSERT(index>=0 && index < length());
-//    const size_t other_index(index + start_);
-//    ASSERT(other_index>=0 && other_index < other_vector_.size());
-//    return other_vector_[other_index];
-//  }
-//
-//  inline const T& operator[](
-//    const size_t index) const noexcept
-//  {
-//    ASSERT(index>=0 && index < length());
-//    const size_t other_index(index + start_);
-//    ASSERT(other_index>=0 && other_index < other_vector_.size());
-//    return other_vector_[other_index];
-//  }
-//};
 
 
 

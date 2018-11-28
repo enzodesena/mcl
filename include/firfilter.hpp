@@ -69,9 +69,11 @@ private:
     T weight_new = ((T)update_index_+T(1))/((T)update_length_+T(1));
     T weight_old = T(1)-weight_new;
     Multiply(impulse_response_, weight_new, coefficients_);
-    MultiplyAdd(impulse_response_old_, weight_old,
-                coefficients_,
-                coefficients_);
+    MultiplyAdd(
+      impulse_response_old_,
+      weight_old,
+      coefficients_,
+      coefficients_);
     // The above is a lock-free equivalent version to
     // coefficients_ = mcl::Add(mcl::Multiply(impulse_response_, weight_new),
     //                          mcl::Multiply(impulse_response_old_, weight_old));
@@ -180,7 +182,7 @@ public:
     {
       // If the impulse response changes length, then reset everything.
       length_ = impulse_response.size();
-      delay_line_.Assign(length_, 0.0);
+      delay_line_ = Vector<T>(length_, T(0.0));
       counter_ = length_-1;
       impulse_response_ = impulse_response;
       impulse_response_old_ = impulse_response;

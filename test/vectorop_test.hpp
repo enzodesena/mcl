@@ -29,6 +29,19 @@ inline bool VectorOpTest()
   myvector_a[2] = -0.3;
   ASSERT(myvector_a[2] == -0.3);
   
+  
+  ASSERT(myvector_a.OwnsData());
+  Vector<double> myvector_a_copy(myvector_a);
+  ASSERT(myvector_a_copy.OwnsData());
+  
+  Vector<double> myvector_a_reference(myvector_a, 0, 3);
+  ASSERT(! myvector_a_reference.OwnsData());
+  myvector_a_reference[1] = 1.0;
+  ASSERT(myvector_a_reference[1] == 1.0);
+  ASSERT(myvector_a[1] == 1.0);
+  ASSERT(myvector_a_copy[1] == 0.2); // Should not have changed
+  myvector_a[1] = 0.2; // Put it back
+  
   Vector<double> myvector_b(3);
   myvector_b[0] = 0.1;
   myvector_b[1] = 0.2;
@@ -148,24 +161,24 @@ inline bool VectorOpTest()
 
   ASSERT(Sum(vector_e) == -0.3+30.3+2.4+12.4);
   
-  ASSERT(Downsample(vector_f, 2).size() == 2);
-  ASSERT(Downsample(vector_f, 3).size() == 2);
-  ASSERT(Downsample(vector_f, 4).size() == 1);
-  ASSERT(Downsample(vector_f, 10).size() == 1);
-  ASSERT(Downsample(pad_vector_c_cmp, 2).size() == 3);
-  ASSERT(Downsample(pad_vector_c_cmp, 3).size() == 2);
-  ASSERT(Downsample(pad_vector_c_cmp, 4).size() == 2);
-  ASSERT(Downsample(pad_vector_c_cmp, 5).size() == 1);
-
-  Vector<Real> cmp_downsample_f(2);
-  cmp_downsample_f[0] = 2.5;
-  cmp_downsample_f[1] = -2.4;
-  ASSERT(IsEqual(cmp_downsample_f, Downsample(vector_f, 2)));
-
-  Vector<Real> cmp_downsample_f_3(2);
-  cmp_downsample_f_3[0] = 2.5;
-  cmp_downsample_f_3[1] = -1.0;
-  ASSERT(IsEqual(cmp_downsample_f_3, Downsample(vector_f, 3)));
+//  ASSERT(Downsample(vector_f, 2).size() == 2);
+//  ASSERT(Downsample(vector_f, 3).size() == 2);
+//  ASSERT(Downsample(vector_f, 4).size() == 1);
+//  ASSERT(Downsample(vector_f, 10).size() == 1);
+//  ASSERT(Downsample(pad_vector_c_cmp, 2).size() == 3);
+//  ASSERT(Downsample(pad_vector_c_cmp, 3).size() == 2);
+//  ASSERT(Downsample(pad_vector_c_cmp, 4).size() == 2);
+//  ASSERT(Downsample(pad_vector_c_cmp, 5).size() == 1);
+//
+//  Vector<Real> cmp_downsample_f(2);
+//  cmp_downsample_f[0] = 2.5;
+//  cmp_downsample_f[1] = -2.4;
+//  ASSERT(IsEqual(cmp_downsample_f, Downsample(vector_f, 2)));
+//
+//  Vector<Real> cmp_downsample_f_3(2);
+//  cmp_downsample_f_3[0] = 2.5;
+//  cmp_downsample_f_3[1] = -1.0;
+//  ASSERT(IsEqual(cmp_downsample_f_3, Downsample(vector_f, 3)));
 
   Vector<Real> vector_f_sub_0_2 = Subset(vector_f, 0, 2);
   ASSERT(vector_f_sub_0_2.size() == 3);
@@ -385,6 +398,7 @@ inline bool VectorOpTest()
   ASSERT(IsEqual(GetSegment(vector_g, 0, 2), vector_g_frame_0));
   ASSERT(IsEqual(GetSegment(vector_g, 1, 2), UnaryVector((Real) -2.4)));
   ASSERT(IsEqual<Real>(GetSegment(vector_g, 1, 2, true), BinaryVector<Real>(-2.4, 0.0)));
+  Vector<Real> hello = GetSegment(vector_g, 2, 2, false);
   ASSERT(IsEqual(GetSegment(vector_g, 2, 2, false), Vector<Real>()));
   ASSERT(IsEqual<Real>(GetSegment(vector_g, 2, 2, true), BinaryVector<Real>(0.0, 0.0)));
 
@@ -644,45 +658,55 @@ inline bool VectorOpTest()
   
   
   // Testing vector reference
-//  Vector<Real> referenced(3,0.0);
-//  referenced[1] = 2.0;
-//  ASSERT(referenced.size() == 3);
-//  ASSERT(referenced[0] == 0.0);
-//  ASSERT(referenced[1] == 2.0);
-//  ASSERT(referenced[2] == 0.0);
-//  Vector<Real,kReference> reference(referenced);
-//  reference[0] = 1.0;
-//  reference[1] = 3.0;
-//  reference[2] = 5.0;
-//  ASSERT(reference[0] == 1.0);
-//  ASSERT(reference[1] == 3.0);
-//  ASSERT(reference[2] == 5.0);
-//  ASSERT(referenced[0] == 1.0);
-//  ASSERT(referenced[1] == 3.0);
-//  ASSERT(referenced[2] == 5.0);
-//  ASSERT(reference.size() == 3);
-//  
-//  Vector<Real,kReference> reference_b(referenced, 0);
-//  ASSERT(reference_b.size() == 3);
-//  ASSERT(reference_b[0] == 1.0);
-//  ASSERT(reference_b[1] == 3.0);
-//  ASSERT(reference_b[2] == 5.0);
-//  referenced[] = 7.0);
-//  ASSERT(reference_b.size() == 4); // The length of the reference has increased along with the referenced
-//  
-//  
-//  Vector<Real,kReference> reference_c(referenced, 0, 4);
-//  ASSERT(reference_c.size() == 4);
-//  referenced[] = 9.0);
-//  ASSERT(reference_c.size() == 4); // In this case the lenght did not increase, because specified a length
-//  ASSERT(reference_c[0] == 1.0);
-//  ASSERT(reference_c[1] == 3.0);
-//  ASSERT(reference_c[2] == 5.0);
-//  
-//  Vector<Real,kReference> reference_d(referenced, 2, 2);
-//  ASSERT(reference_d.size() == 2);
-//  ASSERT(reference_d[0] == 5.0);
-//  ASSERT(reference_d[1] == 7.0);
+  Vector<Real> referenced(3, 0.0);
+  referenced[1] = 2.0;
+  ASSERT(referenced.size() == 3);
+  ASSERT(referenced[0] == 0.0);
+  ASSERT(referenced[1] == 2.0);
+  ASSERT(referenced[2] == 0.0);
+  Vector<Real> reference_a(referenced, 0, 3);
+  reference_a[0] = 1.0;
+  reference_a[1] = 3.0;
+  reference_a[2] = 5.0;
+  ASSERT(reference_a[0] == 1.0);
+  ASSERT(reference_a[1] == 3.0);
+  ASSERT(reference_a[2] == 5.0);
+  ASSERT(referenced[0] == 1.0);
+  ASSERT(referenced[1] == 3.0);
+  ASSERT(referenced[2] == 5.0);
+  ASSERT(reference_a.size() == 3);
+  
+  Vector<Real> reference_b(referenced, 0, 2);
+  ASSERT(reference_b.size() == 2);
+  ASSERT(reference_b[0] == 1.0);
+  ASSERT(reference_b[1] == 3.0);
+  
+  Vector<Real> reference_c(referenced, 1, 2);
+  ASSERT(reference_c.size() == 2);
+  ASSERT(reference_c[0] == 3.0);
+  ASSERT(reference_c[1] == 5.0);
+  
+  Vector<Real> reference_d(referenced, 2, 1);
+  ASSERT(reference_d.size() == 1);
+  ASSERT(reference_d[0] == 5.0);
+  
+  referenced[2] = 10.0;
+  ASSERT(referenced[2] == 10.0);
+  ASSERT(reference_c[1] == 10.0);
+  ASSERT(reference_d[0] == 10.0);
+  
+  reference_d[0] = -5.0;
+  ASSERT(referenced[2] == -5.0);
+  ASSERT(reference_c[1] == -5.0);
+  ASSERT(reference_d[0] == -5.0);
+  
+  auto iter_d = reference_d.begin();
+  ASSERT(*iter_d == -5.0);
+  
+  auto iter_a = reference_a.begin() + 2;
+  ASSERT(*iter_a == -5.0);
+  *iter_a = -2.0;
+  ASSERT(reference_d[0] == -2.0);
   
   return true;
 }

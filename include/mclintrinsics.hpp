@@ -479,7 +479,7 @@ AddVectors(
   {
     vector_lengths[i] = vectors[i].size();
   }
-  size_t max_length(Max(vector_lengths));
+  size_t max_length = Max(vector_lengths);
   Vector<T> output = Zeros<T>(max_length);
   Vector<T> temp(max_length);
   for (auto& vector : vectors)
