@@ -12,12 +12,12 @@
 #include "pointwiseop.hpp"
 #include "vectorop.hpp"
 
-namespace mcl {
-
-  
+namespace mcl
+{
 /** IIR Filter */
 template<typename T>
-class IirFilter : public DigitalFilterInterface<T> {
+class IirFilter : public DigitalFilterInterface<T>
+{
 public:
   /** Constructs a default filter, i.e. identical filter*/
   IirFilter()
@@ -26,9 +26,9 @@ public:
   {
     Int size = B_.size();
     state_ = Vector<T>(size);
-    for (Int i=0; i<size; ++i) { state_[i] = 0.0; }
+    for (Int i = 0; i < size; ++i) { state_[i] = 0.0; }
   }
-  
+
   /** 
    Constructs an IIR filter (II-type direct implementation). B and A are numerator
    and denominator of the filter, respectively.
@@ -42,19 +42,19 @@ public:
     // TODO: implement also for B.size != A.size
     ASSERT(B.size() == A.size());
     ASSERT(B.size() >= 1);
-    
+
     A0_ = A[0];
-    if (! IsApproximatelyEqual(A[0], 1.0, std::numeric_limits<T>::epsilon())) {
-      B_ = Multiply(B, (T) 1.0 / A[0]);
-      A_ = Multiply(A, (T) 1.0 / A[0]);
+    if (! IsApproximatelyEqual(A[0], 1.0, std::numeric_limits<T>::epsilon()))
+    {
+      B_ = Multiply(B, (T)1.0 / A[0]);
+      A_ = Multiply(A, (T)1.0 / A[0]);
     }
-    
-    
+
     Int size = B.size();
     state_ = Vector<T>(size);
-    for (Int i=0; i<size; ++i) { state_[i] = 0.0; }
+    for (Int i = 0; i < size; ++i) { state_[i] = 0.0; }
   }
-  
+
   /** 
    Returns the output of the filter for an input equal to `input`.
    For example, if B=1, A=1, output will be equal to input. 
@@ -66,7 +66,7 @@ public:
     const T input) noexcept
   {
     // Speed up return for simple gain filters
-    if (B_.size() == 1) { return input*B_[0]; }
+    if (B_.size() == 1) { return input * B_[0]; }
     size_t size = B_.size();
     ASSERT(size >= 1);
     T v = input; // The temporary value in the recursive branch.
@@ -74,43 +74,39 @@ public:
     // The index i in both loops refers to the branch in the classic plot of a
     // direct form II, with the highest branch (the one multiplied by b(0) only)
     // being i=0.
-    for (size_t i=1; i<size; ++i)
+    for (size_t i = 1; i < size; ++i)
     {
-      v += state_[i-1]*(-A_[i]);
-      output += state_[i-1]*B_[i];
+      v += state_[i - 1] * (-A_[i]);
+      output += state_[i - 1] * B_[i];
     }
-    for (size_t i=(size-1); i>=1; --i)
-    {
-      state_[i] = state_[i-1];
-    }
+    for (size_t i = (size - 1); i >= 1; --i) { state_[i] = state_[i - 1]; }
     state_[0] = v;
-    output += v*B_[0];
+    output += v * B_[0];
     return output;
   }
-  
+
   T Filter(
-    const T input) noexcept
-  {
-    return FilterSample(input);
-  }
-  
+    const T input) noexcept { return FilterSample(input); }
+
   void Filter(
     const Vector<T>& input,
-    Vector<T>& output) noexcept
+    Vector<T>& output) noexcept override
   {
-    if (B_.size() == 1)
-    {
-      Multiply(input, B_[0], output);
-    }
+    if (B_.size() == 1) { Multiply(input, B_[0], output); }
     else
     {
-      ForEach<T,T>(
+      ForEach<T,T>
+      (
         input,
-        [this] (T element) { return this->FilterSample(element); },
+        [this](
+        T element)
+        {
+          return this->FilterSample(element);
+        },
         output);
     }
   }
-  
+
   Vector<T> Filter(
     const Vector<T>& input) noexcept
   {
@@ -118,13 +114,10 @@ public:
     Filter(input, output);
     return std::move(output);
   }
-  
+
   /** Returns the order of the filter. */
-  Int order() const noexcept
-  {
-    return Max(B_.size(), A_.size())-1;
-  }
-  
+  Int order() const noexcept { return Max(B_.size(), A_.size()) - 1; }
+
   /** 
    Updates the filter coefficients. May cause articafts if the coefficients are
    updated too rapidly.
@@ -140,43 +133,40 @@ public:
     A_ = A;
     A0_ = A[0];
   }
-  
+
   /** Sets the coefficients as identical to those of another filter. */
   void SetCoefficients(
     const IirFilter& other_filter) noexcept
   {
     const Int filter_order = order();
     assert(filter_order == other_filter.order());
-    
-    for (Int i=0; i<=filter_order; ++i) {
+
+    for (Int i = 0; i <= filter_order; ++i)
+    {
       SetNumeratorCoefficient(i, other_filter.GetNumeratorCoefficient(i));
       SetDenominatorCoefficient(i, other_filter.GetDenominatorCoefficient(i));
     }
   }
-  
+
   T GetNumeratorCoefficient(
     const size_t coeff_id) const noexcept
   {
     ASSERT(coeff_id>=0 && coeff_id<=order());
-    return B_[coeff_id]*A0_;
+    return B_[coeff_id] * A0_;
   }
-  
+
   T GetDenominatorCoefficient(
-    const size_t coeff_id) const noexcept
-  {
-    return A_.at(coeff_id);
-  }
-  
+    const size_t coeff_id) const noexcept { return A_.at(coeff_id); }
+
   void SetNumeratorCoefficient(
     const size_t coeff_id,
     const T value) noexcept
   {
     ASSERT(coeff_id >= 0 && coeff_id<=order());
-    B_[coeff_id] = value/A0_;
+    B_[coeff_id] = value / A0_;
   }
-  
-  
-  inline void SetDenominatorCoefficient(
+
+  void SetDenominatorCoefficient(
     const size_t coeff_id,
     const T value) noexcept
   {
@@ -184,91 +174,75 @@ public:
     A_[coeff_id] = value;
     if (coeff_id == 0) { A0_ = value; }
   }
-  
+
   /** Returns the forward coefficients */
   Vector<T> B() const
   {
     // Return the non-normalised version
     return Multiply(B_, A0_);
   }
-  
+
   /** Returns the backward coefficients */
   Vector<T> A() const
   {
     // Return the non-normalised version
     return Multiply(A_, A0_);
   }
-  
-  void Reset() noexcept
-  {
-    SetToZero(state_);
-  }
-  
+
+  void Reset() noexcept override { SetToZero(state_); }
+
 private:
   Vector<T> B_;
   Vector<T> A_;
-  
+
   // By storing A[0] before normalisation we can output B() and A() before
   // normalisation while keeping the internal representation normalised
   T A0_;
-  
+
   Vector<T> state_;
 };
-  
+
 /** Filter bank abstract class */
 template<typename T>
-class IirFilterBank : public FilterBank<T> {
+class IirFilterBank : public FilterBank<T>
+{
 private:
   Vector<IirFilter<T>> filters_;
-  
+
 public:
   IirFilterBank(
     const Vector<IirFilter<T>>& filters) noexcept
     : filters_(filters)
   {
   }
-  
-  virtual Int num_filters() noexcept
-  {
-    return filters_.size();
-  }
-  
+
+  Int num_filters() noexcept override { return filters_.size(); }
+
   /** Returns the output of the filter bank for an input equal to `input`. */
-  virtual Vector<T> Filter(
-    const T input) noexcept
+  Vector<T> Filter(
+    const T input) noexcept override
   {
     const size_t N = filters_.size();
     Vector<T> outputs(N);
-    for (size_t i=0; i<N; ++i)
-    {
-      outputs[i] = filters_[i].Filter(input);
-    }
+    for (size_t i = 0; i < N; ++i) { outputs[i] = filters_[i].Filter(input); }
     return outputs;
   }
-  
+
   /** Returns the output of the filter bank for a given input. */
-  virtual Vector<Vector<T> >
-  Filter(const Vector<T>& input)
+  Vector<Vector<T>>
+  Filter(
+    const Vector<T>& input) override
   {
     const size_t N = filters_.size();
-    Vector<Vector<T> > outputs(N);
-    for (size_t i=0; i<N; ++i)
-    {
-      outputs[i] = filters_[i].Filter(input);
-    }
+    Vector<Vector<T>> outputs(N);
+    for (size_t i = 0; i < N; ++i) { outputs[i] = filters_[i].Filter(input); }
     return outputs;
   }
-  
+
   /** Resets the state of the filter */
-  void Reset()
-  {
-    for (size_t i=0; i<filters_.size(); ++i)
-    {
-      filters_[i].Reset();
-    }
-  }
+  void Reset() override { for (size_t i = 0; i < filters_.size(); ++i) { filters_[i].Reset(); } }
 };
-  
+
 //
 //  /** Implements a first-order IIR low-pass filter with a given decay constant. */
 //  class RampSmoothingFilter : public DigitalFilter {
@@ -325,38 +299,37 @@ public:
 //private:
 //  IirFilter filter_;
 //};
-  
-
-
-
 
 /**
  Get wall filters of type wall_type and for FS given by sampling_frequency
  */
 template<typename T>
-inline IirFilter<T> WallFilter(
-  WallType wall_type, T sampling_frequency)
+IirFilter<T> WallFilter(
+  WallType wall_type,
+  T sampling_frequency)
 {
   // TODO: implement for frequencies other than 44100
   if (! IsEqual(sampling_frequency, 44100))
   {
-    mcl::Logger::GetInstance().LogError("Attempting to use a wall filter "
-        "designed for 44100 Hz sampling frequency with a sampling frequency "
-        "of %f Hz. The filter response will be inaccurate.", sampling_frequency);
+    Logger::GetInstance().LogError
+    ("Attempting to use a wall filter "
+     "designed for 44100 Hz sampling frequency with a sampling frequency "
+     "of %f Hz. The filter response will be inaccurate.",
+     sampling_frequency);
   }
-  
+
   Vector<T> B;
   Vector<T> A;
-  
+
   switch (wall_type)
   {
-    case kRigid:
+  case kRigid:
     {
       B[0] = 1.0;
       A[0] = 1.0;
       break;
     }
-    case kCarpetPile:
+  case kCarpetPile:
     {
       // B_carpet_pile=[0.562666833756030  -1.032627191365576   0.469961155406544];
       // A_carpet_pile=[1.000000000000000  -1.896102349247713   0.896352947528892];
@@ -372,7 +345,7 @@ inline IirFilter<T> WallFilter(
       A = A_;
       break;
     }
-    case kCarpetCotton:
+  case kCarpetCotton:
     {
       // B_carpet_cotton = [0.687580695329600  -1.920746652319969   1.789915765926473  -0.556749690855965];
       // A_carpet_cotton = [1.000000000000000  -2.761840732459190   2.536820778736938  -0.774942833868750];
@@ -390,7 +363,7 @@ inline IirFilter<T> WallFilter(
       A = A_;
       break;
     }
-    case kWallBricks:
+  case kWallBricks:
     {
       // B_wall=[0.978495798553620  -1.817487798457697   0.839209660516074];
       // A_wall=[1.000000000000000  -1.858806492488240   0.859035906864860];
@@ -406,7 +379,7 @@ inline IirFilter<T> WallFilter(
       A = A_;
       break;
     }
-    case kCeilingTile:
+  case kCeilingTile:
     {
       // B_ceiling=[0.168413736374283  -0.243270224986791   0.074863520490536];
       // A_ceiling=[1.000000000000000  -1.845049094190385   0.845565720138466];
@@ -422,9 +395,9 @@ inline IirFilter<T> WallFilter(
       A = A_;
       break;
     }
-    default:
+  default:
     {
-      mcl::Logger::GetInstance().LogError("Unrecognised type of wall filter. Reverting to a completely absorptive one.");
+      Logger::GetInstance().LogError("Unrecognised type of wall filter. Reverting to a completely absorptive one.");
       Vector<T> B_(1);
       Vector<T> A_(1);
       B_[0] = 0.0;
@@ -434,14 +407,14 @@ inline IirFilter<T> WallFilter(
       break;
     }
   }
-  return IirFilter<T>(B,A);
+  return IirFilter<T>(B, A);
 }
 
 /** Returns a pinkifier filter */
 template<typename T>
-inline IirFilter<T> PinkifierFilter()
+IirFilter<T> PinkifierFilter()
 {
-Vector<T> poles(5);
+  Vector<T> poles(5);
   poles[0] = 0.9986823;
   poles[1] = 0.9914651;
   poles[2] = 0.9580812;
@@ -453,11 +426,10 @@ Vector<T> poles(5);
   zeros[2] = 0.9097290;
   zeros[3] = 0.6128445;
   zeros[4] = -0.0324723;
-  
+
   Vector<Complex<T>> num = Poly(zeros);
   Vector<Complex<T>> den = Poly(poles);
-  
-  return IirFilter<T>(RealPart<T>(num),RealPart<T>(den));
+
+  return IirFilter<T>(RealPart<T>(num), RealPart<T>(den));
 }
-  
 } // namespace mcl

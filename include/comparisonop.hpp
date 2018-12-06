@@ -6,15 +6,14 @@
  Authors: Enzo De Sena, enzodesena@gmail.com
  */
 
-
 #pragma once
 
 #ifndef VERY_SMALL
-  #define VERY_SMALL (0.0000000000001)
+#define VERY_SMALL (0.0000000000001)
 #endif
 
 #ifndef VERY_SMALLF
-  #define VERY_SMALLF (0.0000000000001f)
+#define VERY_SMALLF (0.0000000000001f)
 #endif
 
 #if defined(__APPLE__)
@@ -31,91 +30,60 @@
 #include <vector>
 #include <functional>
 
-namespace mcl {
-
-
+namespace mcl
+{
 ////////////////////////////////////////////////////////////////////////////////
 // Comparisons on trivial types
 ////////////////////////////////////////////////////////////////////////////////
 
 inline bool IsEqual(
   const double num_a,
-  const double num_b)
-{
-  return num_a == num_b;
-}
+  const double num_b) { return num_a == num_b; }
 
 inline bool IsEqual(
   const float num_a,
-  const float num_b)
-{
-  return num_a == num_b;
-}
-  
+  const float num_b) { return num_a == num_b; }
+
 inline bool IsApproximatelyEqual(
   const double num_a,
   const double num_b,
-  const double precision = VERY_SMALL)
-{
-  return std::fabs(num_a - num_b) < precision;
-}
+  const double precision = VERY_SMALL) { return std::fabs(num_a - num_b) < precision; }
 
 inline bool IsApproximatelyEqual(
   const float num_a,
   const float num_b,
-  const float precision = VERY_SMALLF)
-{
-  return std::abs(num_a - num_b) < precision;
-}
+  const float precision = VERY_SMALLF) { return std::abs(num_a - num_b) < precision; }
 
 inline bool IsApproximatelyEqual(
   const size_t num_a,
   const size_t num_b,
-  const size_t /*precision*/)
-{
-  return num_a == num_b;
-}
+  const size_t /*precision*/) { return num_a == num_b; }
 
 inline bool IsApproximatelyEqual(
   const Int num_a,
   const Int num_b,
-  const Int /*precision*/) noexcept
-{
-  return num_a == num_b;
-}
+  const Int /*precision*/) noexcept { return num_a == num_b; }
 
 inline bool IsApproximatelyEqual(
   const UInt num_a,
   const UInt num_b,
-  const UInt /*precision*/) noexcept
-{
-  return num_a == num_b;
-}
+  const UInt /*precision*/) noexcept { return num_a == num_b; }
 
 template<typename T>
-inline bool IsApproximatelyEqual(
+bool IsApproximatelyEqual(
   const Complex<T> num_a,
   const Complex<T> num_b,
-  const T precision = VERY_SMALL) noexcept
-{
-  return std::abs(num_a - num_b) < precision;
-}
+  const T precision = VERY_SMALL) noexcept { return std::abs(num_a - num_b) < precision; }
 
 template<typename T>
-inline bool IsSmallerOrEqual(
+bool IsSmallerOrEqual(
   const T num_a,
-  const T num_b) noexcept
-{
-  return std::islessequal(num_a, num_b);
-}
+  const T num_b) noexcept { return std::islessequal(num_a, num_b); }
 
 template<typename T>
-inline bool IsLargerOrEqual(
+bool IsLargerOrEqual(
   const T num_a,
-  const T num_b) noexcept
-{
-  return std::isgreaterequal(num_a, num_b);
-}
+  const T num_b) noexcept { return std::isgreaterequal(num_a, num_b); }
 
 //bool IsSmallerOrEqual(const Real num_a, const Real num_b, const Real precision) {
 //  return num_a <= (num_b + precision);
@@ -125,21 +93,15 @@ inline bool IsLargerOrEqual(
 //  return num_a >= (num_b - precision);
 //}
 
-
 /** Returns true if num is +inf or -inf */
 template<typename T>
-inline bool IsInf(T num)
-{
-  return std::isinf(num);
-}
+bool IsInf(
+  T num) { return std::isinf(num); }
 
 /** Returns true if num is nan */
 template<typename T>
-inline bool IsNan(
-  T num) noexcept
-{
-  return isnan(num);
-}
+bool IsNan(
+  T num) noexcept { return isnan(num); }
 
 ////////////////////////////////////////////////////////////////////////////////
 // Vector checks
@@ -148,80 +110,75 @@ inline bool IsNan(
 /** Checks a condition on all the elements of the vector. Returns true
  if all the conditions are true. False otherwise. */
 template<typename T>
-inline bool IsAnyConditionTrue(
+bool IsAnyConditionTrue(
   const Vector<T>& vector,
-  std::function<bool(T)> condition_checker) noexcept
+  std::function<bool(
+    T)> condition_checker) noexcept
 {
-  for (size_t i=0; i<vector.size(); ++i)
-  {
-    if (condition_checker(vector[i]))
-    {
-      return true;
-    }
-  }
+  for (size_t i = 0; i < vector.size(); ++i) { if (condition_checker(vector[i])) { return true; } }
   return false;
 }
-
 
 /** Checks a condition on all the elements of the vector. Returns true
  if all the conditions are true. False otherwise. */
 template<typename T>
-inline bool AreAllConditionsTrue(
+bool AreAllConditionsTrue(
   const Vector<T>& vector,
-  std::function<bool(const T)> condition_checker) noexcept
+  std::function<bool(
+    T)> condition_checker) noexcept
 {
-  for (size_t i=0; i<vector.size(); ++i)
-  {
-    if (! condition_checker(vector[i]))
-    {
-      return false;
-    }
-  }
+  for (size_t i = 0; i < vector.size(); ++i) { if (! condition_checker(vector[i])) { return false; } }
   return true;
 }
 
 template<typename T>
-inline bool AreAllConditionsTrue(
+bool AreAllConditionsTrue(
   const Vector<T>& vector_a,
   const Vector<T>& vector_b,
-  std::function<bool(T,T)> condition_checker) noexcept
+  std::function<bool(
+    T,
+    T)> condition_checker) noexcept
 {
   if (vector_a.size() != vector_b.size()) return false;
   auto iter_a(vector_a.begin());
   auto iter_b(vector_b.begin());
-  while (iter_a != vector_a.end())
-  {
-    if (! condition_checker(*(iter_a++), *(iter_b++)))
-    {
-      return false;
-    }
-  }
+  while (iter_a != vector_a.end()) { if (! condition_checker(*(iter_a++), *(iter_b++))) { return false; } }
   return true;
 }
 
-
 template<typename T>
-inline bool IsEqual(
+bool IsEqual(
   const Vector<T>& vector_a,
   const Vector<T>& vector_b) noexcept
 {
-  return AreAllConditionsTrue<T>(
+  return AreAllConditionsTrue<T>
+  (
     vector_a,
     vector_b,
-    [] (T a, T b) { return a == b; });
+    [](
+    T a,
+    T b)
+    {
+      return a == b;
+    });
 }
 
-
 template<typename T, typename TPrecision>
-inline bool IsApproximatelyEqual(
+bool IsApproximatelyEqual(
   const Vector<T>& vector_a,
   const Vector<T>& vector_b,
   const TPrecision precision = VERY_SMALL) noexcept
 {
-  return AreAllConditionsTrue<T>(
+  return AreAllConditionsTrue<T>
+  (
     vector_a,
     vector_b,
-    [precision] (T a, T b) { return IsApproximatelyEqual(a, b, precision); });
+    [precision](
+    T a,
+    T b)
+    {
+      return IsApproximatelyEqual(a, b, precision);
+    });
 }
 
 //
@@ -290,22 +247,34 @@ bool AreAllSmallerOrEqual(
   const Vector<T>& vector_a,
   const Vector<T>& vector_b)
 {
-  return AreAllConditionsTrue<T>(
+  return AreAllConditionsTrue<T>
+  (
     vector_a,
     vector_b,
-    [] (T a, T b) { return IsSmallerOrEqual(a, b); });
+    [](
+    T a,
+    T b)
+    {
+      return IsSmallerOrEqual(a, b);
+    });
 }
-
 
 /** Returns true if num is nan */
 template<typename T>
-inline Vector<bool> IsNan(Vector<T> input) noexcept
- {
+Vector<bool> IsNan(
+  Vector<T> input) noexcept
+{
   Vector<bool> output(input.size());
-  ForEach(input, [] (bool e) { return IsNan(e); }, output);
+  ForEach
+  (input,
+   [](
+   bool e)
+   {
+     return IsNan(e);
+   },
+   output);
   return output;
 }
-
 
 /**
  Returns true if the imaginary part is exactly zero
@@ -313,11 +282,7 @@ inline Vector<bool> IsNan(Vector<T> input) noexcept
  */
 template<typename T>
 bool IsReal(
-  const Complex<T>& input) noexcept
-{
-  return input.imag() == T(0.0);
-}
-
+  const Complex<T>& input) noexcept { return input.imag() == T(0.0); }
 
 /**
  Returns true if the imaginary part is approximately zero. The precision used
@@ -326,30 +291,14 @@ bool IsReal(
 template<typename T>
 bool IsApproximatelyReal(
   const Complex<T>& input,
-  const T precision = VERY_SMALL) noexcept
-{
-  return IsApproximatelyEqual(input.imag(), T(0.0), precision);
-}
-
+  const T precision = VERY_SMALL) noexcept { return IsApproximatelyEqual(input.imag(), T(0.0), precision); }
 
 template<typename T>
 bool IsApproximatelyReal(
   const Vector<Complex<T>>& vector,
   const T precision = VERY_SMALL) noexcept
 {
-  for (auto& element : vector)
-  {
-    if (! IsApproximatelyReal(element, precision))
-    {
-      return false;
-    }
-  }
+  for (auto& element : vector) { if (! IsApproximatelyReal(element, precision)) { return false; } }
   return true;
 }
-
-
-  
-  
-  
 } // namespace mcl
-

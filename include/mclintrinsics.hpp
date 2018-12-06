@@ -13,9 +13,9 @@
 #if defined(MCL_APPLE_ACCELERATE)
   #include <Accelerate/Accelerate.h>
 #elif defined(MCL_AVX_ACCELERATE)
-  #include <pmmintrin.h>
-  #include <xmmintrin.h>
-  #include <immintrin.h>
+#include <pmmintrin.h>
+#include <xmmintrin.h>
+#include <immintrin.h>
 #endif
 
 #ifdef MCL_NEON_ACCELERATE
@@ -23,25 +23,18 @@
 #endif
 
 #ifdef MCL_ENVWINDOWS
-  #define ALIGNED(n) __declspec(align(n))
+#define ALIGNED(n) __declspec(align(n))
 #else
   #define ALIGNED(n) __attribute__ ((aligned (n)))
 #endif
 
-
 namespace mcl
 {
-  
-
 template<typename T>
-inline void Add(
+void Add(
   const Vector<Complex<T>>& input_a,
   const Vector<Complex<T>>& input_b,
-  Vector<Complex<T>>& output) noexcept
-{
-  AddSerial(input_a, input_b, output);
-}
-
+  Vector<Complex<T>>& output) noexcept { AddSerial(input_a, input_b, output); }
 
 inline void Add(
   const Vector<double>& input_a,
@@ -59,7 +52,6 @@ inline void Add(
 #endif
 }
 
-
 inline void Add(
   const Vector<float>& input_a,
   const Vector<float>& input_b,
@@ -75,7 +67,6 @@ inline void Add(
   AddSerial(input_a, input_b, output);
 #endif
 }
-
 
 /**
  Returns the point by point multiplication of the vector with the gain.
@@ -119,13 +110,10 @@ inline void Multiply(
 }
 
 template<typename T>
-inline void Multiply(
+void Multiply(
   const Vector<Complex<T>>& input,
   const Complex<T> gain,
-  Vector<Complex<T>>& output) noexcept
-{
-  MultiplySerial(input, gain, output);
-}
+  Vector<Complex<T>>& output) noexcept { MultiplySerial(input, gain, output); }
 
 inline void Multiply(
   const Vector<double>& input_a,
@@ -160,13 +148,10 @@ inline void Multiply(
 }
 
 template<typename T>
-inline void Multiply(
+void Multiply(
   const Vector<Complex<T>>& input_a,
   const Vector<Complex<T>>& input_b,
-  Vector<Complex<T>>& output) noexcept
-{
-  MultiplySerial(input_a, input_b, output);
-}
+  Vector<Complex<T>>& output) noexcept { MultiplySerial(input_a, input_b, output); }
 
 inline void MultiplyAdd(
   const Vector<double>& input_to_multiply,
@@ -186,7 +171,6 @@ inline void MultiplyAdd(
 #endif
 }
 
-
 inline void MultiplyAdd(
   const Vector<float>& input_to_multiply,
   const float gain,
@@ -205,11 +189,6 @@ inline void MultiplyAdd(
 #endif
 }
 
-
-
-
-
-
 /** Calculates the convolution of the `input` vector with impulse response
   `kernel` vector (length P) and outputs it into `output` vector (length N).
   The length of the input vector should at least be N+P-1.
@@ -224,7 +203,7 @@ inline void MultiplyAdd(
   @param[out] output output vector
 */
 template<typename T>
-inline void ConvSerial(
+void ConvSerial(
   const Vector<T>& input,
   const Vector<T>& kernel,
   Vector<T>& output) noexcept
@@ -232,15 +211,8 @@ inline void ConvSerial(
   const size_t N = output.size();
   const size_t P = kernel.size();
   ASSERT(N+P >= 1 && input.size() >= N+P-1);
-  for (size_t n=0; n<N; ++n)
-  {
-    for (size_t p=0; p<P; ++p)
-    {
-      output[n] += input[n+p] * kernel[P-1-p];
-    }
-  }
+  for (size_t n = 0; n < N; ++n) { for (size_t p = 0; p < P; ++p) { output[n] += input[n + p] * kernel[P - 1 - p]; } }
 }
-
 
 #if defined(MCL_APPLE_ACCELERATE_MMA) && MCL_APPLE_ACCELERATE_MMA
 
@@ -258,7 +230,6 @@ inline void ConvApple(
 }
 #endif
 
-
 #if defined(MCL_APPLE_ACCELERATE_MMA) && MCL_APPLE_ACCELERATE_MMA
 inline void ConvApple(
   const Vector<float>& input,
@@ -273,7 +244,6 @@ inline void ConvApple(
     coefficients.size());
 }
 #endif
-
 
 #if defined(MCL_AVX_ACCELERATE) && MCL_AVX_ACCELERATE
 inline void ConvAvx(
@@ -291,36 +261,35 @@ inline void ConvAvx(
     return;
   }
 #endif
-  
+
   const size_t batch_size = 8;
   ALIGNED(16) __m256 input_frame;
   ALIGNED(16) __m256 coefficient;
   ALIGNED(16) __m256 accumulator;
-  
-  for(size_t n=0; (n+batch_size)<=num_samples; n+=batch_size)
+
+  for (size_t n = 0; (n + batch_size) <= num_samples; n += batch_size)
   {
     accumulator = _mm256_setzero_ps();
-    for(size_t k=0; k<length_; k++)
+    for (size_t k = 0; k < length_; k++)
     {
-      coefficient = _mm256_set1_ps((float) coefficients_[length_ - k - 1]);
+      coefficient = _mm256_set1_ps((float)coefficients_[length_ - k - 1]);
       input_frame = _mm256_loadu_ps(extended_input_data + n + k);
       accumulator = _mm256_add_ps(_mm256_mul_ps(coefficient, input_frame), accumulator);
     }
-    _mm256_storeu_ps(output_data_float+n, accumulator);
+    _mm256_storeu_ps(output_data_float + n, accumulator);
   }
-  
+
   const size_t num_samples_completed = num_samples - (num_samples % batch_size);
-  
-  for (size_t n=num_samples_completed; n<num_samples; ++n)
+
+  for (size_t n = num_samples_completed; n < num_samples; ++n)
   {
-    for (size_t p=0; p<length_; ++p)
+    for (size_t p = 0; p < length_; ++p)
     {
-      output_data[n] += coefficients_[length_-p-1] * extended_input_data[n+p];
+      output_data[n] += coefficients_[length_ - p - 1] * extended_input_data[n + p];
     }
   }
 }
 #endif
-
 
 #if defined(MCL_NEON_ACCELERATE) && MCL_NEON_ACCELERATE
 inline void ConvNeon(
@@ -357,7 +326,6 @@ inline void ConvNeon(
 }
 #endif
 
-
 /** Calculates the convolution of the `input` vector with impulse response
   `kernel` vector (length P) and outputs it into `output` vector (length N).
   The length of the input vector should at least be N+P-1.
@@ -372,7 +340,7 @@ inline void ConvNeon(
   @param[out] output output vector
 */
 template<typename T>
-inline void Conv(
+void Conv(
   const Vector<T>& input,
   const Vector<T>& kernel,
   Vector<T>& output) noexcept
@@ -389,11 +357,8 @@ inline void Conv(
 #endif
 }
 
-
-
-
 template<typename T>
-inline Vector<T> Add(
+Vector<T> Add(
   const Vector<T>& input_a,
   const Vector<T>& input_b) noexcept
 {
@@ -402,13 +367,12 @@ inline Vector<T> Add(
   return std::move(output);
 }
 
-
 /**
  Returns the point by point multiplication of the vector with the gain.
  Equivalent to Matlab's vector_a.*gain.
  */
 template<typename T>
-inline Vector<T> Multiply(
+Vector<T> Multiply(
   const Vector<T>& input,
   const T gain) noexcept
 {
@@ -417,9 +381,8 @@ inline Vector<T> Multiply(
   return std::move(output);
 }
 
-
 template<typename T>
-inline Vector<T> Multiply(
+Vector<T> Multiply(
   const Vector<T>& input_a,
   const Vector<T>& input_b) noexcept
 {
@@ -427,26 +390,20 @@ inline Vector<T> Multiply(
   Multiply(input_a, input_b, output);
   return std::move(output);
 }
-  
-  
 
- 
 /**
  Returns the point by point addition of the two vectors.
  Equivalent to Matlab's vector_a+vector_b.
  */
 template<typename T>
-inline void AddScalar(
+void AddScalar(
   const Vector<T>& input,
   const T scalar,
   Vector<T>& output) noexcept
 {
   auto input_iter = input.begin();
   auto output_iter = output.begin();
-  while (output_iter != output.end())
-  {
-    *(output_iter++) = *(input_iter++) + scalar;
-  }
+  while (output_iter != output.end()) { *(output_iter++) = *(input_iter++) + scalar; }
 }
 
 /**
@@ -454,7 +411,7 @@ inline void AddScalar(
  Equivalent to Matlab's vector_a+vector_b.
  */
 template<typename T>
-inline Vector<T> AddScalar(
+Vector<T> AddScalar(
   const Vector<T>& vector,
   const T scalar) noexcept
 {
@@ -462,7 +419,6 @@ inline Vector<T> AddScalar(
   AddScalar(vector, scalar, output);
   return std::move(output);
 }
-
 
 /**
  Adds all the vectors and zero-pads short vectors if they have different
@@ -475,19 +431,13 @@ AddVectors(
 {
   // Get maximum length
   Vector<size_t> vector_lengths(vectors.size());
-  for (size_t i=0; i<vectors.size(); ++i)
-  {
-    vector_lengths[i] = vectors[i].size();
-  }
+  for (size_t i = 0; i < vectors.size(); ++i) { vector_lengths[i] = vectors[i].size(); }
   size_t max_length = Max(vector_lengths);
   Vector<T> output = Zeros<T>(max_length);
   Vector<T> temp(max_length);
   for (auto& vector : vectors)
   {
-    if (vector.size() == max_length)
-    {
-      output = Add(output, vector);
-    }
+    if (vector.size() == max_length) { output = Add(output, vector); }
     else
     {
       ZeroPad(vector, temp);
@@ -497,17 +447,12 @@ AddVectors(
   return std::move(output);
 }
 
-
 /**
  Returns the point by point subtraction of the two vectors.
  Equivalent to Matlab's vector_a-vector_b.
  */
 template<class T>
-inline Vector<T> Subtract(
+Vector<T> Subtract(
   const Vector<T>& vector_a,
-  const Vector<T>& vector_b) noexcept
-{
-  return Add(vector_a, Opposite(vector_b));
-}
-
+  const Vector<T>& vector_b) noexcept { return Add(vector_a, Opposite(vector_b)); }
 } /**< namespace mcl */
