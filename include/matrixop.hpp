@@ -26,10 +26,14 @@ void Print(
 {
   for (size_t i = 0; i < matrix.num_rows(); ++i)
   {
-    for (size_t j = 0; j < matrix.num_columns(); ++j) { std::cout << matrix.GetElement(i, j) << "\t"; }
+    for (size_t j = 0; j < matrix.num_columns(); ++j)
+    {
+      std::cout << matrix.GetElement(i, j) << "\t";
+    }
     std::cout << std::endl;
   }
 }
+
 
 /** Transposes the matrix. Equivalent to Matlab's matrix' */
 template<class T>
@@ -39,10 +43,14 @@ Matrix<T> Transpose(
   Matrix<T> output(matrix.num_columns(), matrix.num_rows());
   for (size_t i = 0; i < output.num_rows(); ++i)
   {
-    for (size_t j = 0; j < output.num_columns(); ++j) { output.SetElement(i, j, matrix.GetElement(j, i)); }
+    for (size_t j = 0; j < output.num_columns(); ++j)
+    {
+      output.SetElement(i, j, matrix.GetElement(j, i));
+    }
   }
   return output;
 }
+
 
 /** 
  Multiplies all the elements of `matrix` by `value`. Equivalent
@@ -56,10 +64,14 @@ Matrix<T> Multiply(
   Matrix<T> output(matrix.num_rows(), matrix.num_columns());
   for (size_t i = 0; i < output.num_rows(); ++i)
   {
-    for (size_t j = 0; j < output.num_columns(); ++j) { output.SetElement(i, j, matrix.GetElement(i, j) * value); }
+    for (size_t j = 0; j < output.num_columns(); ++j)
+    {
+      output.SetElement(i, j, matrix.GetElement(i, j) * value);
+    }
   }
   return output;
 }
+
 
 /** Matrix multiplication. Equivalent to Matlabs' matrix_a*matrix_b */
 template<class T>
@@ -85,6 +97,7 @@ Matrix<T> Multiply(
   return output;
 }
 
+
 template<class T>
 Vector<T> Multiply(
   const Matrix<T>& matrix_a,
@@ -99,13 +112,18 @@ Vector<T> Multiply(
   return temp_output.GetColumn(0);
 }
 
+
 /** 
  Extract the maximum value of the matrix. Equivalent to Matlab's
  max(max(matrix)) 
  */
 template<class T>
 T Max(
-  const Matrix<T>& matrix) noexcept { return Max<T>(matrix.Serial()); }
+  const Matrix<T>& matrix) noexcept
+{
+  return Max<T>(matrix.Serial());
+}
+
 
 /** Contains eigenvalues and eigenvectors */
 template<typename T>
@@ -115,6 +133,7 @@ struct EigOutput
   Vector<Vector<Complex<T>>> eigen_vectors; /**< Eigenvectors */
 };
 
+
 template<typename T>
 Matrix<T> RealPart(
   const Matrix<Complex<T>>& input) noexcept
@@ -122,7 +141,10 @@ Matrix<T> RealPart(
   Matrix<Real> output(input.num_rows(), input.num_columns());
   for (Int i = 0; i < input.num_rows(); ++i)
   {
-    for (Int j = 0; j < input.num_columns(); ++j) { output.SetElement(i, j, input.GetElement(i, j).real()); }
+    for (Int j = 0; j < input.num_columns(); ++j)
+    {
+      output.SetElement(i, j, input.GetElement(i, j).real());
+    }
   }
   return output;
 }
@@ -179,17 +201,24 @@ bool IsEqual(
   const Matrix<T>& matrix_b) noexcept
 {
   if (matrix_a.num_rows() != matrix_b.num_rows() |
-    matrix_a.num_columns() != matrix_b.num_columns()) { return false; }
+    matrix_a.num_columns() != matrix_b.num_columns())
+  {
+    return false;
+  }
 
   for (size_t i = 0; i < matrix_a.num_rows(); ++i)
   {
     for (size_t j = 0; j < matrix_a.num_columns(); ++j)
     {
-      if (!IsEqual(matrix_a.GetElement(i, j), matrix_b.GetElement(i, j))) { return false; }
+      if (!IsEqual(matrix_a.GetElement(i, j), matrix_b.GetElement(i, j)))
+      {
+        return false;
+      }
     }
   }
   return true;
 }
+
 
 /** Writes the vector to a file. The separator is endline. */
 template<typename T>

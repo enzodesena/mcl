@@ -32,6 +32,7 @@ enum EulerOrder
   yxz
 };
 
+
 template<typename T>
 struct AxAng
 {
@@ -40,6 +41,7 @@ struct AxAng
   T z;
   T angle;
 };
+
 
 /** Quaternion class */
 template<typename T>
@@ -60,14 +62,38 @@ public:
   {
   }
 
-  T w() const noexcept { return w_; }
-  T x() const noexcept { return x_; }
-  T y() const noexcept { return y_; }
-  T z() const noexcept { return z_; }
+
+  T w() const noexcept
+  {
+    return w_;
+  }
+
+
+  T x() const noexcept
+  {
+    return x_;
+  }
+
+
+  T y() const noexcept
+  {
+    return y_;
+  }
+
+
+  T z() const noexcept
+  {
+    return z_;
+  }
+
 
   /** Constructs a quaternion that is neutral to rotations, 
    i.e. a multiplicative identity quaternion */
-  static Quaternion<T> Identity() { return Quaternion(1.0, 0.0, 0.0, 0.0); }
+  static Quaternion<T> Identity()
+  {
+    return Quaternion(1.0, 0.0, 0.0, 0.0);
+  }
+
 
 private:
   // q = w + x*i + y*j + z*k where i² = j² = k² = i*j*k = -1
@@ -76,6 +102,7 @@ private:
   T y_;
   T z_;
 };
+
 
 /** Returns a Quaternion using a given axis-angle representation */
 template<typename T>
@@ -94,20 +121,21 @@ Quaternion<T> AxAng2Quat(
     sin(angle / 2.0) * z / norm);
 }
 
+
 template<typename T>
 AxAng<T> Quat2AxAng(
   const Quaternion<T>& input) noexcept
 {
   AxAng<T> output;
 
-  Quaternion<T> q = (Norm(input) > 1.0)
-                      ? Quaternion<T>
+  Quaternion<T> q = (Norm(input) > 1.0) ?
+                      Quaternion<T>
                       (
                         input.w() / Norm(input),
                         input.x() / Norm(input),
                         input.y() / Norm(input),
-                        input.z() / Norm(input))
-                      : input;
+                        input.z() / Norm(input)) :
+                      input;
 
   Point q_r(q.x(), q.y(), q.z());
   if (q_r.norm() == 0.0) // TODO: verify whether this should be an approx equal
@@ -127,9 +155,14 @@ AxAng<T> Quat2AxAng(
   return output;
 }
 
+
 template<typename T>
 Quaternion<T> QuatConj(
-  const Quaternion<T>& q) noexcept { return Quaternion(q.w(), -q.x(), -q.y(), -q.z()); }
+  const Quaternion<T>& q) noexcept
+{
+  return Quaternion(q.w(), -q.x(), -q.y(), -q.z());
+}
+
 
 /** Returns the norm of a quaternion (defined the same as the Eucledian 
  norm in R^4) */
@@ -137,8 +170,10 @@ template<typename T>
 T Norm(
   const Quaternion<T>& q) noexcept
 {
-  return sqrt(pow(q.w(), 2.0) + pow(q.x(), 2.0) + pow(q.y(), 2.0) + pow(q.z(), 2.0));
+  return sqrt(
+    pow(q.w(), 2.0) + pow(q.x(), 2.0) + pow(q.y(), 2.0) + pow(q.z(), 2.0));
 }
+
 
 /** Implements the (Hamilton) quaternion multiplication **/
 template<typename T>
@@ -153,6 +188,7 @@ Quaternion<T> QuatMultiply(
     r.w() * q.y() + r.x() * q.z() + r.y() * q.w() - r.z() * q.x(),
     r.w() * q.z() - r.x() * q.y() + r.y() * q.x() + r.z() * q.w());
 }
+
 
 template<typename T>
 Point<T> QuatRotate(
@@ -173,6 +209,7 @@ Point<T> QuatRotate(
   Quaternion result = QuatMultiply(QuatMultiply(QuatConj(q_norm), p), q_norm);
   return Point(result.x(), result.y(), result.z());
 }
+
 
 /** Converts Euler angles with a given convention to a Quaternion. 
  Each input angle corresponds to the associated ordering.
@@ -241,6 +278,7 @@ Quaternion<T> Eul2Quat(
   return QuatMultiply(QuatMultiply(rotation_1, rotation_2), rotation_3);
 }
 
+
 /** Returns the Euler angle around the x-axis associated to a given quaternion
  and for a given Euler rotation convention */
 template<typename T>
@@ -252,8 +290,9 @@ T Quat2EulX(
   {
   case zyx:
     return atan2
-    (-2.0 * q.y() * q.z() + 2.0 * q.w() * q.x(),
-     pow(q.w(), 2.0) + pow(q.z(), 2.0) - pow(q.y(), 2.0) - pow(q.x(), 2.0));
+    (
+      -2.0 * q.y() * q.z() + 2.0 * q.w() * q.x(),
+      pow(q.w(), 2.0) + pow(q.z(), 2.0) - pow(q.y(), 2.0) - pow(q.x(), 2.0));
     break;
   default:
     ASSERT(false);
@@ -261,6 +300,7 @@ T Quat2EulX(
     break;
   }
 }
+
 
 /** Returns the Euler angle around the y-axis associated to a given quaternion
  and for a given Euler rotation convention */
@@ -281,6 +321,7 @@ T Quat2EulY(
   }
 }
 
+
 /** Returns the Euler angle around the z-axis associated to a given quaternion
  and for a given Euler rotation convention */
 template<typename T>
@@ -292,9 +333,10 @@ T Quat2EulZ(
   {
   case zyx:
     return atan2
-    (-2.0 * q.x() * q.y() + 2.0 * q.w() * q.z(),
-     pow(q.w(), 2.0) + pow(q.x(), 2.0)
-     - pow(q.y(), 2.0) - pow(q.z(), 2.0));
+    (
+      -2.0 * q.x() * q.y() + 2.0 * q.w() * q.z(),
+      pow(q.w(), 2.0) + pow(q.x(), 2.0)
+      - pow(q.y(), 2.0) - pow(q.z(), 2.0));
     break;
   default:
     ASSERT(false);
@@ -302,6 +344,7 @@ T Quat2EulZ(
     break;
   }
 }
+
 
 template<typename T>
 Quaternion<T> QuatInverse(
@@ -317,6 +360,7 @@ Quaternion<T> QuatInverse(
     conj.z() / norm_sq);
 }
 
+
 template<typename T>
 bool IsEqual(
   const Quaternion<T>& q_a,
@@ -325,6 +369,7 @@ bool IsEqual(
   return q_a.w() == q_b.w() && q_a.x() == q_b.x() &
     q_a.y() == q_b.y() && q_a.z() == q_b.z();
 }
+
 
 template<typename T>
 bool IsApproximatelyEqual(

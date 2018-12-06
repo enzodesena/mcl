@@ -20,6 +20,7 @@ public:
   using Iterator = typename std::vector<T>::iterator;
   using ConstIterator = typename std::vector<T>::const_iterator;
 
+
   Vector() noexcept
     : data_()
     , data_ptr_(nullptr)
@@ -31,6 +32,7 @@ public:
     , owns_data_(true)
   {
   }
+
 
   Vector(
     size_t size,
@@ -46,6 +48,7 @@ public:
   {
   }
 
+
   Vector(
     std::initializer_list<T> list)
     : data_(std::vector<T>(list))
@@ -58,6 +61,7 @@ public:
     , owns_data_(true)
   {
   }
+
 
   Vector(
     ConstIterator iter_begin,
@@ -73,6 +77,7 @@ public:
   {
   }
 
+
   Vector(
     Vector<T>& referenced_vector,
     size_t first_element_index,
@@ -80,14 +85,17 @@ public:
     : data_()
     , data_ptr_(referenced_vector.data_.data() + first_element_index)
     , size_(size)
-    , begin_(referenced_vector.begin() + (data_ptr_ - referenced_vector.data_.data()))
+    , begin_(
+      referenced_vector.begin() + (data_ptr_ - referenced_vector.data_.data()))
     , end_(begin_ + size_)
-    , const_begin_(referenced_vector.begin() + (data_ptr_ - referenced_vector.data_.data()))
+    , const_begin_(
+      referenced_vector.begin() + (data_ptr_ - referenced_vector.data_.data()))
     , const_end_(const_begin_ + size_)
     , owns_data_(false)
   {
     ASSERT(first_element_index+size <= referenced_vector.size());
   }
+
 
   Vector(
     const Vector& other)
@@ -102,6 +110,7 @@ public:
   {
   }
 
+
   /** Copy assignment operator. If you are trying to assign the object onto
    itself, this operator has no effect. Also, there is no effect if you try
    to assign a buffer that is referencing itself. For
@@ -112,7 +121,10 @@ public:
   {
     if (this != &other)
     {
-      if (owns_data_ && other.data_.data() == data_.data()) { return *this; }
+      if (owns_data_ && other.data_.data() == data_.data())
+      {
+        return *this;
+      }
 
       data_ = other.data_;
       data_ptr_ = (other.owns_data_) ? data_.data() : other.data_ptr_;
@@ -126,19 +138,48 @@ public:
     return *this;
   }
 
-  ~Vector() { data_ptr_ = nullptr; }
 
-  bool OwnsData() const noexcept { return owns_data_; }
+  ~Vector()
+  {
+    data_ptr_ = nullptr;
+  }
 
-  Iterator begin() noexcept { return begin_; }
 
-  ConstIterator begin() const noexcept { return begin_; }
+  bool OwnsData() const noexcept
+  {
+    return owns_data_;
+  }
 
-  Iterator end() noexcept { return end_; }
 
-  ConstIterator end() const noexcept { return end_; }
+  Iterator begin() noexcept
+  {
+    return begin_;
+  }
 
-  size_t size() const noexcept { return size_; }
+
+  ConstIterator begin() const noexcept
+  {
+    return begin_;
+  }
+
+
+  Iterator end() noexcept
+  {
+    return end_;
+  }
+
+
+  ConstIterator end() const noexcept
+  {
+    return end_;
+  }
+
+
+  size_t size() const noexcept
+  {
+    return size_;
+  }
+
 
   T& operator[](
     const size_t index) noexcept
@@ -147,12 +188,14 @@ public:
     return data_ptr_[index];
   }
 
+
   const T& operator[](
     const size_t index) const noexcept
   {
     ASSERT(index>=0 && index < size());
     return data_ptr_[index];
   }
+
 
 private:
   std::vector<T> data_;
@@ -168,22 +211,30 @@ private:
   bool owns_data_;
 };
 
+
 template<typename TOrigin, typename TDestination>
 Vector<TDestination> Cast(
   const Vector<TOrigin>& vector) noexcept
 {
   const size_t length = vector.size();
   Vector<TDestination> output(length);
-  for (size_t i = 0; i < length; ++i) { output[i] = static_cast<TDestination>(vector[i]); }
+  for (size_t i = 0; i < length; ++i)
+  {
+    output[i] = static_cast<TDestination>(vector[i]);
+  }
   return output;
 }
+
 
 template<typename T>
 Vector<Complex<T>> CastToComplex(
   Vector<T> input) noexcept
 {
   Vector<Complex<T>> output(input.size());
-  for (Int i = 0; i < (Int)input.size(); ++i) { output[i] = Complex<T>(input[i], 0.0); }
+  for (Int i = 0; i < (Int)input.size(); ++i)
+  {
+    output[i] = Complex<T>(input[i], 0.0);
+  }
   return output;
 }
 } /**< namespace mcl */

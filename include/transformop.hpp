@@ -30,6 +30,7 @@ Vector<Complex<T>> Fft(
   return outbuf;
 }
 
+
 /**
  Performs the ifft of the input signal.
  Equivalent to Matlab's ifft(input, n_point)
@@ -49,6 +50,7 @@ Vector<Complex<T>> Ifft(
   return Multiply(outbuf, Complex<T>(T(1.0) / n_point, T(0.0)));
 }
 
+
 /**
  Performs the fft of the real input signal.
  Equivalent to Voice Box's rfft(input, n_point)
@@ -65,6 +67,7 @@ Vector<Complex<T>> Rfft(
     (Int)floor(1.0 + ((double)n_point) / 2.0) - 1);
 }
 
+
 /**
  Performs the fft of real vectors.
  Equivalent to Voice Box's rfft(input, n_point)
@@ -75,9 +78,13 @@ Vector<Vector<Complex<T>>> Rfft(
   size_t n_point) noexcept
 {
   Vector<Vector<Complex<T>>> outputs(input.size());
-  for (size_t i = 0; i < input.size(); ++i) { outputs[i] = Rfft(input[i], n_point); }
+  for (size_t i = 0; i < input.size(); ++i)
+  {
+    outputs[i] = Rfft(input[i], n_point);
+  }
   return outputs;
 }
+
 
 /**
  Performs the inverse fft of conjugate symmetric spectrum.
@@ -92,7 +99,9 @@ Vector<T> Irfft(
   // non-repeated term, together with DC) and is of dimension M=N/2 + 1
   // whereas if N is odd then there is no Nyquist term
   // and the input is of dimension M=(N+1)/2.
-  Int M = (Rem(n_point, (size_t)2) == 0) ? (n_point / 2 + 1) : (n_point + 1) / 2;
+  Int M = (Rem(n_point, (size_t)2) == 0) ?
+            (n_point / 2 + 1) :
+            (n_point + 1) / 2;
   Vector<Complex<T>> zero_padded(M);
   ZeroPad(input, zero_padded);
   Vector<Complex<T>> spectrum;
@@ -100,24 +109,28 @@ Vector<T> Irfft(
   {
     // If n_point is even
     spectrum = Concatenate
-    (zero_padded,
-     Flip
-     (Conj
-       (
-         Elements(zero_padded, 1, n_point / 2 - 1))));
+    (
+      zero_padded,
+      Flip
+      (
+        Conj
+        (
+          Elements(zero_padded, 1, n_point / 2 - 1))));
   }
   else
   {
     // If n_point is odd
     spectrum = Concatenate
-    (zero_padded,
-     Flip(Conj(Elements(zero_padded, 1, (n_point + 1) / 2 - 1))));
+    (
+      zero_padded,
+      Flip(Conj(Elements(zero_padded, 1, (n_point + 1) / 2 - 1))));
   }
   ASSERT(spectrum.size() == n_point);
   Vector<Complex<T>> output = Ifft(spectrum, n_point);
   ASSERT(IsApproximatelyReal(output));
   return RealPart(output);
 }
+
 
 /**
  Performs the inverse fft of conjugate symmetric spectra.
@@ -129,9 +142,13 @@ Vector<Vector<T>> Irfft(
   size_t n_point) noexcept
 {
   Vector<Vector<T>> outputs;
-  for (Int i = 0; i < (Int)input.size(); ++i) { outputs.PushBack(Irfft(input[i], n_point)); }
+  for (Int i = 0; i < (Int)input.size(); ++i)
+  {
+    outputs.PushBack(Irfft(input[i], n_point));
+  }
   return outputs;
 }
+
 
 /** 
  Performs the equivalent of Matlab's Hilbert (i.e. computes the so-called
@@ -150,18 +167,25 @@ Vector<Complex<T>> Hilbert(
     // even and nonempty
     h[0] = 1.0;
     h[n / 2] = 1.0;
-    for (Int i = 1; i < (n / 2); ++i) { h[i] = 2.0; }
+    for (Int i = 1; i < (n / 2); ++i)
+    {
+      h[i] = 2.0;
+    }
   }
   else if (n > 0)
   {
     // odd and nonempty
     h[0] = 1.0;
-    for (Int i = 1; i < ((n + 1) / 2); ++i) { h[i] = 2.0; }
+    for (Int i = 1; i < ((n + 1) / 2); ++i)
+    {
+      h[i] = 2.0;
+    }
   }
 
   // x = ifft(x.*h(:,ones(1,size(x,2))));
   return Ifft(Multiply(x, h), n);
 }
+
 
 /** 
  Returns the real cepstrum of the real sequence X.
@@ -181,6 +205,7 @@ Vector<T> RCeps(
   return RealPart(Ifft(CastToComplex(Log(fftxabs)), n));
 }
 
+
 /** 
  Returns the (unique) minimum-phase sequence that has the same real
  cepstrum as vector. Equivalent to Matlab's [~, out] = rceps(vector).
@@ -199,6 +224,7 @@ Vector<T> MinPhase(
   Vector<T> wn = Concatenate(wn_2, Zeros<T>((n + odd) / 2 - 1));
   return RealPart(Ifft(Exp(Fft(CastToComplex(Multiply(wn, RCeps(x))), n)), n));
 }
+
 
 // The method XCorr naturally is placed in vectorop, but since it depends
 // on the Fft method, I place it here, so someone who doesn't want to
@@ -223,8 +249,14 @@ Vector<T> XCorr(
   Int end = c_T.size();
   Int maxlag = M - 1;
   Int k = 0; // running index
-  for (Int i = end - maxlag + 1 - 1; i <= (end - 1); ++i) { output[k++] = c_T[i]; }
-  for (Int i = 1 - 1; i <= (maxlag + 1 - 1); ++i) { output[k++] = c_T[i]; }
+  for (Int i = end - maxlag + 1 - 1; i <= (end - 1); ++i)
+  {
+    output[k++] = c_T[i];
+  }
+  for (Int i = 1 - 1; i <= (maxlag + 1 - 1); ++i)
+  {
+    output[k++] = c_T[i];
+  }
   return output;
 }
 } /**< namespace mcl */

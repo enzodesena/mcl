@@ -38,52 +38,92 @@ namespace mcl
 
 inline bool IsEqual(
   const double num_a,
-  const double num_b) { return num_a == num_b; }
+  const double num_b)
+{
+  return num_a == num_b;
+}
+
 
 inline bool IsEqual(
   const float num_a,
-  const float num_b) { return num_a == num_b; }
+  const float num_b)
+{
+  return num_a == num_b;
+}
+
 
 inline bool IsApproximatelyEqual(
   const double num_a,
   const double num_b,
-  const double precision = VERY_SMALL) { return std::fabs(num_a - num_b) < precision; }
+  const double precision = VERY_SMALL)
+{
+  return std::fabs(num_a - num_b) < precision;
+}
+
 
 inline bool IsApproximatelyEqual(
   const float num_a,
   const float num_b,
-  const float precision = VERY_SMALLF) { return std::abs(num_a - num_b) < precision; }
+  const float precision = VERY_SMALLF)
+{
+  return std::abs(num_a - num_b) < precision;
+}
+
 
 inline bool IsApproximatelyEqual(
   const size_t num_a,
   const size_t num_b,
-  const size_t /*precision*/) { return num_a == num_b; }
+  const size_t /*precision*/)
+{
+  return num_a == num_b;
+}
+
 
 inline bool IsApproximatelyEqual(
   const Int num_a,
   const Int num_b,
-  const Int /*precision*/) noexcept { return num_a == num_b; }
+  const Int /*precision*/) noexcept
+{
+  return num_a == num_b;
+}
+
 
 inline bool IsApproximatelyEqual(
   const UInt num_a,
   const UInt num_b,
-  const UInt /*precision*/) noexcept { return num_a == num_b; }
+  const UInt /*precision*/) noexcept
+{
+  return num_a == num_b;
+}
+
 
 template<typename T>
 bool IsApproximatelyEqual(
   const Complex<T> num_a,
   const Complex<T> num_b,
-  const T precision = VERY_SMALL) noexcept { return std::abs(num_a - num_b) < precision; }
+  const T precision = VERY_SMALL) noexcept
+{
+  return std::abs(num_a - num_b) < precision;
+}
+
 
 template<typename T>
 bool IsSmallerOrEqual(
   const T num_a,
-  const T num_b) noexcept { return std::islessequal(num_a, num_b); }
+  const T num_b) noexcept
+{
+  return std::islessequal(num_a, num_b);
+}
+
 
 template<typename T>
 bool IsLargerOrEqual(
   const T num_a,
-  const T num_b) noexcept { return std::isgreaterequal(num_a, num_b); }
+  const T num_b) noexcept
+{
+  return std::isgreaterequal(num_a, num_b);
+}
+
 
 //bool IsSmallerOrEqual(const Real num_a, const Real num_b, const Real precision) {
 //  return num_a <= (num_b + precision);
@@ -96,12 +136,20 @@ bool IsLargerOrEqual(
 /** Returns true if num is +inf or -inf */
 template<typename T>
 bool IsInf(
-  T num) { return std::isinf(num); }
+  T num)
+{
+  return std::isinf(num);
+}
+
 
 /** Returns true if num is nan */
 template<typename T>
 bool IsNan(
-  T num) noexcept { return isnan(num); }
+  T num) noexcept
+{
+  return isnan(num);
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // Vector checks
@@ -115,9 +163,16 @@ bool IsAnyConditionTrue(
   std::function<bool(
     T)> condition_checker) noexcept
 {
-  for (size_t i = 0; i < vector.size(); ++i) { if (condition_checker(vector[i])) { return true; } }
+  for (size_t i = 0; i < vector.size(); ++i)
+  {
+    if (condition_checker(vector[i]))
+    {
+      return true;
+    }
+  }
   return false;
 }
+
 
 /** Checks a condition on all the elements of the vector. Returns true
  if all the conditions are true. False otherwise. */
@@ -127,9 +182,16 @@ bool AreAllConditionsTrue(
   std::function<bool(
     T)> condition_checker) noexcept
 {
-  for (size_t i = 0; i < vector.size(); ++i) { if (! condition_checker(vector[i])) { return false; } }
+  for (size_t i = 0; i < vector.size(); ++i)
+  {
+    if (! condition_checker(vector[i]))
+    {
+      return false;
+    }
+  }
   return true;
 }
+
 
 template<typename T>
 bool AreAllConditionsTrue(
@@ -139,12 +201,20 @@ bool AreAllConditionsTrue(
     T,
     T)> condition_checker) noexcept
 {
-  if (vector_a.size() != vector_b.size()) return false;
+  if (vector_a.size() != vector_b.size())
+    return false;
   auto iter_a(vector_a.begin());
   auto iter_b(vector_b.begin());
-  while (iter_a != vector_a.end()) { if (! condition_checker(*(iter_a++), *(iter_b++))) { return false; } }
+  while (iter_a != vector_a.end())
+  {
+    if (! condition_checker(*(iter_a++), *(iter_b++)))
+    {
+      return false;
+    }
+  }
   return true;
 }
+
 
 template<typename T>
 bool IsEqual(
@@ -163,6 +233,7 @@ bool IsEqual(
     });
 }
 
+
 template<typename T, typename TPrecision>
 bool IsApproximatelyEqual(
   const Vector<T>& vector_a,
@@ -180,6 +251,7 @@ bool IsApproximatelyEqual(
       return IsApproximatelyEqual(a, b, precision);
     });
 }
+
 
 //
 //template<typename T>
@@ -259,6 +331,7 @@ bool AreAllSmallerOrEqual(
     });
 }
 
+
 /** Returns true if num is nan */
 template<typename T>
 Vector<bool> IsNan(
@@ -266,15 +339,17 @@ Vector<bool> IsNan(
 {
   Vector<bool> output(input.size());
   ForEach
-  (input,
-   [](
-   bool e)
-   {
-     return IsNan(e);
-   },
-   output);
+  (
+    input,
+    [](
+    bool e)
+    {
+      return IsNan(e);
+    },
+    output);
   return output;
 }
+
 
 /**
  Returns true if the imaginary part is exactly zero
@@ -282,7 +357,11 @@ Vector<bool> IsNan(
  */
 template<typename T>
 bool IsReal(
-  const Complex<T>& input) noexcept { return input.imag() == T(0.0); }
+  const Complex<T>& input) noexcept
+{
+  return input.imag() == T(0.0);
+}
+
 
 /**
  Returns true if the imaginary part is approximately zero. The precision used
@@ -291,14 +370,24 @@ bool IsReal(
 template<typename T>
 bool IsApproximatelyReal(
   const Complex<T>& input,
-  const T precision = VERY_SMALL) noexcept { return IsApproximatelyEqual(input.imag(), T(0.0), precision); }
+  const T precision = VERY_SMALL) noexcept
+{
+  return IsApproximatelyEqual(input.imag(), T(0.0), precision);
+}
+
 
 template<typename T>
 bool IsApproximatelyReal(
   const Vector<Complex<T>>& vector,
   const T precision = VERY_SMALL) noexcept
 {
-  for (auto& element : vector) { if (! IsApproximatelyReal(element, precision)) { return false; } }
+  for (auto& element : vector)
+  {
+    if (! IsApproximatelyReal(element, precision))
+    {
+      return false;
+    }
+  }
   return true;
 }
 } // namespace mcl

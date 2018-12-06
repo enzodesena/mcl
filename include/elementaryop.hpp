@@ -17,27 +17,39 @@ T Max(
   const T scalar_a,
   const T scalar_b) noexcept
 {
-  if (scalar_a >= scalar_b) { return scalar_a; }
+  if (scalar_a >= scalar_b)
+  {
+    return scalar_a;
+  }
   return scalar_b;
 }
+
 
 template<class T>
 T Min(
   const T scalar_a,
   const T scalar_b) noexcept
 {
-  if (scalar_a < scalar_b) { return scalar_a; }
+  if (scalar_a < scalar_b)
+  {
+    return scalar_a;
+  }
   return scalar_b;
 }
+
 
 /** Equivalent to Matlab's fix(scalar) */
 template<typename T>
 Int Fix(
   const T scalar) noexcept
 {
-  if (scalar >= 0.0) { return (Int)floor((double)scalar); }
+  if (scalar >= 0.0)
+  {
+    return (Int)floor((double)scalar);
+  }
   return (Int)ceil((double)scalar);
 }
+
 
 /**
  Equivalent to Matlab's sign. Returns 1 if the element
@@ -47,10 +59,17 @@ template<typename T>
 Int Sign(
   const T scalar) noexcept
 {
-  if (scalar == T(0.0)) { return 0; }
-  if (scalar > 0.0) { return 1; }
+  if (scalar == T(0.0))
+  {
+    return 0;
+  }
+  if (scalar > 0.0)
+  {
+    return 1;
+  }
   return -1;
 }
+
 
 inline bool IsApproximatelyEqual(
   size_t num_a,
@@ -67,10 +86,14 @@ T Rem(
   {
     return std::numeric_limits<T>::quiet_NaN();
   }
-  if (IsApproximatelyEqual(x, y, std::numeric_limits<T>::epsilon())) { return static_cast<T>(0.0); }
+  if (IsApproximatelyEqual(x, y, std::numeric_limits<T>::epsilon()))
+  {
+    return static_cast<T>(0.0);
+  }
   Int n = Fix(x / y);
   return x - ((T)n) * y;
 }
+
 
 template<typename T>
 T Floor(
@@ -80,6 +103,7 @@ T Floor(
   return std::floor(input);
 }
 
+
 /** Equivalent to Matlab's mod(scalar_a,scalar_b) */
 template<typename T>
 T Mod(
@@ -87,62 +111,112 @@ T Mod(
   const T y) noexcept
 {
   static_assert(! std::is_integral<T>::value);
-  if (IsApproximatelyEqual(y, 0, std::numeric_limits<T>::epsilon())) { return x; }
-  if (IsApproximatelyEqual(x, y, std::numeric_limits<T>::epsilon())) { return static_cast<T>(0.0); }
+  if (IsApproximatelyEqual(y, 0, std::numeric_limits<T>::epsilon()))
+  {
+    return x;
+  }
+  if (IsApproximatelyEqual(x, y, std::numeric_limits<T>::epsilon()))
+  {
+    return static_cast<T>(0.0);
+  }
   Int signum(Sign(x / y));
-  if (signum == 1 || signum == 0) { return Rem(x, y); }
+  if (signum == 1 || signum == 0)
+  {
+    return Rem(x, y);
+  }
   return Rem(x, y) + y;
 }
+
 
 template<>
 inline int Mod<int>(
   const int x,
   const int y) noexcept
 {
-  if (y == 0) { return x; }
-  if (x == y || x == -y) { return 0; }
+  if (y == 0)
+  {
+    return x;
+  }
+  if (x == y || x == -y)
+  {
+    return 0;
+  }
   int n(static_cast<int>(Fix(((double)x) / ((double)y))));
   int signum(static_cast<int>(Sign(((double)x) / ((double)y))));
-  if (signum == 1 || signum == 0) { return x - n * y; }
+  if (signum == 1 || signum == 0)
+  {
+    return x - n * y;
+  }
   return x - n * y + y;
 }
+
 
 template<>
 inline Int Mod<Int>(
   const Int x,
   const Int y) noexcept
 {
-  if (y == 0) { return x; }
-  if (x == y || x == -y) { return 0; }
+  if (y == 0)
+  {
+    return x;
+  }
+  if (x == y || x == -y)
+  {
+    return 0;
+  }
   Int n = Fix(((double)x) / ((double)y));
   Int signum(Sign(((double)x) / ((double)y)));
-  if (signum == 1 || signum == 0) { return x - n * y; }
+  if (signum == 1 || signum == 0)
+  {
+    return x - n * y;
+  }
   return x - n * y + y;
 }
 
+
 /** Equivalent to Matlab's abs(scalar) */
 inline double Abs(
-  double input) noexcept { return std::fabs(input); }
+  double input) noexcept
+{
+  return std::fabs(input);
+}
+
 
 /** Equivalent to Matlab's abs(scalar) */
 inline float Abs(
-  float input) noexcept { return std::abs(input); }
+  float input) noexcept
+{
+  return std::abs(input);
+}
+
 
 /** Equivalent to Matlab's abs(scalar) */
 template<typename T>
 T Abs(
-  const Complex<T> input) noexcept { return static_cast<T>(std::abs(input)); }
+  const Complex<T> input) noexcept
+{
+  return static_cast<T>(std::abs(input));
+}
+
 
 /** Power function. Equivalent to Matlab's input^exponent. */
 template<typename T>
 T Pow(
   T input,
-  T exponent) noexcept { return (T)pow((double)input, (double)exponent); }
+  T exponent) noexcept
+{
+  return (T)pow((double)input, (double)exponent);
+}
+
 
 /** Square root function. Equivalent to Matlab's sqrt(input) */
 template<typename T>
 T Sqrt(
-  T input) noexcept { return (T)sqrt((double)input); }
+  T input) noexcept
+{
+  return (T)sqrt((double)input);
+}
+
 
 /** Equivalent to Matlab's round(input). This is faster than the standard
  C++ round function, especially on Windows. Returns an integer. */
@@ -155,32 +229,53 @@ Int RoundToInt(
   return output;
 }
 
+
 /** Returns the conjugate of the element. Equivalent to Matlab's conj(scalar). */
 template<typename T>
 Complex<T> Conj(
-  const Complex<T>& scalar) noexcept { return Complex<T>(scalar.real(), -scalar.imag()); }
+  const Complex<T>& scalar) noexcept
+{
+  return Complex<T>(scalar.real(), -scalar.imag());
+}
+
 
 /** Returns the real part of a complex scalar. Equivalent to Matlab's 
  real(scalar). I am calling it `RealPart' since `T' denotes the number type */
 template<typename T>
 T RealPart(
-  const Complex<T>& scalar) noexcept { return scalar.real(); }
+  const Complex<T>& scalar) noexcept
+{
+  return scalar.real();
+}
+
 
 /** Returns the imaginary part of a complex scalar. Equivalent to Matlab's
  imag(scalar). I am calling it `ImagPart' for consistency with `RealPart' */
 template<typename T>
 T ImagPart(
-  const Complex<T>& scalar) noexcept { return scalar.imag(); }
+  const Complex<T>& scalar) noexcept
+{
+  return scalar.imag();
+}
+
 
 /** Equivalent to Matlab's nextpow2(input) */
 template<typename T>
 Int NextPow2(
-  const T input) noexcept { return static_cast<int>(std::ceil(log2(std::fabs((double)input)))); }
+  const T input) noexcept
+{
+  return static_cast<int>(std::ceil(log2(std::fabs((double)input))));
+}
+
 
 /** This returns the next power of 2. For instance 5=>8, 12=>16, 16=>16. */
 //template<typename T>
 inline Int Next2(
-  const Int input) noexcept { return static_cast<Int>(pow(2, NextPow2(input))); }
+  const Int input) noexcept
+{
+  return static_cast<Int>(pow(2, NextPow2(input)));
+}
+
 
 /** Converts a string to a double */
 inline double StringToDouble(
@@ -188,18 +283,26 @@ inline double StringToDouble(
 {
   std::istringstream i(s);
   double x;
-  if (!(i >> x)) { return 0; }
+  if (!(i >> x))
+  {
+    return 0;
+  }
   return x;
 }
+
 
 /** Equivalent to Matlab's factorial(input) */
 template<typename T>
 T Factorial(
   const T input) // TODO: inlining this is a bit dangerous
 {
-  if (input <= 1) { return 1; }
+  if (input <= 1)
+  {
+    return 1;
+  }
   return input * Factorial(input - 1);
 }
+
 
 /** Linear interpolation between two values */
 template<typename T>

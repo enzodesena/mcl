@@ -1,6 +1,9 @@
 # Mac OS X
 *.DS_Store
 
+.vs
+mcl.vcxproj.user
+
 # Xcode
 *.pbxuser
 *.mode1v3

@@ -23,6 +23,7 @@ public:
   virtual void Reset() noexcept = 0;
 };
 
+
 template<typename T>
 class DigitalFilter
 {
@@ -34,14 +35,17 @@ public:
   {
   }
 
+
   DigitalFilter(
     const DigitalFilter& x)
     : self_(x.self_->copy_())
   {
   }
 
+
   DigitalFilter(
     DigitalFilter&& x) noexcept = default;
+
 
   DigitalFilter& operator=(
     const DigitalFilter& x) noexcept
@@ -51,19 +55,34 @@ public:
     return *this;
   }
 
+
   /** Move assignment operator */
   DigitalFilter& operator=(
     DigitalFilter&& x) noexcept = default;
 
+
   void Filter(
     const Vector<double>& input,
-    Vector<double>& output) noexcept { self_->Filter_(input, output); }
+    Vector<double>& output) noexcept
+  {
+    self_->Filter_(input, output);
+  }
+
 
   void Filter(
     const Vector<float>& input,
-    Vector<float>& output) noexcept { self_->Filter_(input, output); }
+    Vector<float>& output) noexcept
+  {
+    self_->Filter_(input, output);
+  }
 
-  void Reset() noexcept { self_->Reset_(); }
+
+  void Reset() noexcept
+  {
+    self_->Reset_();
+  }
+
+
 private:
   struct DigitalFilterConcept
   {
@@ -75,10 +94,12 @@ private:
     virtual std::unique_ptr<DigitalFilterConcept> copy_() = 0;
   };
 
+
   template<typename DigitalFilterT>
   struct DigitalFilterModel final : DigitalFilterConcept
   {
     DigitalFilterT data_;
+
 
     DigitalFilterModel(
       DigitalFilterT x)
@@ -86,17 +107,31 @@ private:
     {
     }
 
-    std::unique_ptr<DigitalFilterConcept> copy_() override { return std::make_unique<DigitalFilterModel>(*this); }
+
+    std::unique_ptr<DigitalFilterConcept> copy_() override
+    {
+      return std::make_unique<DigitalFilterModel>(*this);
+    }
+
 
     void Filter_(
       const Vector<T>& input,
-      Vector<T>& output) noexcept override { data_.Filter(input, output); }
+      Vector<T>& output) noexcept override
+    {
+      data_.Filter(input, output);
+    }
 
-    void Reset_() noexcept override { data_.Reset(); }
+
+    void Reset_() noexcept override
+    {
+      data_.Reset();
+    }
   };
+
 
   std::unique_ptr<DigitalFilterConcept> self_; // Concept is filterable object
 };
+
 
 /** Filter bank abstract class */
 template<typename T>
@@ -117,6 +152,7 @@ public:
   virtual Int num_filters() = 0;
 };
 
+
 template<typename T>
 class GainFilter
 {
@@ -129,6 +165,7 @@ public:
   {
   }
 
+
   void Filter(
     const Vector<T>& input,
     Vector<T>& output) noexcept
@@ -136,6 +173,7 @@ public:
     ASSERT(input.size() == output.size());
     Multiply(input, gain_, output);
   }
+
 
   void Reset()
   {

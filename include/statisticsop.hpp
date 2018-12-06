@@ -17,7 +17,11 @@ namespace mcl
 template<typename T>
 /** Equivalent to Matlab's mean(input) */
 T Mean(
-  const Vector<T>& input) noexcept { return Sum(input) / ((T)input.size()); }
+  const Vector<T>& input) noexcept
+{
+  return Sum(input) / ((T)input.size());
+}
+
 
 /**
  Returns the geometric mean of the input vector. Equivalent
@@ -30,6 +34,7 @@ T Geomean(
   // TODO: Throw error for negative entries
   return Pow(Prod(input), 1.0 / ((T)input.size()));
 }
+
 
 /**
  Weighted mean. Not implemented in Matlab (but should be). The weights are
@@ -50,13 +55,18 @@ T Mean(
   return Sum(Multiply(input, normalised_weights));
 }
 
+
 /**
  Returns the standard deviation of the `input` vector. Equivalent to Matlab's
  std(input). This includes the correction for having an unbiased estimator.
  */
 template<typename T>
 T Std(
-  const Vector<T>& input) noexcept { return sqrt(Var(input)); }
+  const Vector<T>& input) noexcept
+{
+  return sqrt(Var(input));
+}
+
 
 /** Var (unbiased estimator) */
 template<typename T>
@@ -65,9 +75,13 @@ T Var(
 {
   T mean = Mean(input);
   T output(0.0);
-  for (size_t i = 0; i < input.size(); ++i) { output += pow(input[i] - mean, 2.0); }
+  for (size_t i = 0; i < input.size(); ++i)
+  {
+    output += pow(input[i] - mean, 2.0);
+  }
   return output / ((T)(input.size() - 1));
 }
+
 
 /** Weighted var (biased estimator) */
 template<typename T>
@@ -85,6 +99,7 @@ T Var(
   return (Sum(Multiply(norm_weights, temp)));
 }
 
+
 /** Returns the Pearson linear correlation between `vector_a` and `vector_b` */
 template<typename T>
 T Corr(
@@ -92,7 +107,8 @@ T Corr(
   const Vector<T>& y) noexcept
 {
   T pearson_num_lin = Sum
-  (mcl::Multiply
+  (
+    mcl::Multiply
     (
       AddScalar(x, -Mean(x)),
       AddScalar(y, -Mean(y))));
@@ -100,6 +116,7 @@ T Corr(
     sqrt(Sum(Pow(AddScalar(y, -Mean(y)), 2.0)));
   return pearson_num_lin / pearson_den_lin;
 }
+
 
 /**
  Calculates the entropy of a discreate random variable with given `pdf'.
@@ -115,6 +132,7 @@ T Entropy(
   return -Sum(Multiply(pdf, Log(pdf))) / log(base);
 }
 
+
 template<typename T>
 Matrix<T> Cov(
   const Vector<T>& x,
@@ -126,6 +144,7 @@ Matrix<T> Cov(
   return Cov(input);
 }
 
+
 template<typename T>
 Matrix<T> Cov(
   const Vector<Vector<T>>& input) noexcept
@@ -134,10 +153,14 @@ Matrix<T> Cov(
   Matrix<T> output(N, N);
   for (size_t i = 0; i < N; ++i)
   {
-    for (size_t j = 0; j < N; ++j) { output.SetElement(i, j, CovElement(input[i], input[j])); }
+    for (size_t j = 0; j < N; ++j)
+    {
+      output.SetElement(i, j, CovElement(input[i], input[j]));
+    }
   }
   return output;
 }
+
 
 template<typename T>
 T CovElement(

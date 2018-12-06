@@ -31,25 +31,46 @@ Int MinIndex(
   return min_index;
 }
 
+
 template<class T>
 T Min(
-  const Vector<T>& input) { return input[MinIndex(input)]; }
+  const Vector<T>& input)
+{
+  return input[MinIndex(input)];
+}
+
 
 template<class T>
 size_t MaxIndex(
-  const Vector<T>& input) noexcept { return MinIndex(Opposite(input)); }
+  const Vector<T>& input) noexcept
+{
+  return MinIndex(Opposite(input));
+}
+
 
 template<>
 inline size_t MaxIndex<UInt>(
-  const Vector<UInt>& input) noexcept { return MinIndex(Opposite(Cast<UInt,Int>(input))); }
+  const Vector<UInt>& input) noexcept
+{
+  return MinIndex(Opposite(Cast<UInt,Int>(input)));
+}
+
 
 template<>
 inline size_t MaxIndex<size_t>(
-  const Vector<size_t>& input) noexcept { return MinIndex(Opposite(Cast<size_t,Int>(input))); }
+  const Vector<size_t>& input) noexcept
+{
+  return MinIndex(Opposite(Cast<size_t,Int>(input)));
+}
+
 
 template<class T>
 T Max(
-  const Vector<T>& input) noexcept { return input[MaxIndex(input)]; }
+  const Vector<T>& input) noexcept
+{
+  return input[MaxIndex(input)];
+}
+
 
 //template<typename T>
 //inline Vector<size_t> FindPeaksIndexes(

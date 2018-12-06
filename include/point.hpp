@@ -21,6 +21,7 @@ public:
   {
   }
 
+
   /** Constructor with explicit definition of all coordinates. */
   Triplet(
     const T x,
@@ -32,32 +33,69 @@ public:
   {
   }
 
+
   // Getter methods.
-  T x() const noexcept { return x_; }
+  T x() const noexcept
+  {
+    return x_;
+  }
 
-  T y() const noexcept { return y_; }
 
-  T z() const noexcept { return z_; }
+  T y() const noexcept
+  {
+    return y_;
+  }
+
+
+  T z() const noexcept
+  {
+    return z_;
+  }
+
 
   void SetX(
-    const T value) noexcept { x_ = value; }
+    const T value) noexcept
+  {
+    x_ = value;
+  }
+
 
   void SetY(
-    const T value) noexcept { y_ = value; }
+    const T value) noexcept
+  {
+    y_ = value;
+  }
+
 
   void SetZ(
-    const T value) noexcept { z_ = value; }
+    const T value) noexcept
+  {
+    z_ = value;
+  }
+
 
   /** Returns the norm of the vector, or, in other words, the distance
    of the point from the origin (0,0,0) */
-  T norm() const noexcept { return sqrt(pow(x(), 2) + pow(y(), 2) + pow(z(), 2)); }
+  T norm() const noexcept
+  {
+    return sqrt(pow(x(), 2) + pow(y(), 2) + pow(z(), 2));
+  }
+
 
   /** Returns the angle formed with the z-axis */
-  T theta() const noexcept { return (T)acos(z() / norm()); }
+  T theta() const noexcept
+  {
+    return (T)acos(z() / norm());
+  }
+
 
   /** Returns the angle formed between the projection on the x-y axis and
    the x-axis */
-  T phi() const noexcept { return (Real)atan2(y(), x()); }
+  T phi() const noexcept
+  {
+    return (Real)atan2(y(), x());
+  }
+
 
   /** Modifies the point (i.e. vector) such that its norm is equal to 1. */
   void Normalize() noexcept
@@ -68,11 +106,13 @@ public:
     z_ = z_ / vector_norm;
   }
 
+
 private:
   T x_;
   T y_;
   T z_;
 };
+
 
 template<typename T>
 struct Point : public Triplet<T>
@@ -80,6 +120,7 @@ struct Point : public Triplet<T>
   Point() noexcept
   {
   }
+
 
   /** Constructor with explicit definition of all coordinates. */
   Point(
@@ -90,6 +131,7 @@ struct Point : public Triplet<T>
   {
   }
 };
+
 
 /**
  Rotates the reference system about the x-axis with the right-hand rule.
@@ -104,10 +146,12 @@ Point<T> RotateAboutX(
   T sin_angle = sin(angle);
 
   return Point
-  (point.x(),
-   point.y() * cos_angle + point.z() * (-sin_angle),
-   point.y() * (sin_angle) + point.z() * cos_angle);
+  (
+    point.x(),
+    point.y() * cos_angle + point.z() * (-sin_angle),
+    point.y() * (sin_angle) + point.z() * cos_angle);
 }
+
 
 /**
  Rotates the reference system about the y-axis with the right-hand rule.
@@ -122,10 +166,12 @@ Point<T> RotateAboutY(
   T sin_angle = sin(angle);
 
   return Point
-  (point.x() * cos_angle + point.z() * sin_angle,
-   point.y(),
-   point.x() * (-sin_angle) + point.z() * cos_angle);
+  (
+    point.x() * cos_angle + point.z() * sin_angle,
+    point.y(),
+    point.x() * (-sin_angle) + point.z() * cos_angle);
 }
+
 
 /**
  Rotates the reference system about the z-axis with the right-hand rule.
@@ -139,10 +185,12 @@ Point<T> RotateAboutZ(
   T cos_angle = cos(angle);
   T sin_angle = sin(angle);
   return Point
-  (point.x() * cos_angle + point.y() * (-sin_angle),
-   point.x() * sin_angle + point.y() * cos_angle,
-   point.z());
+  (
+    point.x() * cos_angle + point.y() * (-sin_angle),
+    point.x() * sin_angle + point.y() * cos_angle,
+    point.z());
 }
+
 
 /**
  Rotates the reference system with euler angles. Convention is ZYX with
@@ -161,13 +209,16 @@ Point<T> Rotate(
   return rotated_about_x;
 }
 
+
 template<typename T>
 T DotProduct(
   const Point<T>& point_a,
   const Point<T>& point_b) noexcept
 {
-  return point_a.x() * point_b.x() + point_a.y() * point_b.y() + point_a.z() * point_b.z();
+  return point_a.x() * point_b.x() + point_a.y() * point_b.y() + point_a.z() *
+    point_b.z();
 }
+
 
 template<typename T>
 T Distance(
@@ -181,6 +232,7 @@ T Distance(
     point_a.z() - point_b.z());
   return point.norm();
 }
+
 
 template<typename T>
 T Theta(
@@ -196,6 +248,7 @@ T Theta(
   return point.theta();
 }
 
+
 template<typename T>
 T Phi(
   const Point<T>& point_a,
@@ -210,6 +263,7 @@ T Phi(
   return point.phi();
 }
 
+
 template<typename T>
 T AngleBetweenDirections(
   T theta_a,
@@ -217,10 +271,13 @@ T AngleBetweenDirections(
   T theta_b,
   T phi_b) noexcept
 {
-  Point point_a(sin(theta_a) * cos(phi_a), sin(theta_a) * sin(phi_a), cos(theta_a));
-  Point point_b(sin(theta_b) * cos(phi_b), sin(theta_b) * sin(phi_b), cos(theta_b));
+  Point point_a(
+    sin(theta_a) * cos(phi_a), sin(theta_a) * sin(phi_a), cos(theta_a));
+  Point point_b(
+    sin(theta_b) * cos(phi_b), sin(theta_b) * sin(phi_b), cos(theta_b));
   return acos(DotProduct(point_a, point_b));
 }
+
 
 template<typename T>
 T AngleBetweenPoints(
@@ -231,6 +288,7 @@ T AngleBetweenPoints(
   point_b.Normalize();
   return acos(DotProduct(point_a, point_b));
 }
+
 
 /**
  Contructs a point from spherical coordinates, with (r, 0, 0) corresponding
@@ -248,6 +306,7 @@ Point<T> PointSpherical(
   return Point(x, y, z);
 }
 
+
 /**
  This returns the point on the line between `point_a` and `point_b` which
  has a distance of `distance` from `point_a`
@@ -259,9 +318,11 @@ Point<T> PointOnLine(
   const T distance) noexcept
 {
   Point point_centered = Subtract(point_b, point_a);
-  Point out_point_centered = PointSpherical(distance, point_centered.theta(), point_centered.phi());
+  Point out_point_centered = PointSpherical(
+    distance, point_centered.theta(), point_centered.phi());
   return Sum(out_point_centered, point_a);
 }
+
 
 /** Sums the coordinates of `point_a` and `point_b` */
 template<typename T>
@@ -276,6 +337,7 @@ Point<T> Sum(
     point_a.z() + point_b.z());
 }
 
+
 /** Subtracts the coordinates of `point_a` from `point_b` (point_a-point_b) */
 template<typename T>
 Point<T> Subtract(
@@ -288,6 +350,7 @@ Point<T> Subtract(
     point_a.y() - point_b.y(),
     point_a.z() - point_b.z());
 }
+
 
 /**
  Multiplies all coordinates by given constant. Has the effect of changing
@@ -305,6 +368,7 @@ Point<T> Multiply(
     point.z() * constant);
 }
 
+
 /**
  Constructs a vector that is the the projection of the input `vector`
  on the plane (passing through the origin) identified by the vector
@@ -317,12 +381,14 @@ Point<T> Projection(
 {
   Point normalised_plane_normal_vector = Normalized(plane_normal_vector);
   return Subtract
-  (vector,
-   Multiply
-   (
-     normalised_plane_normal_vector,
-     DotProduct(vector, normalised_plane_normal_vector)));
+  (
+    vector,
+    Multiply
+    (
+      normalised_plane_normal_vector,
+      DotProduct(vector, normalised_plane_normal_vector)));
 }
+
 
 /**
  Returns a new point that is a normalized (norm == 1) version of `point`.
@@ -334,6 +400,7 @@ Point<T> Normalized(
   point.Normalize();
   return point;
 }
+
 
 /**
  Returns whther or not an intersection between a plane and a line exists. 
@@ -354,8 +421,9 @@ bool IntersectionPlaneLineExists(
 {
   // TODO: find a way to avoid rewriting this calculation in the next function
   T numerator = DotProduct
-  (Subtract(plane_point, line_point),
-   plane_normal);
+  (
+    Subtract(plane_point, line_point),
+    plane_normal);
   T denominator = DotProduct(line_direction, plane_normal);
 
   bool zero_numerator = IsEqual(numerator, 0.0);
@@ -371,6 +439,7 @@ bool IntersectionPlaneLineExists(
   // numerator is not = 0.
   return ! (zero_denominator & ! zero_numerator);
 }
+
 
 /**
  Returns the intersection point between a plane and a line. The line is
@@ -393,20 +462,29 @@ Point<T> IntersectionPlaneLine(
   const Point<T>& plane_normal) noexcept
 {
   if (! IntersectionPlaneLineExists
-    (line_point,
-     line_direction,
-     plane_point,
-     plane_normal)) { return Point<double>(NAN, NAN, NAN); }
+    (
+      line_point,
+      line_direction,
+      plane_point,
+      plane_normal))
+  {
+    return Point<double>(NAN, NAN, NAN);
+  }
 
   T d = DotProduct
-    (Subtract(plane_point, line_point),
-     plane_normal) /
+    (
+      Subtract(plane_point, line_point),
+      plane_normal) /
     DotProduct(line_direction, plane_normal);
 
   // if line and plane are parallel, and line is contained in plane
-  if (IsNan(d)) { return line_point; }
+  if (IsNan(d))
+  {
+    return line_point;
+  }
   return Sum(Multiply(line_direction, d), line_point);
 }
+
 
 template<typename T>
 bool IsApproximatelyEqual(
@@ -420,6 +498,7 @@ bool IsApproximatelyEqual(
     mcl::IsApproximatelyEqual(point_a.z(), point_b.z(), precision);
 }
 
+
 template<typename T>
 bool IsEqual(
   const Point<T>& point_a,
@@ -431,14 +510,24 @@ bool IsEqual(
     point_a.z() == point_b.z();
 }
 
+
 template<typename T>
 bool IsEqual(
   const Vector<Point<T>>& points_a,
   const Vector<Point<T>>& points_b) noexcept
 {
   const Int num_points = (Int)points_a.size();
-  if (num_points != (Int)points_b.size()) { return false; }
-  for (Int i = 0; i < num_points; ++i) { if (! IsEqual(points_a[i], points_b[i])) { return false; } }
+  if (num_points != (Int)points_b.size())
+  {
+    return false;
+  }
+  for (Int i = 0; i < num_points; ++i)
+  {
+    if (! IsEqual(points_a[i], points_b[i]))
+    {
+      return false;
+    }
+  }
   return true;
 }
 } // namespace mcl

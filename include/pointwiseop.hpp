@@ -23,14 +23,22 @@ void ForEach(
   ASSERT(input_vector.size() == output_vector.size());
   auto input_iter = input_vector.begin();
   auto output_iter = output_vector.begin();
-  while (input_iter != input_vector.end()) { *(output_iter++) = operation(*(input_iter++)); }
+  while (input_iter != input_vector.end())
+  {
+    *(output_iter++) = operation(*(input_iter++));
+  }
 }
+
 
 template<typename T>
 void ForEach(
   Vector<T>& vector,
   std::function<T(
-    T)> operation) noexcept { ForEach(vector, operation, vector); }
+    T)> operation) noexcept
+{
+  ForEach(vector, operation, vector);
+}
+
 
 template<typename T>
 void ForEach(
@@ -46,8 +54,13 @@ void ForEach(
   auto input_a_iter = input_a.begin();
   auto input_b_iter = input_b.begin();
   auto output_iter = output.begin();
-  while (output_iter != output.end()) { *(output_iter++) = pointwise_operation(*(input_a_iter++), *(input_b_iter++)); }
+  while (output_iter != output.end())
+  {
+    *(output_iter++) = pointwise_operation(
+      *(input_a_iter++), *(input_b_iter++));
+  }
 }
+
 
 /** Fall-back multiply by a constant in case of no available optimisations. */
 template<typename T>
@@ -66,6 +79,7 @@ void MultiplySerial(
   }
 }
 
+
 //template<typename T>
 //inline void ForEach(
 //  const Vector<T>& input_a,
@@ -81,16 +95,18 @@ void MultiplySerial(
   Vector<T>& output) noexcept
 {
   ForEach<T>
-  (input_a,
-   input_b,
-   [](
-   T a,
-   T b)
-   {
-     return a * b;
-   },
-   output);
+  (
+    input_a,
+    input_b,
+    [](
+    T a,
+    T b)
+    {
+      return a * b;
+    },
+    output);
 }
+
 
 /**
  Returns the point by point multiplication of the two vectors.
@@ -107,6 +123,7 @@ Vector<T> MultiplySerial(
 
   return output;
 }
+
 
 template<typename T>
 void MultiplyAddSerial(
@@ -127,6 +144,7 @@ void MultiplyAddSerial(
   }
 }
 
+
 /**
  Returns the point by point addition of the two vectors.
  Equivalent to Matlab's vector_a+vector_b.
@@ -142,8 +160,12 @@ void AddSerial(
   auto input_a_iter = input_a.begin();
   auto input_b_iter = input_b.begin();
   auto output_iter = output.begin();
-  while (output_iter != output.end()) { *(output_iter++) = *(input_a_iter++) + *(input_b_iter++); }
+  while (output_iter != output.end())
+  {
+    *(output_iter++) = *(input_a_iter++) + *(input_b_iter++);
+  }
 }
+
 
 template<typename T>
 void ForEach(
@@ -155,8 +177,12 @@ void ForEach(
   ASSERT(input_vector.size() == output_vector.size());
   auto input_iter = input_vector.begin();
   auto output_iter = output_vector.begin();
-  while (input_iter != input_vector.end()) { *(output_iter++) = operation(*(input_iter++)); }
+  while (input_iter != input_vector.end())
+  {
+    *(output_iter++) = operation(*(input_iter++));
+  }
 }
+
 
 /** Returns the opposite vector.Equivalent to Matlab's -vector. */
 template<typename T>
@@ -179,6 +205,7 @@ Vector<T> Opposite(
   return std::move(output);
 }
 
+
 /** Returns the inverse vector.Equivalent to Matlab's 1./vector. */
 template<typename T>
 Vector<T> Inverse(
@@ -195,6 +222,7 @@ Vector<T> Inverse(
   return std::move(output);
 }
 
+
 template<typename T>
 Vector<T> HalfWave(
   const Vector<T>& input) noexcept
@@ -209,6 +237,7 @@ Vector<T> HalfWave(
   ForEach(input, operation, output);
   return output;
 }
+
 
 template<typename T>
 Vector<T> Cos(
@@ -225,6 +254,7 @@ Vector<T> Cos(
   return output;
 }
 
+
 template<typename T>
 Vector<T> Sin(
   const Vector<T>& input) noexcept
@@ -240,6 +270,7 @@ Vector<T> Sin(
   return output;
 }
 
+
 /**
  Returns the point by point multiplication of the two vectors.
  Equivalent to Matlab's vector_a.*vector_b.
@@ -251,9 +282,13 @@ Vector<T> Divide(
 {
   ASSERT(vector_a.size() == vector_b.size());
   Vector<T> output((Int)vector_a.size());
-  for (Int i = 0; i < (Int)vector_a.size(); ++i) { output[i] = vector_a[i] / vector_b[i]; }
+  for (Int i = 0; i < (Int)vector_a.size(); ++i)
+  {
+    output[i] = vector_a[i] / vector_b[i];
+  }
   return output;
 }
+
 
 //
 /** Equivalent to Matlab's exp(vector). */
@@ -263,9 +298,13 @@ Vector<T> Exp(
 {
   Int n(vector.size());
   Vector<T> output(vector.size());
-  for (Int i = 0; i < n; ++i) { output[i] = exp(vector[i]); }
+  for (Int i = 0; i < n; ++i)
+  {
+    output[i] = exp(vector[i]);
+  }
   return output;
 }
+
 
 /**
  Returns the vector with conjugate entries.
@@ -287,6 +326,7 @@ Vector<Complex<T>> Conj(
   return std::move(output);
 }
 
+
 /** Equivalent to Matlab's real(input). */
 template<typename T>
 Vector<T> RealPart(
@@ -303,6 +343,7 @@ Vector<T> RealPart(
   return std::move(output);
 }
 
+
 /** Equivalent to Matlab's imag(input). */
 template<typename T>
 Vector<T> Imag(
@@ -312,6 +353,7 @@ Vector<T> Imag(
   ForEach(input, &std::imag, output);
   return std::move(output);
 }
+
 
 /**
  Returns the point-wise poser to exponent.
@@ -323,9 +365,13 @@ Vector<T> Pow(
   const T exponent) noexcept
 {
   Vector<T> output(input.size());
-  for (size_t i = 0; i < input.size(); ++i) { output[i] = Pow(input[i], exponent); }
+  for (size_t i = 0; i < input.size(); ++i)
+  {
+    output[i] = Pow(input[i], exponent);
+  }
   return std::move(output);
 }
+
 
 /** Equivalent to Matlab's abs(vector) */
 
@@ -337,6 +383,7 @@ inline Vector<double> Abs(
   return output;
 }
 
+
 /** Equivalent to Matlab's abs(vector) */
 
 inline Vector<float> Abs(
@@ -346,6 +393,7 @@ inline Vector<float> Abs(
   ForEach(input, &std::abs, output);
   return output;
 }
+
 
 /** Equivalent to Matlab's abs(vector) */
 template<typename T>
@@ -362,6 +410,7 @@ Vector<double> Abs(
   ForEach<Complex<T>,T>(input, operation, output);
   return std::move(output);
 }
+
 
 //
 ///** Equivalent to Matlab's vector.*(vector>0) */
@@ -382,9 +431,13 @@ Vector<T> Log(
   const Vector<T>& vector) noexcept
 {
   Vector<T> output(vector.size());
-  for (size_t i = 0; i < vector.size(); ++i) { output[i] = log(vector[i]); }
+  for (size_t i = 0; i < vector.size(); ++i)
+  {
+    output[i] = log(vector[i]);
+  }
   return output;
 }
+
 
 /**
  Returns the 10-base logarithm of the elements of vector.
@@ -395,7 +448,10 @@ Vector<T> Log10(
   const Vector<T>& vector) noexcept
 {
   Vector<T> output(vector.size());
-  for (size_t i = 0; i < vector.size(); ++i) { output[i] = log10(vector[i]); }
+  for (size_t i = 0; i < vector.size(); ++i)
+  {
+    output[i] = log10(vector[i]);
+  }
   return output;
 }
 } /**< namespace mcl */

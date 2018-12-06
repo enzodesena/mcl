@@ -9,7 +9,8 @@
 #pragma once
 
 template<class T>
-constexpr T pi_const = T(3.141592653589793238462643383279502884197169399375105820974944);
+constexpr T pi_const = T(
+  3.141592653589793238462643383279502884197169399375105820974944);
 
 #ifndef PI
 #define PI 3.141592653589793238462643383279502884197169399375105820974944
@@ -65,7 +66,9 @@ constexpr T pi_const = T(3.14159265358979323846264338327950288419716939937510582
 #define MCL_MAX_VLA_LENGTH 16384
 
 #if MCL_ENVWINDOWS
-#define MCL_STACK_ALLOCATE(type, variable, size) type* variable = (type*)alloca((size)*sizeof(type));
+#define MCL_STACK_ALLOCATE(type, variable, size
+)
+type* variable = (type*)alloca((size) * sizeof(type));
 #else
   #define MCL_STACK_ALLOCATE(type, variable, size) type variable[(size)];
 #endif
@@ -102,6 +105,7 @@ public:
     return instance;
   }
 
+
   bool IsAvxSupported()
   {
 #if defined(MCL_ENVWINDOWS)
@@ -112,7 +116,10 @@ public:
       if (cpu_info[0] >= 1)
       {
         __cpuidex(cpu_info, 1, 0);
-        if ((cpu_info[2] & (1 << 28)) != 0) { avx_supported_ = true; }
+        if ((cpu_info[2] & (1 << 28)) != 0)
+        {
+          avx_supported_ = true;
+        }
       }
       system_has_been_polled_ = true;
     }
@@ -120,10 +127,12 @@ public:
     return avx_supported_;
   }
 
+
 private:
   bool avx_supported_ = false;
   bool system_has_been_polled_ = false;
 };
+
 
 /** Singleton logger class */
 class Logger
@@ -135,6 +144,7 @@ public:
     return instance;
   }
 
+
   enum OutputType
   {
     kNone,
@@ -142,16 +152,28 @@ public:
     kOutputFile
   };
 
-  void LogErrorToCerr(
-    std::string output) { std::cerr << output << std::endl; }
 
   void LogErrorToCerr(
-    const char* output) { std::cerr << output << std::endl; }
+    std::string output)
+  {
+    std::cerr << output << std::endl;
+  }
+
+
+  void LogErrorToCerr(
+    const char* output)
+  {
+    std::cerr << output << std::endl;
+  }
+
 
   void LogError(
     const char* format)
   {
-    if (output_type_ == kNone) { return; }
+    if (output_type_ == kNone)
+    {
+      return;
+    }
 
     const size_t SIZE = snprintf(nullptr, 0, "%s", format);
 
@@ -159,7 +181,10 @@ public:
     output.resize(SIZE + 1);
     snprintf(&(output[0]), SIZE + 1, "%s", format);
 
-    if (output_type_ == kCerr) { std::cerr << output << std::endl; }
+    if (output_type_ == kCerr)
+    {
+      std::cerr << output << std::endl;
+    }
     else if (output_type_ == kOutputFile)
     {
       log_string_.append("\n");
@@ -167,12 +192,16 @@ public:
     }
   }
 
+
   template<typename... argv>
   void LogError(
     const char* format,
     argv ... args)
   {
-    if (output_type_ == kNone) { return; }
+    if (output_type_ == kNone)
+    {
+      return;
+    }
 
     const size_t SIZE = snprintf(nullptr, 0, format, args...);
 
@@ -180,7 +209,10 @@ public:
     output.resize(SIZE + 1);
     snprintf(&(output[0]), SIZE + 1, format, args...);
 
-    if (output_type_ == kCerr) { std::cerr << output << std::endl; }
+    if (output_type_ == kCerr)
+    {
+      std::cerr << output << std::endl;
+    }
     else if (output_type_ == kOutputFile)
     {
       log_string_.append("\n");
@@ -188,11 +220,20 @@ public:
     }
   }
 
+
   void SetOutputType(
-    OutputType output_type) { output_type_ = output_type; }
+    OutputType output_type)
+  {
+    output_type_ = output_type;
+  }
+
 
   void SetOutputFile(
-    const std::string& log_output_file) { log_output_file_ = log_output_file; }
+    const std::string& log_output_file)
+  {
+    log_output_file_ = log_output_file;
+  }
+
 
 private:
   Logger()
@@ -200,6 +241,7 @@ private:
     , log_output_file_("err.log")
   {
   }
+
 
   ~Logger()
   {
@@ -212,6 +254,7 @@ private:
     }
   }
 
+
   Logger(
     const Logger&) = delete;
   const Logger& operator=(
@@ -223,6 +266,7 @@ private:
   std::string log_output_file_;
 };
 
+
 /** Enum describing whether we are using a right handed or left handed
  reference system. */
 enum Handedness
@@ -230,6 +274,7 @@ enum Handedness
   kRightHanded,
   kLeftHanded
 };
+
 
 /** This enum is related to the frequencye absorption characteristics of
  the different walls.  */
