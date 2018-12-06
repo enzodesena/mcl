@@ -26,8 +26,12 @@ public:
   {
     Int size = B_.size();
     state_ = Vector<T>(size);
-    for (Int i = 0; i < size; ++i) { state_[i] = 0.0; }
+    for (Int i = 0; i < size; ++i)
+    {
+      state_[i] = 0.0;
+    }
   }
+
 
   /** 
    Constructs an IIR filter (II-type direct implementation). B and A are numerator
@@ -52,8 +56,12 @@ public:
 
     Int size = B.size();
     state_ = Vector<T>(size);
-    for (Int i = 0; i < size; ++i) { state_[i] = 0.0; }
+    for (Int i = 0; i < size; ++i)
+    {
+      state_[i] = 0.0;
+    }
   }
+
 
   /** 
    Returns the output of the filter for an input equal to `input`.
@@ -66,7 +74,10 @@ public:
     const T input) noexcept
   {
     // Speed up return for simple gain filters
-    if (B_.size() == 1) { return input * B_[0]; }
+    if (B_.size() == 1)
+    {
+      return input * B_[0];
+    }
     size_t size = B_.size();
     ASSERT(size >= 1);
     T v = input; // The temporary value in the recursive branch.
@@ -79,20 +90,31 @@ public:
       v += state_[i - 1] * (-A_[i]);
       output += state_[i - 1] * B_[i];
     }
-    for (size_t i = (size - 1); i >= 1; --i) { state_[i] = state_[i - 1]; }
+    for (size_t i = (size - 1); i >= 1; --i)
+    {
+      state_[i] = state_[i - 1];
+    }
     state_[0] = v;
     output += v * B_[0];
     return output;
   }
 
+
   T Filter(
-    const T input) noexcept { return FilterSample(input); }
+    const T input) noexcept
+  {
+    return FilterSample(input);
+  }
+
 
   void Filter(
     const Vector<T>& input,
     Vector<T>& output) noexcept override
   {
-    if (B_.size() == 1) { Multiply(input, B_[0], output); }
+    if (B_.size() == 1)
+    {
+      Multiply(input, B_[0], output);
+    }
     else
     {
       ForEach<T,T>
@@ -107,6 +129,7 @@ public:
     }
   }
 
+
   Vector<T> Filter(
     const Vector<T>& input) noexcept
   {
@@ -115,8 +138,13 @@ public:
     return std::move(output);
   }
 
+
   /** Returns the order of the filter. */
-  Int order() const noexcept { return Max(B_.size(), A_.size()) - 1; }
+  Int order() const noexcept
+  {
+    return Max(B_.size(), A_.size()) - 1;
+  }
+
 
   /** 
    Updates the filter coefficients. May cause articafts if the coefficients are
@@ -134,6 +162,7 @@ public:
     A0_ = A[0];
   }
 
+
   /** Sets the coefficients as identical to those of another filter. */
   void SetCoefficients(
     const IirFilter& other_filter) noexcept
@@ -148,6 +177,7 @@ public:
     }
   }
 
+
   T GetNumeratorCoefficient(
     const size_t coeff_id) const noexcept
   {
@@ -155,8 +185,13 @@ public:
     return B_[coeff_id] * A0_;
   }
 
+
   T GetDenominatorCoefficient(
-    const size_t coeff_id) const noexcept { return A_.at(coeff_id); }
+    const size_t coeff_id) const noexcept
+  {
+    return A_.at(coeff_id);
+  }
+
 
   void SetNumeratorCoefficient(
     const size_t coeff_id,
@@ -166,14 +201,19 @@ public:
     B_[coeff_id] = value / A0_;
   }
 
+
   void SetDenominatorCoefficient(
     const size_t coeff_id,
     const T value) noexcept
   {
     ASSERT(coeff_id >= 0 &&coeff_id<(Int)A_.size());
     A_[coeff_id] = value;
-    if (coeff_id == 0) { A0_ = value; }
+    if (coeff_id == 0)
+    {
+      A0_ = value;
+    }
   }
+
 
   /** Returns the forward coefficients */
   Vector<T> B() const
@@ -182,6 +222,7 @@ public:
     return Multiply(B_, A0_);
   }
 
+
   /** Returns the backward coefficients */
   Vector<T> A() const
   {
@@ -189,7 +230,12 @@ public:
     return Multiply(A_, A0_);
   }
 
-  void Reset() noexcept override { SetToZero(state_); }
+
+  void Reset() noexcept override
+  {
+    SetToZero(state_);
+  }
+
 
 private:
   Vector<T> B_;
@@ -201,6 +247,7 @@ private:
 
   Vector<T> state_;
 };
+
 
 /** Filter bank abstract class */
 template<typename T>
@@ -216,7 +263,12 @@ public:
   {
   }
 
-  Int num_filters() noexcept override { return filters_.size(); }
+
+  Int num_filters() noexcept override
+  {
+    return filters_.size();
+  }
+
 
   /** Returns the output of the filter bank for an input equal to `input`. */
   Vector<T> Filter(
@@ -224,9 +276,13 @@ public:
   {
     const size_t N = filters_.size();
     Vector<T> outputs(N);
-    for (size_t i = 0; i < N; ++i) { outputs[i] = filters_[i].Filter(input); }
+    for (size_t i = 0; i < N; ++i)
+    {
+      outputs[i] = filters_[i].Filter(input);
+    }
     return outputs;
   }
+
 
   /** Returns the output of the filter bank for a given input. */
   Vector<Vector<T>>
@@ -235,13 +291,24 @@ public:
   {
     const size_t N = filters_.size();
     Vector<Vector<T>> outputs(N);
-    for (size_t i = 0; i < N; ++i) { outputs[i] = filters_[i].Filter(input); }
+    for (size_t i = 0; i < N; ++i)
+    {
+      outputs[i] = filters_[i].Filter(input);
+    }
     return outputs;
   }
 
+
   /** Resets the state of the filter */
-  void Reset() override { for (size_t i = 0; i < filters_.size(); ++i) { filters_[i].Reset(); } }
+  void Reset() override
+  {
+    for (size_t i = 0; i < filters_.size(); ++i)
+    {
+      filters_[i].Reset();
+    }
+  }
 };
+
 
 //
 //  /** Implements a first-order IIR low-pass filter with a given decay constant. */
@@ -312,10 +379,11 @@ IirFilter<T> WallFilter(
   if (! IsEqual(sampling_frequency, 44100))
   {
     Logger::GetInstance().LogError
-    ("Attempting to use a wall filter "
-     "designed for 44100 Hz sampling frequency with a sampling frequency "
-     "of %f Hz. The filter response will be inaccurate.",
-     sampling_frequency);
+    (
+      "Attempting to use a wall filter "
+      "designed for 44100 Hz sampling frequency with a sampling frequency "
+      "of %f Hz. The filter response will be inaccurate.",
+      sampling_frequency);
   }
 
   Vector<T> B;
@@ -324,91 +392,93 @@ IirFilter<T> WallFilter(
   switch (wall_type)
   {
   case kRigid:
-    {
-      B[0] = 1.0;
-      A[0] = 1.0;
-      break;
-    }
+  {
+    B[0] = 1.0;
+    A[0] = 1.0;
+    break;
+  }
   case kCarpetPile:
-    {
-      // B_carpet_pile=[0.562666833756030  -1.032627191365576   0.469961155406544];
-      // A_carpet_pile=[1.000000000000000  -1.896102349247713   0.896352947528892];
-      Vector<T> B_(3);
-      Vector<T> A_(3);
-      B_[0] = 0.562666833756030;
-      B_[1] = -1.03262719136557;
-      B_[2] = 0.469961155406544;
-      A_[0] = 1.000000000000000;
-      A_[1] = -1.896102349247713;
-      A_[2] = 0.896352947528892;
-      B = B_;
-      A = A_;
-      break;
-    }
+  {
+    // B_carpet_pile=[0.562666833756030  -1.032627191365576   0.469961155406544];
+    // A_carpet_pile=[1.000000000000000  -1.896102349247713   0.896352947528892];
+    Vector<T> B_(3);
+    Vector<T> A_(3);
+    B_[0] = 0.562666833756030;
+    B_[1] = -1.03262719136557;
+    B_[2] = 0.469961155406544;
+    A_[0] = 1.000000000000000;
+    A_[1] = -1.896102349247713;
+    A_[2] = 0.896352947528892;
+    B = B_;
+    A = A_;
+    break;
+  }
   case kCarpetCotton:
-    {
-      // B_carpet_cotton = [0.687580695329600  -1.920746652319969   1.789915765926473  -0.556749690855965];
-      // A_carpet_cotton = [1.000000000000000  -2.761840732459190   2.536820778736938  -0.774942833868750];
-      Vector<T> B_(4);
-      Vector<T> A_(4);
-      B_[0] = 0.687580695329600;
-      B_[1] = -1.920746652319969;
-      B_[2] = 1.789915765926473;
-      B_[3] = -0.556749690855965;
-      A_[0] = 1.000000000000000;
-      A_[1] = -2.761840732459190;
-      A_[2] = 2.536820778736938;
-      A_[3] = -0.774942833868750;
-      B = B_;
-      A = A_;
-      break;
-    }
+  {
+    // B_carpet_cotton = [0.687580695329600  -1.920746652319969   1.789915765926473  -0.556749690855965];
+    // A_carpet_cotton = [1.000000000000000  -2.761840732459190   2.536820778736938  -0.774942833868750];
+    Vector<T> B_(4);
+    Vector<T> A_(4);
+    B_[0] = 0.687580695329600;
+    B_[1] = -1.920746652319969;
+    B_[2] = 1.789915765926473;
+    B_[3] = -0.556749690855965;
+    A_[0] = 1.000000000000000;
+    A_[1] = -2.761840732459190;
+    A_[2] = 2.536820778736938;
+    A_[3] = -0.774942833868750;
+    B = B_;
+    A = A_;
+    break;
+  }
   case kWallBricks:
-    {
-      // B_wall=[0.978495798553620  -1.817487798457697   0.839209660516074];
-      // A_wall=[1.000000000000000  -1.858806492488240   0.859035906864860];
-      Vector<T> B_(3);
-      Vector<T> A_(3);
-      B_[0] = 0.978495798553620;
-      B_[1] = -1.817487798457697;
-      B_[2] = 0.839209660516074;
-      A_[0] = 1.000000000000000;
-      A_[1] = -1.858806492488240;
-      A_[2] = 0.859035906864860;
-      B = B_;
-      A = A_;
-      break;
-    }
+  {
+    // B_wall=[0.978495798553620  -1.817487798457697   0.839209660516074];
+    // A_wall=[1.000000000000000  -1.858806492488240   0.859035906864860];
+    Vector<T> B_(3);
+    Vector<T> A_(3);
+    B_[0] = 0.978495798553620;
+    B_[1] = -1.817487798457697;
+    B_[2] = 0.839209660516074;
+    A_[0] = 1.000000000000000;
+    A_[1] = -1.858806492488240;
+    A_[2] = 0.859035906864860;
+    B = B_;
+    A = A_;
+    break;
+  }
   case kCeilingTile:
-    {
-      // B_ceiling=[0.168413736374283  -0.243270224986791   0.074863520490536];
-      // A_ceiling=[1.000000000000000  -1.845049094190385   0.845565720138466];
-      Vector<T> B_(3);
-      Vector<T> A_(3);
-      B_[0] = 0.168413736374283;
-      B_[1] = -0.243270224986791;
-      B_[2] = 0.074863520490536;
-      A_[0] = 1.000000000000000;
-      A_[1] = -1.845049094190385;
-      A_[2] = 0.845565720138466;
-      B = B_;
-      A = A_;
-      break;
-    }
+  {
+    // B_ceiling=[0.168413736374283  -0.243270224986791   0.074863520490536];
+    // A_ceiling=[1.000000000000000  -1.845049094190385   0.845565720138466];
+    Vector<T> B_(3);
+    Vector<T> A_(3);
+    B_[0] = 0.168413736374283;
+    B_[1] = -0.243270224986791;
+    B_[2] = 0.074863520490536;
+    A_[0] = 1.000000000000000;
+    A_[1] = -1.845049094190385;
+    A_[2] = 0.845565720138466;
+    B = B_;
+    A = A_;
+    break;
+  }
   default:
-    {
-      Logger::GetInstance().LogError("Unrecognised type of wall filter. Reverting to a completely absorptive one.");
-      Vector<T> B_(1);
-      Vector<T> A_(1);
-      B_[0] = 0.0;
-      A_[0] = 1.0;
-      B = B_;
-      A = A_;
-      break;
-    }
+  {
+    Logger::GetInstance().LogError(
+      "Unrecognised type of wall filter. Reverting to a completely absorptive one.");
+    Vector<T> B_(1);
+    Vector<T> A_(1);
+    B_[0] = 0.0;
+    A_[0] = 1.0;
+    B = B_;
+    A = A_;
+    break;
+  }
   }
   return IirFilter<T>(B, A);
 }
+
 
 /** Returns a pinkifier filter */
 template<typename T>

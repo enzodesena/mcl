@@ -31,17 +31,24 @@ private:
   size_t update_length_;
   bool updating_;
 
+
   void GetExtendedInput(
     const Vector<T>& input,
     Vector<T>& extended_input) noexcept
   {
     // Stage 1
-    for (size_t i = 0; i < counter_; ++i) { extended_input[i] = delay_line_[counter_ - i - 1]; }
+    for (size_t i = 0; i < counter_; ++i)
+    {
+      extended_input[i] = delay_line_[counter_ - i - 1];
+    }
 
     // Stage 2
     // Starting from counter_ in padded_data
     // Ending in counter_+(length_-counter_-1)
-    for (size_t i = counter_; i < (length_ - 1); ++i) { extended_input[i] = delay_line_[length_ - 1 - (i - counter_)]; }
+    for (size_t i = counter_; i < (length_ - 1); ++i)
+    {
+      extended_input[i] = delay_line_[length_ - 1 - (i - counter_)];
+    }
 
     // Stage 3
     // Append input signal
@@ -50,6 +57,7 @@ private:
       extended_input[i] = input[i - (length_ - 1)];
     }
   }
+
 
   /** Method called to slowly update the filter coefficients. It is called
    every time one of the Filter method is called and is activated only
@@ -73,9 +81,16 @@ private:
     // coefficients_ = mcl::Add(mcl::Multiply(impulse_response_, weight_new),
     //                          mcl::Multiply(impulse_response_old_, weight_old));
 
-    if (update_index_ == update_length_) { updating_ = false; }
-    else { update_index_++; }
+    if (update_index_ == update_length_)
+    {
+      updating_ = false;
+    }
+    else
+    {
+      update_index_++;
+    }
   }
+
 
 public:
   /** Constructs a default FIR filter, i.e. identical filter */
@@ -88,7 +103,11 @@ public:
     , impulse_response_old_(mcl::UnaryVector<T>(1.0))
     , update_index_(0)
     , update_length_(0)
-    , updating_(false) { SetToZero(delay_line_); }
+    , updating_(false)
+  {
+    SetToZero(delay_line_);
+  }
+
 
   /** Constructs an FIR filter with impulse response B. */
   FirFilter(
@@ -101,7 +120,11 @@ public:
     , impulse_response_old_(B)
     , update_index_(0)
     , update_length_(0)
-    , updating_(false) { SetToZero(delay_line_); }
+    , updating_(false)
+  {
+    SetToZero(delay_line_);
+  }
+
 
   /**
    Returns the output of the filter for an input equal to `input`.
@@ -113,7 +136,10 @@ public:
   T Filter(
     const T input_sample) noexcept
   {
-    if (updating_) { UpdateCoefficients(); }
+    if (updating_)
+    {
+      UpdateCoefficients();
+    }
     if (length_ == 1)
     {
       delay_line_[0] = input_sample;
@@ -125,11 +151,18 @@ public:
     for (size_t i = 0; i < length_; ++i)
     {
       result += coefficients_[i] * delay_line_[index++];
-      if (index >= length_) { index = 0; }
+      if (index >= length_)
+      {
+        index = 0;
+      }
     }
-    if (counter_-- == 0) { counter_ = length_ - 1; }
+    if (counter_-- == 0)
+    {
+      counter_ = length_ - 1;
+    }
     return result;
   }
+
 
   /** 
    Updates the filter coefficients. You can set how long it takes to 
@@ -146,7 +179,10 @@ public:
     const Vector<T>& impulse_response,
     const Int update_length = 0) noexcept
   {
-    if (mcl::IsEqual(impulse_response, impulse_response_)) { return; }
+    if (mcl::IsEqual(impulse_response, impulse_response_))
+    {
+      return;
+    }
 
     if (impulse_response.size() != length_)
     {
@@ -173,16 +209,28 @@ public:
         // If there is no update being carried out
         impulse_response_old_ = impulse_response_;
       }
-      else { impulse_response_old_ = coefficients_; }
+      else
+      {
+        impulse_response_old_ = coefficients_;
+      }
     }
     ASSERT(impulse_response_.size() == impulse_response_old_.size());
   }
 
+
   /** Resets the state of the filter */
-  void Reset() noexcept { SetToZero(delay_line_); }
+  void Reset() noexcept
+  {
+    SetToZero(delay_line_);
+  }
+
 
   /** Returns the impulse response of the filter */
-  Vector<T> impulse_response() const noexcept { return impulse_response_; }
+  Vector<T> impulse_response() const noexcept
+  {
+    return impulse_response_;
+  }
+
 
   void FilterSerial(
     const Vector<T>& input,
@@ -190,8 +238,12 @@ public:
   {
     auto input_iter(input.begin());
     auto output_iter(output.begin());
-    while (output_iter != output.end()) { *(output_iter++) = Filter(*(input_iter++)); }
+    while (output_iter != output.end())
+    {
+      *(output_iter++) = Filter(*(input_iter++));
+    }
   }
+
 
   void Filter(
     const Vector<T>& input,
@@ -199,14 +251,18 @@ public:
   {
     ASSERT(input.size() == output.size());
     const size_t num_samples = input.size();
-    if (updating_) { UpdateCoefficients(); }
+    if (updating_)
+    {
+      UpdateCoefficients();
+    }
     if (length_ == 1)
     {
       delay_line_[0] = input[input.size() - 1];
       Multiply(input, coefficients_, output);
       return;
     }
-    if (num_samples < length_ || (num_samples + length_ - 1) > MCL_MAX_VLA_LENGTH)
+    if (num_samples < length_ || (num_samples + length_ - 1) >
+      MCL_MAX_VLA_LENGTH)
     {
       FilterSerial(input, output);
       return;
@@ -215,7 +271,10 @@ public:
     GetExtendedInput(input, extended_input);
     Conv(extended_input, coefficients_, output);
     // Reorganise state for the next run
-    for (size_t i = 0; i < length_; ++i) { delay_line_[i] = input[num_samples - 1 - i]; }
+    for (size_t i = 0; i < length_; ++i)
+    {
+      delay_line_[i] = input[num_samples - 1 - i];
+    }
     counter_ = length_ - 1;
   }
 };
