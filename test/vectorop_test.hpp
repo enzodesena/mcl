@@ -34,7 +34,7 @@ inline bool VectorOpTest()
   Vector<double> myvector_a_copy(myvector_a);
   ASSERT(myvector_a_copy.OwnsData());
   
-  Vector<double> myvector_a_reference(myvector_a, 0, 3);
+  Vector<double> myvector_a_reference = MakeReference(myvector_a, 0, 3);
   ASSERT(! myvector_a_reference.OwnsData());
   myvector_a_reference[1] = 1.0;
   ASSERT(myvector_a_reference[1] == 1.0);
@@ -664,7 +664,7 @@ inline bool VectorOpTest()
   ASSERT(referenced[0] == 0.0);
   ASSERT(referenced[1] == 2.0);
   ASSERT(referenced[2] == 0.0);
-  Vector<Real> reference_a(referenced, 0, 3);
+  Vector<Real> reference_a = MakeReference(referenced, 0, 3);
   reference_a[0] = 1.0;
   reference_a[1] = 3.0;
   reference_a[2] = 5.0;
@@ -676,17 +676,17 @@ inline bool VectorOpTest()
   ASSERT(referenced[2] == 5.0);
   ASSERT(reference_a.size() == 3);
   
-  Vector<Real> reference_b(referenced, 0, 2);
+  Vector<Real> reference_b = MakeReference(referenced, 0, 2);
   ASSERT(reference_b.size() == 2);
   ASSERT(reference_b[0] == 1.0);
   ASSERT(reference_b[1] == 3.0);
   
-  Vector<Real> reference_c(referenced, 1, 2);
+  Vector<Real> reference_c = MakeReference(referenced, 1, 2);
   ASSERT(reference_c.size() == 2);
   ASSERT(reference_c[0] == 3.0);
   ASSERT(reference_c[1] == 5.0);
   
-  Vector<Real> reference_d(referenced, 2, 1);
+  Vector<Real> reference_d = MakeReference(referenced, 2, 1);
   ASSERT(reference_d.size() == 1);
   ASSERT(reference_d[0] == 5.0);
   

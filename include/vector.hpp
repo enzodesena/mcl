@@ -79,25 +79,6 @@ public:
 
 
   Vector(
-    Vector<T>& referenced_vector,
-    size_t first_element_index,
-    size_t size) noexcept
-    : data_()
-    , data_ptr_(referenced_vector.data_.data() + first_element_index)
-    , size_(size)
-    , begin_(
-      referenced_vector.begin() + (data_ptr_ - referenced_vector.data_.data()))
-    , end_(begin_ + size_)
-    , const_begin_(
-      referenced_vector.begin() + (data_ptr_ - referenced_vector.data_.data()))
-    , const_end_(const_begin_ + size_)
-    , owns_data_(false)
-  {
-    ASSERT(first_element_index+size <= referenced_vector.size());
-  }
-
-
-  Vector(
     const Vector& other)
     : data_(other.data_)
     , data_ptr_((other.owns_data_) ? data_.data() : other.data_ptr_)
@@ -196,7 +177,15 @@ public:
     return data_ptr_[index];
   }
 
-
+  friend Vector MakeReference(
+    Vector<T>& vector,
+    size_t first_element_index = 0,
+    size_t size = std::numeric_limits<size_t>::max()) noexcept
+  {
+    size = (size < std::numeric_limits<size_t>::max()) ? size : vector.size();
+    return std::move(Vector(vector, first_element_index, size));
+  }
+  
 private:
   std::vector<T> data_;
 
@@ -209,6 +198,25 @@ private:
   ConstIterator const_end_;
 
   bool owns_data_;
+  
+  
+  Vector(
+    Vector<T>& referenced_vector,
+    size_t first_element_index,
+    size_t size) noexcept
+    : data_()
+    , data_ptr_(referenced_vector.data_.data() + first_element_index)
+    , size_(size)
+    , begin_(
+      referenced_vector.begin() + (data_ptr_ - referenced_vector.data_.data()))
+    , end_(begin_ + size_)
+    , const_begin_(
+      referenced_vector.begin() + (data_ptr_ - referenced_vector.data_.data()))
+    , const_end_(const_begin_ + size_)
+    , owns_data_(false)
+  {
+    ASSERT(first_element_index+size <= referenced_vector.size());
+  }
 };
 
 
