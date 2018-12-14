@@ -36,7 +36,7 @@ void Add(
   const Vector<Complex<T>>& input_b,
   Vector<Complex<T>>& output) noexcept
 {
-  AddSerial(input_a, input_b, output);
+  Add(input_a.begin(), input_a.end(), input_b.begin(), output.begin());
 }
 
 
@@ -46,13 +46,14 @@ inline void Add(
   Vector<double>& output) noexcept
 {
 #if defined(MCL_APPLE_ACCELERATE_MMA) && MCL_APPLE_ACCELERATE_MMA
-  vDSP_vaddD(
+  vDSP_vaddD
+  (
     &input_a[0], 1,
     &input_b[0], 1,
     &output[0], 1,
     output.size());
 #else
-  AddSerial(input_a, input_b, output);
+  Add(input_a.begin(), input_a.end(), input_b.begin(), output.begin());
 #endif
 }
 
@@ -63,13 +64,14 @@ inline void Add(
   Vector<float>& output) noexcept
 {
 #if defined(MCL_APPLE_ACCELERATE_MMA) && MCL_APPLE_ACCELERATE_MMA
-  vDSP_vadd(
+  vDSP_vadd
+  (
     &input_a[0], 1,
     &input_b[0], 1,
     &output[0], 1,
     output.size());
 #else
-  AddSerial(input_a, input_b, output);
+  Add(input_a.begin(), input_a.end(), input_b.begin(), output.begin());
 #endif
 }
 
@@ -85,12 +87,14 @@ inline void Multiply(
   Vector<double>& output) noexcept
 {
 #if defined(MCL_APPLE_ACCELERATE_MMA) && MCL_APPLE_ACCELERATE_MMA
-  vDSP_vmulD(&input[0], 1,
-             &gain, 0,
-             &output[0], 1,
-             output.size());
+  vDSP_vmulD
+  (
+    &input[0], 1,
+    &gain, 0,
+    &output[0], 1,
+    output.size());
 #else
-  MultiplySerial(input, gain, output);
+  Multiply(input.begin(), input.end(), gain, output.begin());
 #endif
 }
 
@@ -106,13 +110,14 @@ inline void Multiply(
   Vector<float>& output) noexcept
 {
 #if defined(MCL_APPLE_ACCELERATE_MMA) && MCL_APPLE_ACCELERATE_MMA
-  vDSP_vmul(
+  vDSP_vmul
+  (
     &input[0], 1,
     &gain, 0,
     &output[0], 1,
     output.size());
 #else
-  MultiplySerial(input, gain, output);
+  Multiply(input.begin(), input.end(), gain, output.begin());
 #endif
 }
 
@@ -123,7 +128,7 @@ void Multiply(
   const Complex<T> gain,
   Vector<Complex<T>>& output) noexcept
 {
-  MultiplySerial(input, gain, output);
+  Multiply(input.begin(), input.end(), gain, output.begin());
 }
 
 
@@ -133,13 +138,14 @@ inline void Multiply(
   Vector<double>& output) noexcept
 {
 #if defined(MCL_APPLE_ACCELERATE_MMA) && MCL_APPLE_ACCELERATE_MMA
-  vDSP_vmulD(
+  vDSP_vmulD
+  (
     &input_a[0], 1,
     &input_b[0], 1,
     &output[0], 1,
     output.size());
 #else
-  MultiplySerial(input_a, input_b, output);
+  Multiply(input_a.begin(), input_a.end(), input_b.begin(), output.begin());
 #endif
 }
 
@@ -150,13 +156,14 @@ inline void Multiply(
   Vector<float>& output) noexcept
 {
 #if defined(MCL_APPLE_ACCELERATE_MMA) && MCL_APPLE_ACCELERATE_MMA
-  vDSP_vmul(
+  vDSP_vmul
+  (
     &input_a[0], 1,
     &input_b[0], 1,
     &output[0], 1,
     output.size());
 #else
-  MultiplySerial(input_a, input_b, output);
+  Multiply(input_a.begin(), input_a.end(), input_b.begin(), output.begin());
 #endif
 }
 
@@ -167,7 +174,7 @@ void Multiply(
   const Vector<Complex<T>>& input_b,
   Vector<Complex<T>>& output) noexcept
 {
-  MultiplySerial(input_a, input_b, output);
+  Multiply(input_a.begin(), input_a.end(), input_b.begin(), output.begin());
 }
 
 
@@ -178,14 +185,21 @@ inline void MultiplyAdd(
   Vector<double>& output) noexcept
 {
 #if defined(MCL_APPLE_ACCELERATE_MMA) && MCL_APPLE_ACCELERATE_MMA
-  vDSP_vmaD(
+  vDSP_vmaD
+  (
     &input_to_multiply[0], 1,
     &gain, 0,
     &input_to_add[0], 1,
     &output[0], 1,
     output.size());
 #else
-  MultiplyAddSerial(input_to_multiply, gain, input_to_add, output);
+  MultiplyAdd
+  (
+    input_to_multiply.begin(),
+    input_to_multiply.end(),
+    gain,
+    input_to_add.begin(),
+    output.begin());
 #endif
 }
 
@@ -204,7 +218,13 @@ inline void MultiplyAdd(
     &output[0], 1,
     output.size());
 #else
-  MultiplyAddSerial(input_to_multiply, gain, input_to_add, output);
+  MultiplyAdd
+  (
+    input_to_multiply.begin(),
+    input_to_multiply.end(),
+    gain,
+    input_to_add.begin(),
+    output.begin());
 #endif
 }
 

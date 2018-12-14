@@ -13,6 +13,58 @@
 
 namespace mcl
 {
+template<
+  typename ConstForwardIterator,
+  typename ConstForwardIteratorT = typename std::iterator_traits<ConstForwardIterator>::value_type,
+  typename ForwardIterator,
+  typename ForwardIteratorT = typename std::iterator_traits<ForwardIterator>::value_type>
+void ForEach(
+  ConstForwardIterator input_begin,
+  const ConstForwardIterator input_end,
+  std::function<ForwardIteratorT(ConstForwardIteratorT)> operation,
+  ForwardIterator output_begin) noexcept
+{
+  while (input_begin != input_end)
+  {
+    *(output_begin++) = operation(*(input_begin++));
+  }
+}
+
+
+template<
+  typename ConstForwardIterator,
+  typename T = typename std::iterator_traits<ConstForwardIterator>::value_type,
+  typename ForwardIterator>
+void ForEach(
+  ConstForwardIterator input_a_begin,
+  const ConstForwardIterator input_a_end,
+  ConstForwardIterator input_b_begin,
+  std::function<T(T,T)> pointwise_operation,
+  ForwardIterator output_iter) noexcept
+{
+  while (input_a_begin != input_a_end)
+  {
+    *(output_iter++) = pointwise_operation(
+      *(input_a_begin++), *(input_b_begin++));
+  }
+}
+
+template<typename T>
+void ForEach(
+  const Vector<T>& input_vector,
+  T (*operation)(T),
+  Vector<T>& output_vector)
+{
+  ASSERT(input_vector.size() == output_vector.size());
+  auto input_iter = input_vector.begin();
+  auto output_iter = output_vector.begin();
+  while (input_iter != input_vector.end())
+  {
+    *(output_iter++) = operation(*(input_iter++));
+  }
+}
+
+
 template<typename T, typename U>
 void ForEach(
   const Vector<T>& input_vector,
@@ -56,132 +108,99 @@ void ForEach(
   auto output_iter = output.begin();
   while (output_iter != output.end())
   {
-    *(output_iter++) = pointwise_operation(
-      *(input_a_iter++), *(input_b_iter++));
+    *(output_iter++) = pointwise_operation(*(input_a_iter++), *(input_b_iter++));
   }
 }
 
 
-/** Fall-back multiply by a constant in case of no available optimisations. */
-template<typename T>
-void MultiplySerial(
-  const Vector<T>& input,
+template<
+  typename ConstForwardIterator,
+  typename T = typename std::iterator_traits<ConstForwardIterator>::value_type,
+  typename ForwardIterator>
+void Multiply(
+  ConstForwardIterator input_begin,
+  const ConstForwardIterator input_end,
   const T gain,
-  Vector<T>& output) noexcept
+  ForwardIterator output_begin) noexcept
 {
-  ASSERT(input.size() == output.size());
-  //  auto input_iter(input.begin());
-  //  auto output_iter(input.begin());
-  for (size_t i = 0; i < output.size(); ++i)
-  {
-    output[i] = input[i] * gain;
-    //    *(output_iter++) = *(input_iter++) * gain;
-  }
-}
-
-
-//template<typename T>
-//inline void ForEach(
-//  const Vector<T>& input_a,
-//  const Vector<T>& input_b,
-//  std::function<T(T,T)> pointwise_operation,
-//  Vector<T>& output) noexcept
-
-/** Fall-back multiply vectors in case of no available optimisations. */
-template<typename T>
-void MultiplySerial(
-  const Vector<T>& input_a,
-  const Vector<T>& input_b,
-  Vector<T>& output) noexcept
-{
-  ForEach<T>
+  std::function<T(T)> operation = [gain](T a) -> T { return  a * gain; };
+  ForEach
   (
-    input_a,
-    input_b,
-    [](
-    T a,
-    T b)
-    {
-      return a * b;
-    },
-    output);
+    input_begin,
+    input_end,
+    operation,
+    output_begin);
 }
 
 
-/**
- Returns the point by point multiplication of the two vectors.
- Equivalent to Matlab's vector_a.*vector_b.
- */
-template<class T>
-Vector<T> MultiplySerial(
-  const Vector<T>& vector_a,
-  const Vector<T>& vector_b) noexcept
+template<
+  typename ConstForwardIterator,
+  typename T = typename std::iterator_traits<ConstForwardIterator>::value_type,
+  typename ForwardIterator>
+void Multiply(
+  ConstForwardIterator input_a_begin,
+  const ConstForwardIterator input_a_end,
+  ConstForwardIterator input_b_begin,
+  ForwardIterator output_begin) noexcept
 {
-  ASSERT(vector_a.size() == vector_b.size());
-  Vector<T> output(vector_a.size());
-  MultiplySerial(vector_a, vector_b, output);
-
-  return output;
+  std::function<T(T,T)> operation = [](T a, T b) -> T { return  a * b; };
+  ForEach
+  (
+    input_a_begin,
+    input_a_end,
+    input_b_begin,
+    operation,
+    output_begin);
 }
 
 
-template<typename T>
-void MultiplyAddSerial(
-  const Vector<T>& input_to_multiply,
+template<
+  typename ConstForwardIterator,
+  typename T = typename std::iterator_traits<ConstForwardIterator>::value_type,
+  typename ForwardIterator>
+void MultiplyAdd(
+  ConstForwardIterator input_to_multiply_begin,
+  const ConstForwardIterator input_to_multiply_end,
   const T gain,
-  const Vector<T>& input_to_add,
-  Vector<T>& output) noexcept
+  ConstForwardIterator input_to_add_begin,
+  ForwardIterator output_begin) noexcept
 {
-  ASSERT(input_to_multiply.size() == input_to_add.size());
-  ASSERT(input_to_add.size() == output.size());
-  auto input_to_multiply_iter(input_to_multiply.begin());
-  auto input_to_add_iter(input_to_add.begin());
-  auto output_iter(output.begin());
-  while (output_iter != output.end())
+  std::function<T(T,T)> operation = [gain](T a, T b) -> T
   {
-    *(output_iter++) =
-      *(input_to_multiply_iter++) * gain + *(input_to_add_iter++);
-  }
+    return  a * gain + b;
+  };
+  ForEach
+  (
+    input_to_multiply_begin,
+    input_to_multiply_end,
+    input_to_add_begin,
+    operation,
+    output_begin);
 }
 
 
-/**
- Returns the point by point addition of the two vectors.
- Equivalent to Matlab's vector_a+vector_b.
- */
-template<typename T>
-void AddSerial(
-  const Vector<T>& input_a,
-  const Vector<T>& input_b,
-  Vector<T>& output) noexcept
+template<
+  typename ConstForwardIterator,
+  typename T = typename std::iterator_traits<ConstForwardIterator>::value_type,
+  typename ForwardIterator>
+void Add(
+  ConstForwardIterator input_a_begin,
+  const ConstForwardIterator input_a_end,
+  ConstForwardIterator input_b_begin,
+  ForwardIterator output_begin) noexcept
 {
-  ASSERT(input_a.size() == input_a.size());
-  ASSERT(input_a.size() == output.size());
-  auto input_a_iter = input_a.begin();
-  auto input_b_iter = input_b.begin();
-  auto output_iter = output.begin();
-  while (output_iter != output.end())
-  {
-    *(output_iter++) = *(input_a_iter++) + *(input_b_iter++);
-  }
+  std::function<T(T,T)> operation = [](T a, T b) -> T { return  a + b; };
+  ForEach
+  (
+    input_a_begin,
+    input_a_end,
+    input_b_begin,
+    operation,
+    output_begin);
 }
 
 
-template<typename T>
-void ForEach(
-  const Vector<T>& input_vector,
-  T (*operation)(
-    T),
-  Vector<T>& output_vector)
-{
-  ASSERT(input_vector.size() == output_vector.size());
-  auto input_iter = input_vector.begin();
-  auto output_iter = output_vector.begin();
-  while (input_iter != input_vector.end())
-  {
-    *(output_iter++) = operation(*(input_iter++));
-  }
-}
+
 
 
 /** Returns the opposite vector.Equivalent to Matlab's -vector. */
