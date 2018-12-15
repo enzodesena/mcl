@@ -19,59 +19,22 @@ class Vector
 public:
 
   
-  
-  class Iterator : public std::iterator<std::random_access_iterator_tag, T>
+  template<bool is_const = false>
+  class ConstNoConstIterator : public std::iterator<std::random_access_iterator_tag, T>
   {
   public:
-    typedef Iterator SelfType;
-    using Pointer = typename std::iterator<std::random_access_iterator_tag, T>::pointer;
-    using Reference = typename std::iterator<std::random_access_iterator_tag, T>::reference;
+    typedef ConstNoConstIterator SelfType;
+    typedef typename std::conditional<is_const,const T*,T*>::type Pointer;
+    typedef typename std::conditional<is_const,const T&,T&>::type Reference;
     using DifferenceType = typename std::iterator<std::random_access_iterator_tag, T>::difference_type;
 
-    Iterator() : ptr_(nullptr) {}
-    Iterator(T* rhs) : ptr_(rhs) {}
+    ConstNoConstIterator() : ptr_(nullptr) {}
+    ConstNoConstIterator(T* rhs) : ptr_(rhs) {}
     inline SelfType& operator+=(DifferenceType rhs) noexcept { ptr_ += rhs; return *this; }
     inline SelfType& operator-=(DifferenceType rhs) noexcept { ptr_ -= rhs; return *this; }
     inline Reference operator*() const noexcept { return *ptr_; }
-    inline Pointer operator->() const noexcept { return ptr_; }
     inline Reference operator[](DifferenceType rhs) const noexcept { return ptr_[rhs]; }
-
-    inline SelfType& operator++() noexcept { ++ptr_; return *this; }
-    inline SelfType& operator--() noexcept { --ptr_; return *this; }
-    inline SelfType operator++(int /* unused */) noexcept { SelfType temp(*this); ++ptr_; return temp; }
-    inline SelfType operator--(int /* unused */) noexcept { SelfType temp(*this); --ptr_; return temp; }
-    inline SelfType operator+(const Iterator& rhs) noexcept { return SelfType(ptr_+rhs.ptr); }
-    inline DifferenceType operator-(const SelfType& rhs) const noexcept { return ptr_-rhs.ptr_; }
-    inline SelfType operator+(DifferenceType rhs) const noexcept { return SelfType(ptr_+rhs); }
-    inline SelfType operator-(DifferenceType rhs) const noexcept { return SelfType(ptr_-rhs); }
-    friend inline SelfType operator+(DifferenceType lhs, const SelfType& rhs) noexcept { return SelfType(lhs+rhs.ptr_); }
-    friend inline SelfType operator-(DifferenceType lhs, const SelfType& rhs) noexcept { return SelfType(lhs-rhs.ptr_); }
-
-    inline bool operator==(const SelfType& rhs) const noexcept { return ptr_ == rhs.ptr_; }
-    inline bool operator!=(const SelfType& rhs) const noexcept { return ptr_ != rhs.ptr_; }
-    inline bool operator>(const SelfType& rhs) const noexcept { return ptr_ > rhs.ptr_; }
-    inline bool operator<(const SelfType& rhs) const noexcept { return ptr_ < rhs.ptr_; }
-    inline bool operator>=(const SelfType& rhs) const noexcept { return ptr_ >= rhs.ptr_; }
-    inline bool operator<=(const SelfType& rhs) const noexcept { return ptr_ <= rhs.ptr_; }
-  private:
-    T* ptr_;
-  };
-
-  class ConstIterator : public std::iterator<std::random_access_iterator_tag, T>
-  {
-  public:
-    typedef ConstIterator SelfType;
-    using Pointer = typename std::iterator<std::random_access_iterator_tag, T>::pointer;
-    using Reference = typename std::iterator<std::random_access_iterator_tag, T>::reference;
-    using DifferenceType = typename std::iterator<std::random_access_iterator_tag, T>::difference_type;
-
-    ConstIterator() : ptr_(nullptr) {}
-    ConstIterator(T* rhs) : ptr_(rhs) {}
-    inline ConstIterator& operator+=(DifferenceType rhs) noexcept { ptr_ += rhs; return *this; }
-    inline ConstIterator& operator-=(DifferenceType rhs) noexcept { ptr_ -= rhs; return *this; }
-    inline Reference operator*() const noexcept { return *ptr_; }
     inline Pointer operator->() const noexcept { return ptr_; }
-    inline Reference operator[](DifferenceType rhs) const noexcept { return ptr_[rhs]; }
 
     inline SelfType& operator++() noexcept { ++ptr_; return *this; }
     inline SelfType& operator--() noexcept { --ptr_; return *this; }
@@ -93,6 +56,9 @@ public:
   private:
     T* ptr_;
   };
+
+  typedef ConstNoConstIterator<true> ConstIterator;
+  typedef ConstNoConstIterator<false> Iterator;
 
   Vector() noexcept
     : size_(0)
