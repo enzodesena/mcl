@@ -17,18 +17,86 @@ template<typename T>
 class Vector
 {
 public:
-  using Iterator = typename std::vector<T>::iterator;
-  using ConstIterator = typename std::vector<T>::const_iterator;
 
+  
+  
+  class Iterator : public std::iterator<std::random_access_iterator_tag, T>
+  {
+  public:
+    typedef Iterator SelfType;
+    using Pointer = typename std::iterator<std::random_access_iterator_tag, T>::pointer;
+    using Reference = typename std::iterator<std::random_access_iterator_tag, T>::reference;
+    using DifferenceType = typename std::iterator<std::random_access_iterator_tag, T>::difference_type;
+
+    Iterator() : ptr_(nullptr) {}
+    Iterator(T* rhs) : ptr_(rhs) {}
+    inline SelfType& operator+=(DifferenceType rhs) noexcept { ptr_ += rhs; return *this; }
+    inline SelfType& operator-=(DifferenceType rhs) noexcept { ptr_ -= rhs; return *this; }
+    inline Reference operator*() const noexcept { return *ptr_; }
+    inline Pointer operator->() const noexcept { return ptr_; }
+    inline Reference operator[](DifferenceType rhs) const noexcept { return ptr_[rhs]; }
+
+    inline SelfType& operator++() noexcept { ++ptr_; return *this; }
+    inline SelfType& operator--() noexcept { --ptr_; return *this; }
+    inline SelfType operator++(int /* unused */) noexcept { SelfType temp(*this); ++ptr_; return temp; }
+    inline SelfType operator--(int /* unused */) noexcept { SelfType temp(*this); --ptr_; return temp; }
+    inline SelfType operator+(const Iterator& rhs) noexcept { return SelfType(ptr_+rhs.ptr); }
+    inline DifferenceType operator-(const SelfType& rhs) const noexcept { return ptr_-rhs.ptr_; }
+    inline SelfType operator+(DifferenceType rhs) const noexcept { return SelfType(ptr_+rhs); }
+    inline SelfType operator-(DifferenceType rhs) const noexcept { return SelfType(ptr_-rhs); }
+    friend inline SelfType operator+(DifferenceType lhs, const SelfType& rhs) noexcept { return SelfType(lhs+rhs.ptr_); }
+    friend inline SelfType operator-(DifferenceType lhs, const SelfType& rhs) noexcept { return SelfType(lhs-rhs.ptr_); }
+
+    inline bool operator==(const SelfType& rhs) const noexcept { return ptr_ == rhs.ptr_; }
+    inline bool operator!=(const SelfType& rhs) const noexcept { return ptr_ != rhs.ptr_; }
+    inline bool operator>(const SelfType& rhs) const noexcept { return ptr_ > rhs.ptr_; }
+    inline bool operator<(const SelfType& rhs) const noexcept { return ptr_ < rhs.ptr_; }
+    inline bool operator>=(const SelfType& rhs) const noexcept { return ptr_ >= rhs.ptr_; }
+    inline bool operator<=(const SelfType& rhs) const noexcept { return ptr_ <= rhs.ptr_; }
+  private:
+    T* ptr_;
+  };
+
+  class ConstIterator : public std::iterator<std::random_access_iterator_tag, T>
+  {
+  public:
+    typedef ConstIterator SelfType;
+    using Pointer = typename std::iterator<std::random_access_iterator_tag, T>::pointer;
+    using Reference = typename std::iterator<std::random_access_iterator_tag, T>::reference;
+    using DifferenceType = typename std::iterator<std::random_access_iterator_tag, T>::difference_type;
+
+    ConstIterator() : ptr_(nullptr) {}
+    ConstIterator(T* rhs) : ptr_(rhs) {}
+    inline ConstIterator& operator+=(DifferenceType rhs) noexcept { ptr_ += rhs; return *this; }
+    inline ConstIterator& operator-=(DifferenceType rhs) noexcept { ptr_ -= rhs; return *this; }
+    inline Reference operator*() const noexcept { return *ptr_; }
+    inline Pointer operator->() const noexcept { return ptr_; }
+    inline Reference operator[](DifferenceType rhs) const noexcept { return ptr_[rhs]; }
+
+    inline SelfType& operator++() noexcept { ++ptr_; return *this; }
+    inline SelfType& operator--() noexcept { --ptr_; return *this; }
+    inline SelfType operator++(int /* unused */) noexcept { SelfType temp(*this); ++ptr_; return temp; }
+    inline SelfType operator--(int /* unused */) noexcept { SelfType temp(*this); --ptr_; return temp; }
+    inline SelfType operator+(const SelfType& rhs) noexcept { return SelfType(ptr_+rhs.ptr); }
+    inline DifferenceType operator-(const SelfType& rhs) const noexcept { return ptr_-rhs.ptr_; }
+    inline SelfType operator+(DifferenceType rhs) const noexcept { return SelfType(ptr_+rhs); }
+    inline SelfType operator-(DifferenceType rhs) const noexcept { return SelfType(ptr_-rhs); }
+    friend inline SelfType operator+(DifferenceType lhs, const SelfType& rhs) noexcept { return SelfType(lhs+rhs.ptr_); }
+    friend inline SelfType operator-(DifferenceType lhs, const SelfType& rhs) noexcept { return SelfType(lhs-rhs.ptr_); }
+
+    inline bool operator==(const SelfType& rhs) const noexcept { return ptr_ == rhs.ptr_; }
+    inline bool operator!=(const SelfType& rhs) const noexcept { return ptr_ != rhs.ptr_; }
+    inline bool operator>(const SelfType& rhs) const noexcept { return ptr_ > rhs.ptr_; }
+    inline bool operator<(const SelfType& rhs) const noexcept { return ptr_ < rhs.ptr_; }
+    inline bool operator>=(const SelfType& rhs) const noexcept { return ptr_ >= rhs.ptr_; }
+    inline bool operator<=(const SelfType& rhs) const noexcept { return ptr_ <= rhs.ptr_; }
+  private:
+    T* ptr_;
+  };
 
   Vector() noexcept
-    : data_()
-    , data_ptr_(nullptr)
-    , size_(0)
-    , begin_()
-    , end_()
-    , const_begin_()
-    , const_end_()
+    : size_(0)
+    , data_(nullptr)
     , owns_data_(true)
   {
   }
@@ -37,58 +105,76 @@ public:
   Vector(
     size_t size,
     T value = T()) noexcept
-    : data_(std::vector<T>(size, value))
-    , data_ptr_(data_.data())
-    , size_(data_.size())
-    , begin_(data_.begin())
-    , end_(data_.end())
-    , const_begin_(data_.begin())
-    , const_end_(data_.end())
+    : size_(size)
+    , data_(Allocate(size_))
     , owns_data_(true)
   {
+    for (size_t i = 0; i<size_; ++i)
+    {
+      data_[i] = value;
+    }
   }
 
 
   Vector(
     std::initializer_list<T> list)
-    : data_(std::vector<T>(list))
-    , data_ptr_(data_.data())
-    , size_(data_.size())
-    , begin_(data_.begin())
-    , end_(data_.end())
-    , const_begin_(data_.begin())
-    , const_end_(data_.end())
+    : size_(list.size())
+    , data_(Allocate(size_))
     , owns_data_(true)
   {
+    auto iter = begin();
+    for (auto& element : list)
+    {
+      *iter++ = element;
+    }
   }
 
 
   Vector(
-    ConstIterator iter_begin,
-    ConstIterator iter_end) noexcept
-    : data_(std::vector<T>(iter_begin, iter_end))
-    , data_ptr_(data_.data())
-    , size_(data_.size())
-    , begin_(data_.begin())
-    , end_(data_.end())
-    , const_begin_(data_.begin())
-    , const_end_(data_.end())
+    ConstIterator other_begin,
+    ConstIterator other_end) noexcept
+    : size_(other_end-other_begin)
+    , data_(Allocate(size_))
     , owns_data_(true)
   {
+    auto iter = begin();
+    while(other_begin != other_end)
+    {
+      *iter++ = *other_begin++;
+    }
+  }
+
+
+  Vector(
+    Iterator other_begin,
+    Iterator other_end) noexcept
+    : size_(other_end-other_begin)
+    , data_(Allocate(size_))
+    , owns_data_(true)
+  {
+    auto iter = begin();
+    while(other_begin != other_end)
+    {
+      *iter++ = *other_begin++;
+    }
   }
 
 
   Vector(
     const Vector& other)
-    : data_(other.data_)
-    , data_ptr_((other.owns_data_) ? data_.data() : other.data_ptr_)
-    , size_(other.size_)
-    , begin_((other.owns_data_) ? data_.begin() : other.begin_)
-    , end_((other.owns_data_) ? data_.end() : other.end_)
-    , const_begin_((other.owns_data_) ? data_.begin() : other.const_begin_)
-    , const_end_((other.owns_data_) ? data_.end() : other.const_end_)
+    : size_(other.size_)
+    , data_((other.owns_data_) ? Allocate(size_) : other.data_)
     , owns_data_(other.owns_data_)
   {
+    if (owns_data_)
+    {
+      auto iter = begin();
+      auto other_iter = other.begin();
+      while(other_iter != other.end())
+      {
+        *iter++ = *other_iter++;
+      }
+    }
   }
 
 
@@ -100,29 +186,45 @@ public:
   Vector& operator=(
     const Vector& other)
   {
-    if (this != &other)
+    if (owns_data_ && other.data_ == data_)
     {
-      if (owns_data_ && other.data_.data() == data_.data())
-      {
-        return *this;
-      }
-
-      data_ = other.data_;
-      data_ptr_ = (other.owns_data_) ? data_.data() : other.data_ptr_;
-      size_ = other.size_;
-      begin_ = (other.owns_data_) ? data_.begin() : other.begin_;
-      const_begin_ = (other.owns_data_) ? data_.begin() : other.const_begin_;
-      end_ = (other.owns_data_) ? data_.end() : other.end_;
-      const_end_ = (other.owns_data_) ? data_.end() : other.const_end_;
-      owns_data_ = other.owns_data_;
+      return *this;
     }
+    
+    if (owns_data_)
+    {
+      Deallocate();
+    }
+    
+    size_ = other.size_;
+    if (other.owns_data_)
+    {
+      data_ = Allocate(size_);
+      auto iter = begin();
+      auto other_iter = other.begin();
+      while(other_iter != other.end())
+      {
+        *iter++ = *other_iter++;
+      }
+    }
+    else
+    {
+      data_ = other.data_;
+    }
+    
+    owns_data_ = other.owns_data_;
+    
     return *this;
   }
 
 
   ~Vector()
   {
-    data_ptr_ = nullptr;
+    if (OwnsData())
+    {
+      Deallocate();
+    }
+    data_ = nullptr;
   }
 
 
@@ -134,25 +236,25 @@ public:
 
   Iterator begin() noexcept
   {
-    return begin_;
+    return Iterator(data_);
   }
 
 
   ConstIterator begin() const noexcept
   {
-    return begin_;
+    return ConstIterator(data_);
   }
 
 
   Iterator end() noexcept
   {
-    return end_;
+    return Iterator(data_ + size_);
   }
 
 
   ConstIterator end() const noexcept
   {
-    return end_;
+    return ConstIterator(data_ + size_);
   }
 
 
@@ -166,7 +268,7 @@ public:
     const size_t index) noexcept
   {
     ASSERT(index>=0 && index < size());
-    return data_ptr_[index];
+    return data_[index];
   }
 
 
@@ -174,7 +276,7 @@ public:
     const size_t index) const noexcept
   {
     ASSERT(index>=0 && index < size());
-    return data_ptr_[index];
+    return data_[index];
   }
 
   friend Vector MakeReference(
@@ -187,32 +289,26 @@ public:
   }
   
 private:
-  std::vector<T> data_;
-
-  T* data_ptr_;
   size_t size_;
-
-  Iterator begin_;
-  Iterator end_;
-  ConstIterator const_begin_;
-  ConstIterator const_end_;
-
+  T* data_;
   bool owns_data_;
   
+  T* Allocate(size_t size)
+  {
+    return new T[size];
+  }
+  
+  void Deallocate()
+  {
+    delete[] data_;
+  }
   
   Vector(
     Vector<T>& referenced_vector,
     size_t first_element_index,
     size_t size) noexcept
-    : data_()
-    , data_ptr_(referenced_vector.data_.data() + first_element_index)
-    , size_(size)
-    , begin_(
-      referenced_vector.begin() + (data_ptr_ - referenced_vector.data_.data()))
-    , end_(begin_ + size_)
-    , const_begin_(
-      referenced_vector.begin() + (data_ptr_ - referenced_vector.data_.data()))
-    , const_end_(const_begin_ + size_)
+    : size_(size)
+    , data_(referenced_vector.data_ + first_element_index)
     , owns_data_(false)
   {
     ASSERT(first_element_index+size <= referenced_vector.size());
