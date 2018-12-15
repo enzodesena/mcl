@@ -69,18 +69,21 @@ inline bool QuaternionTest()
   ASSERT(IsApproximatelyEqual(QuatInverse(Quaternion(1.0,0.0,1.0,0.0)), Quaternion(0.5,0.0,-0.5,0.0)));
   
   AxAng axang1 = Quat2AxAng(AxAng2Quat(0.0,0.0,1.0,PI/2.0));
+  AVOID_UNUSED_WARNING(axang1);
   ASSERT(IsEqual(axang1.x, 0.0));
   ASSERT(IsEqual(axang1.y, 0.0));
   ASSERT(IsEqual(axang1.z, 1.0));
   ASSERT(IsEqual(axang1.angle, PI/2.0));
   
   AxAng axang2 = Quat2AxAng(AxAng2Quat(1.0,0.0,0.0,-0.456));
+  AVOID_UNUSED_WARNING(axang2);
   ASSERT(IsApproximatelyEqual(axang2.x, -1.0));
   ASSERT(IsApproximatelyEqual(axang2.y, 0.0));
   ASSERT(IsApproximatelyEqual(axang2.z, 0.0));
   ASSERT(IsApproximatelyEqual(axang2.angle, 0.456));
   
   AxAng axang3 = Quat2AxAng(AxAng2Quat(1.0,0.0,0.0,0.456));
+  AVOID_UNUSED_WARNING(axang3);
   ASSERT(IsApproximatelyEqual(axang3.x, 1.0));
   ASSERT(IsApproximatelyEqual(axang3.y, 0.0));
   ASSERT(IsApproximatelyEqual(axang3.z, 0.0));

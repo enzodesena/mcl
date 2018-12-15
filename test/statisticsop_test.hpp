@@ -21,6 +21,7 @@ inline bool StatisticsOpTest()
   vector_c[2] = 2.4;
 
   Real vector_c_mean = Mean(vector_c);
+  AVOID_UNUSED_WARNING(vector_c_mean);
   ASSERT(IsApproximatelyEqual(vector_c_mean, 0.8, VERY_SMALL));
 
   ASSERT(IsApproximatelyEqual(Sum(vector_c), -0.3+0.3+2.4, VERY_SMALL));

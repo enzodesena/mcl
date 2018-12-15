@@ -17,48 +17,66 @@ template<typename T>
 class Vector
 {
 public:
-
-  
   template<bool is_const = false>
-  class ConstNoConstIterator : public std::iterator<std::random_access_iterator_tag, T>
+  class GenIterator : public std::iterator<std::random_access_iterator_tag, T>
   {
   public:
-    typedef ConstNoConstIterator SelfType;
     typedef typename std::conditional<is_const,const T*,T*>::type Pointer;
     typedef typename std::conditional<is_const,const T&,T&>::type Reference;
     using DifferenceType = typename std::iterator<std::random_access_iterator_tag, T>::difference_type;
 
-    ConstNoConstIterator() : ptr_(nullptr) {}
-    ConstNoConstIterator(T* rhs) : ptr_(rhs) {}
-    inline SelfType& operator+=(DifferenceType rhs) noexcept { ptr_ += rhs; return *this; }
-    inline SelfType& operator-=(DifferenceType rhs) noexcept { ptr_ -= rhs; return *this; }
-    inline Reference operator*() const noexcept { return *ptr_; }
-    inline Reference operator[](DifferenceType rhs) const noexcept { return ptr_[rhs]; }
-    inline Pointer operator->() const noexcept { return ptr_; }
+    inline bool operator==(const GenIterator& rhs) const noexcept { return ptr_ == rhs.ptr_; }
+    inline bool operator!=(const GenIterator& rhs) const noexcept { return ptr_ != rhs.ptr_; }
+    inline bool operator>(const GenIterator& rhs) const noexcept { return ptr_ > rhs.ptr_; }
+    inline bool operator<(const GenIterator& rhs) const noexcept { return ptr_ < rhs.ptr_; }
+    inline bool operator>=(const GenIterator& rhs) const noexcept { return ptr_ >= rhs.ptr_; }
+    inline bool operator<=(const GenIterator& rhs) const noexcept { return ptr_ <= rhs.ptr_; }
+    
+    bool IsWithinBoundsOf(const Vector<T>& vector) const noexcept
+    {
+      return ptr_ >= vector.data_
+        && ptr_ < vector.data_+vector.size_;
+    }
+    
+    GenIterator() : ptr_(nullptr) {}
 
-    inline SelfType& operator++() noexcept { ++ptr_; return *this; }
-    inline SelfType& operator--() noexcept { --ptr_; return *this; }
-    inline SelfType operator++(int /* unused */) noexcept { SelfType temp(*this); ++ptr_; return temp; }
-    inline SelfType operator--(int /* unused */) noexcept { SelfType temp(*this); --ptr_; return temp; }
-    inline SelfType operator+(const SelfType& rhs) noexcept { return SelfType(ptr_+rhs.ptr); }
-    inline DifferenceType operator-(const SelfType& rhs) const noexcept { return ptr_-rhs.ptr_; }
-    inline SelfType operator+(DifferenceType rhs) const noexcept { return SelfType(ptr_+rhs); }
-    inline SelfType operator-(DifferenceType rhs) const noexcept { return SelfType(ptr_-rhs); }
-    friend inline SelfType operator+(DifferenceType lhs, const SelfType& rhs) noexcept { return SelfType(lhs+rhs.ptr_); }
-    friend inline SelfType operator-(DifferenceType lhs, const SelfType& rhs) noexcept { return SelfType(lhs-rhs.ptr_); }
+#ifndef NDEBUG
+    GenIterator(T* ptr, const Vector<T>& vector) noexcept : ptr_(ptr) , vector_ref_(vector) {}
+    #define VECTOR_REF_ARG , vector_ref_
+    #define VECTOR_RHS_REF_ARG , rhs.vector_ref_
+#else
+    GenIterator(T* ptr) : ptr_(ptr) {}
+    #define VECTOR_REF_ARG
+    #define VECTOR_RHS_REF_ARG
+#endif
 
-    inline bool operator==(const SelfType& rhs) const noexcept { return ptr_ == rhs.ptr_; }
-    inline bool operator!=(const SelfType& rhs) const noexcept { return ptr_ != rhs.ptr_; }
-    inline bool operator>(const SelfType& rhs) const noexcept { return ptr_ > rhs.ptr_; }
-    inline bool operator<(const SelfType& rhs) const noexcept { return ptr_ < rhs.ptr_; }
-    inline bool operator>=(const SelfType& rhs) const noexcept { return ptr_ >= rhs.ptr_; }
-    inline bool operator<=(const SelfType& rhs) const noexcept { return ptr_ <= rhs.ptr_; }
+    inline Reference operator*() const noexcept { ASSERT(IsWithinBoundsOf(vector_ref_)); return *ptr_; }
+    inline Reference operator[](DifferenceType rhs) const noexcept { ASSERT(IsWithinBoundsOf(vector_ref_)); return ptr_[rhs]; }
+    inline Pointer operator->() const noexcept { ASSERT(IsWithinBoundsOf(vector_ref_)); return ptr_; }
+
+    inline GenIterator& operator+=(DifferenceType rhs) noexcept { ptr_ += rhs; return *this; }
+    inline GenIterator& operator-=(DifferenceType rhs) noexcept { ptr_ -= rhs; return *this; }
+    inline GenIterator& operator++() noexcept { ++ptr_; return *this; }
+    inline GenIterator& operator--() noexcept { --ptr_;  return *this; }
+    inline DifferenceType operator-(const GenIterator& rhs) const noexcept { return ptr_-rhs.ptr_; }
+    
+    inline GenIterator operator++(int /* unused */) noexcept { GenIterator temp(*this); ++ptr_; return temp; }
+    inline GenIterator operator--(int /* unused */) noexcept { GenIterator temp(*this); --ptr_; return temp; }
+    inline GenIterator operator+(const GenIterator& rhs) noexcept { return GenIterator(ptr_+rhs.ptr VECTOR_REF_ARG); }
+    inline GenIterator operator+(DifferenceType rhs) const noexcept { return GenIterator(ptr_+rhs VECTOR_REF_ARG); }
+    inline GenIterator operator-(DifferenceType rhs) const noexcept { return GenIterator(ptr_-rhs VECTOR_REF_ARG); }
+    friend inline GenIterator operator+(DifferenceType lhs, const GenIterator& rhs) noexcept { return GenIterator(lhs+rhs.ptr_ VECTOR_RHS_REF_ARG); }
+    friend inline GenIterator operator-(DifferenceType lhs, const GenIterator& rhs) noexcept { return GenIterator(lhs-rhs.ptr_ VECTOR_RHS_REF_ARG); }
+
   private:
     T* ptr_;
+#ifndef NDEBUG
+    const Vector<T>& vector_ref_;
+#endif
   };
 
-  typedef ConstNoConstIterator<true> ConstIterator;
-  typedef ConstNoConstIterator<false> Iterator;
+  typedef GenIterator<false> Iterator;
+  typedef GenIterator<true> ConstIterator;
 
   Vector() noexcept
     : size_(0)
@@ -159,7 +177,7 @@ public:
     
     if (owns_data_)
     {
-      Deallocate();
+      Deallocate(data_);
     }
     
     size_ = other.size_;
@@ -188,7 +206,7 @@ public:
   {
     if (OwnsData())
     {
-      Deallocate();
+      Deallocate(data_);
     }
     data_ = nullptr;
   }
@@ -199,28 +217,33 @@ public:
     return owns_data_;
   }
 
+#ifndef NDEBUG
+    #define THIS_VECTOR_REF_ARG , *this
+#else
+    #define THIS_VECTOR_REF_ARG
+#endif
 
   Iterator begin() noexcept
   {
-    return Iterator(data_);
+    return Iterator(data_ THIS_VECTOR_REF_ARG);
   }
 
 
   ConstIterator begin() const noexcept
   {
-    return ConstIterator(data_);
+    return ConstIterator(data_ THIS_VECTOR_REF_ARG);
   }
 
 
   Iterator end() noexcept
   {
-    return Iterator(data_ + size_);
+    return Iterator(data_ + size_ THIS_VECTOR_REF_ARG);
   }
 
 
   ConstIterator end() const noexcept
   {
-    return ConstIterator(data_ + size_);
+    return ConstIterator(data_ + size_ THIS_VECTOR_REF_ARG);
   }
 
 
@@ -259,14 +282,14 @@ private:
   T* data_;
   bool owns_data_;
   
-  T* Allocate(size_t size)
+  static T* Allocate(size_t size)
   {
     return new T[size];
   }
   
-  void Deallocate()
+  static void Deallocate(T* data)
   {
-    delete[] data_;
+    delete[] data;
   }
   
   Vector(

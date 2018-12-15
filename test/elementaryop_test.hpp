@@ -28,6 +28,7 @@ inline bool ElementaryOpTest()
   ASSERT(Fix(-2.7) == -2);
 
   Real rem_a = Rem((Real)2.0, 2.0);
+  AVOID_UNUSED_WARNING(rem_a);
   ASSERT(rem_a == 0.0);
   ASSERT(Rem((Real)5.0, 2.0) == 1.0);
   ASSERT(Rem((Real)5.5, 2.0) == 1.5);

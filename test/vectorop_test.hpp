@@ -101,8 +101,7 @@ inline bool VectorOpTest()
   vector_n_cmp[1] = 1.33333333333333333333;
   vector_n_cmp[2] = 1.66666666666665666667;
   vector_n_cmp[3] = 2.0;
-  bool aa = IsApproximatelyEqual(vector_n_cmp, vector_n, VERY_SMALL);
-  ASSERT(aa);
+  ASSERT(IsApproximatelyEqual(vector_n_cmp, vector_n, VERY_SMALL));
 
   Vector<Real> vector_c(3);
   vector_c[0] = -0.3;
@@ -702,11 +701,12 @@ inline bool VectorOpTest()
   
   auto iter_d = reference_d.begin();
   ASSERT(*iter_d == -5.0);
+  AVOID_UNUSED_WARNING(iter_d);
   
-//  auto iter_a = reference_a.begin() + 2;
-//  ASSERT(*iter_a == -5.0);
-//  *iter_a = -2.0;
-//  ASSERT(reference_d[0] == -2.0);
+  auto iter_a = reference_a.begin() + 2;
+  ASSERT(*iter_a == -5.0);
+  *iter_a = -2.0;
+  ASSERT(reference_d[0] == -2.0);
   
   return true;
 }

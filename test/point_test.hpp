@@ -86,6 +86,7 @@ inline bool PointTest()
   
   Point<Real> point_f = RotateAboutX(RotateAboutY(
                          RotateAboutZ(Point<Real>(1.5,-1.0,0.5),pi/5.0),pi/6.0),pi/7.0);
+  AVOID_UNUSED_WARNING(point_f);
   
   ASSERT(IsApproximatelyEqual(Rotate(Point<Real>(1.5,-1.0,0.5), pi/5.0, pi/6.0, pi/7.0), point_f));
   ASSERT(IsApproximatelyEqual(Rotate(Point<Real>(0.0,0.0,1.0), pi/2.0, 0.0, 0.0), Point<Real>(0.0,0.0,1.0)));
@@ -136,7 +137,9 @@ inline bool PointTest()
   ASSERT(IsApproximatelyEqual(PointSpherical(1.0, PI/4.0, PI/2.0), Point<Real>(0.0, 1.0/sqrt(2.0), 1.0/sqrt(2.0))));
   
   Point<Real> point_g(1.0, 2.0, 1.5);
+  AVOID_UNUSED_WARNING(point_g);
   Point<Real> point_h = Normalized(point_g);
+  AVOID_UNUSED_WARNING(point_h);
   ASSERT(IsApproximatelyEqual(point_g, Point<Real>(1.0, 2.0, 1.5)));
   ASSERT(IsApproximatelyEqual(point_h.norm(), 1.0));
   ASSERT(IsApproximatelyEqual(point_h, Point<Real>(0.371390676354104,
@@ -154,6 +157,7 @@ inline bool PointTest()
   Point<Real> point_l(1.5, 2.0, 3.0);
   Point<Real> point_l_cmp =
           PointSpherical(point_l.norm()*cos(PI/2.0-point_l.theta()), PI/2.0, point_l.phi());
+  AVOID_UNUSED_WARNING(point_l_cmp);
   ASSERT(IsApproximatelyEqual(Projection(point_l, Point<Real>(0,0,1)), point_l_cmp));
   
   // Test IntersectionPlaneLine
