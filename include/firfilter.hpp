@@ -30,7 +30,7 @@ private:
   size_t update_index_;
   size_t update_length_;
   bool updating_;
-
+  Vector<T> temp_data_;
 
   void GetExtendedInput(
     const Vector<T>& input,
@@ -104,6 +104,7 @@ public:
     , update_index_(0)
     , update_length_(0)
     , updating_(false)
+    , temp_data_()
   {
     SetToZero(delay_line_);
   }
@@ -111,7 +112,8 @@ public:
 
   /** Constructs an FIR filter with impulse response B. */
   FirFilter(
-    const Vector<T>& B) noexcept
+    const Vector<T>& B,
+    size_t max_expected_input_length = 0) noexcept
     : delay_line_(B.size())
     , coefficients_(B)
     , counter_(B.size() - 1)
@@ -121,6 +123,7 @@ public:
     , update_index_(0)
     , update_length_(0)
     , updating_(false)
+    , temp_data_(Vector(max_expected_input_length, T(0.0)))
   {
     SetToZero(delay_line_);
   }
@@ -267,9 +270,12 @@ public:
       FilterSerial(input, output);
       return;
     }
-    Vector<T> extended_input(num_samples + length_ - 1, 0.0);
-    GetExtendedInput(input, extended_input);
-    Conv(extended_input, coefficients_, output);
+    if (temp_data_.size() < num_samples + length_ - 1)
+    {
+      temp_data_ = Vector<T>(num_samples + length_ - 1);
+    }
+    GetExtendedInput(input, temp_data_);
+    Conv(temp_data_, coefficients_, output);
     // Reorganise state for the next run
     for (size_t i = 0; i < length_; ++i)
     {
