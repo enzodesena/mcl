@@ -15,9 +15,9 @@ namespace mcl
 {
 template<
   typename ConstForwardIterator,
-  typename ConstForwardIteratorT = typename std::iterator_traits<ConstForwardIterator>::value_type,
   typename ForwardIterator,
-  typename ForwardIteratorT = typename std::iterator_traits<ForwardIterator>::value_type>
+  typename ForwardIteratorT = typename std::iterator_traits<ForwardIterator>::value_type,
+  typename ConstForwardIteratorT = typename std::iterator_traits<ConstForwardIterator>::value_type>
 void ForEach(
   ConstForwardIterator input_begin,
   const ConstForwardIterator input_end,
@@ -32,15 +32,16 @@ void ForEach(
 
 
 template<
-  typename ConstForwardIterator,
-  typename T = typename std::iterator_traits<ConstForwardIterator>::value_type,
-  typename ForwardIterator>
+  typename ForwardIteratorInputA,
+  typename ForwardIteratorInputB,
+  typename ForwardIteratorOutput,
+  typename T = typename std::iterator_traits<ForwardIteratorOutput>::value_type>
 void ForEach(
-  ConstForwardIterator input_a_begin,
-  const ConstForwardIterator input_a_end,
-  ConstForwardIterator input_b_begin,
+  ForwardIteratorInputA input_a_begin,
+  const ForwardIteratorInputA input_a_end,
+  ForwardIteratorInputB input_b_begin,
   std::function<T(T,T)> pointwise_operation,
-  ForwardIterator output_iter) noexcept
+  ForwardIteratorOutput output_iter) noexcept
 {
   while (input_a_begin != input_a_end)
   {
@@ -115,8 +116,8 @@ void ForEach(
 
 template<
   typename ConstForwardIterator,
-  typename T = typename std::iterator_traits<ConstForwardIterator>::value_type,
-  typename ForwardIterator>
+  typename ForwardIterator,
+  typename T = typename std::iterator_traits<ForwardIterator>::value_type>
 void Multiply(
   ConstForwardIterator input_begin,
   const ConstForwardIterator input_end,
@@ -135,8 +136,8 @@ void Multiply(
 
 template<
   typename ConstForwardIterator,
-  typename T = typename std::iterator_traits<ConstForwardIterator>::value_type,
-  typename ForwardIterator>
+  typename ForwardIterator,
+  typename T = typename std::iterator_traits<ForwardIterator>::value_type>
 void Multiply(
   ConstForwardIterator input_a_begin,
   const ConstForwardIterator input_a_end,
@@ -155,15 +156,16 @@ void Multiply(
 
 
 template<
-  typename ConstForwardIterator,
-  typename T = typename std::iterator_traits<ConstForwardIterator>::value_type,
-  typename ForwardIterator>
+  typename ForwardIteratorInputA,
+  typename ForwardIteratorInputB,
+  typename ForwardIteratorOutput,
+  typename T = typename std::iterator_traits<ForwardIteratorOutput>::value_type>
 void MultiplyAdd(
-  ConstForwardIterator input_to_multiply_begin,
-  const ConstForwardIterator input_to_multiply_end,
+  ForwardIteratorInputA input_to_multiply_begin,
+  const ForwardIteratorInputA input_to_multiply_end,
   const T gain,
-  ConstForwardIterator input_to_add_begin,
-  ForwardIterator output_begin) noexcept
+  ForwardIteratorInputB input_to_add_begin,
+  ForwardIteratorOutput output_begin) noexcept
 {
   std::function<T(T,T)> operation = [gain](T a, T b) -> T
   {
@@ -180,14 +182,15 @@ void MultiplyAdd(
 
 
 template<
-  typename ConstForwardIterator,
-  typename T = typename std::iterator_traits<ConstForwardIterator>::value_type,
-  typename ForwardIterator>
+  typename ForwardIteratorInputA,
+  typename ForwardIteratorInputB,
+  typename ForwardIteratorOutput,
+  typename T = typename std::iterator_traits<ForwardIteratorOutput>::value_type>
 void Add(
-  ConstForwardIterator input_a_begin,
-  const ConstForwardIterator input_a_end,
-  ConstForwardIterator input_b_begin,
-  ForwardIterator output_begin) noexcept
+  ForwardIteratorInputA input_a_begin,
+  const ForwardIteratorInputA input_a_end,
+  ForwardIteratorInputB input_b_begin,
+  ForwardIteratorOutput output_begin) noexcept
 {
   std::function<T(T,T)> operation = [](T a, T b) -> T { return  a + b; };
   ForEach

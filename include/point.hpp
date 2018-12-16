@@ -281,8 +281,8 @@ T AngleBetweenDirections(
 
 template<typename T>
 T AngleBetweenPoints(
-  const Point<T>& point_a,
-  const Point<T>& point_b) noexcept
+  Point<T> point_a,
+  Point<T> point_b) noexcept
 {
   point_a.Normalize();
   point_b.Normalize();
