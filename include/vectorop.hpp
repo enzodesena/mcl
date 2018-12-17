@@ -81,11 +81,6 @@ void SetToZero(
 }
 
 
-/**
- Adds zero until the output vector has a length of total_length.
- If the length of input is smaller than total_length, than it returns the
- vector with the first total_length elements.
- */
 template<typename T>
 void ZeroPad(
   const Vector<T>& input,
@@ -106,6 +101,21 @@ void ZeroPad(
   }
 }
 
+
+/**
+ Adds zero until the output vector has a length of total_length.
+ If the length of input is smaller than total_length, than it returns the
+ vector with the first total_length elements.
+ */
+template<typename T>
+Vector<T> ZeroPad(
+  const Vector<T>& input,
+  const size_t output_length) noexcept
+{
+  Vector<T> output(output_length);
+  ZeroPad(input, output);
+  return std::move(output);
+}
 
 /** Returns a vector of zeros */
 template<class T>
@@ -283,23 +293,25 @@ Vector<T> Interleave(
 }
 
 
-//
+
 /** Decreases the sampling frequency of the input vector by keeping
  the first sample and then every `downsampling_factor`-th sample after the
  first. */
-//template<class T>
-//Vector<T> Downsample(
-//  const Vector<T>& vector,
-//  const Int downsampling_factor) noexcept
-//{
-//  ASSERT(downsampling_factor >= 1);
-//  Vector<T> output;
-//  for (size_t i=0; i<vector.size(); i += downsampling_factor)
-//  {
-//    output.PushBack(vector[i]);
-//  }
-//  return output;
-//}
+template<class T>
+Vector<T> Downsample(
+  const Vector<T>& input,
+  const Int downsampling_factor) noexcept
+{
+  ASSERT(downsampling_factor >= 1);
+  Vector<T> output(static_cast<size_t>(ceil(((float)input.size())/((float)downsampling_factor))));
+  auto input_iter = input.begin();
+  for (auto& element : output)
+  {
+    element = *input_iter;
+    input_iter += downsampling_factor;
+  }
+  return std::move(output);
+}
 
 /**
  This is equivalent to Matlab's from:to. E.g. 3:5 outputs a vector [3,4,5].

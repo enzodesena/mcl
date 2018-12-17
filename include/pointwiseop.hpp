@@ -97,9 +97,7 @@ template<typename T>
 void ForEach(
   const Vector<T>& input_a,
   const Vector<T>& input_b,
-  std::function<T(
-    T,
-    T)> pointwise_operation,
+  std::function<T(T,T)> pointwise_operation,
   Vector<T>& output) noexcept
 {
   ASSERT(input_a.size() == input_b.size());

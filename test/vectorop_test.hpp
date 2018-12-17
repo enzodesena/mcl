@@ -708,6 +708,23 @@ inline bool VectorOpTest()
   *iter_a = -2.0;
   ASSERT(reference_d[0] == -2.0);
   
+  
+  
+  // Testing general forward iterator
+  Vector<Real> referenced_b(3, 1.0);
+  referenced_b[0] = 2.0;
+  auto iter_fwd = referenced_b.GetFwdIteratorBegin();
+  auto iter_fwd_end = referenced_b.GetFwdIteratorEnd();
+  ASSERT(iter_fwd != iter_fwd_end);
+  ASSERT(*iter_fwd == 2.0);
+  
+  ++iter_fwd;
+  ASSERT(*iter_fwd == 1.0);
+  ASSERT(iter_fwd != iter_fwd_end);
+  
+  ++iter_fwd;
+  ASSERT(*iter_fwd == 1.0);
+  ASSERT(++iter_fwd == iter_fwd_end);
   return true;
 }
   

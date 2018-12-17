@@ -133,24 +133,24 @@
 		57A1565115933B8A00AA6445 /* include */ = {
 			isa = PBXGroup;
 			children = (
-				57BA700215B4263D002F077F /* mcltypes.hpp */,
-				5788B8262185FD2F00D935DE /* vector.hpp */,
-				57BA700315B4274D002F077F /* vectorop.hpp */,
-				57BA701215B43BC9002F077F /* comparisonop.hpp */,
-				57FE67CD1CFB795800E3CB2A /* point.hpp */,
-				576B25781CF9DFD200673FC0 /* quaternion.hpp */,
-				57BA700E15B43B07002F077F /* elementaryop.hpp */,
-				5774892E21AC4D2200D949F8 /* matrix.hpp */,
-				5708B0AE21A59B9B0000F5FD /* mclintrinsics.hpp */,
 				57BA701A15B49263002F077F /* basicop.hpp */,
+				57BA701215B43BC9002F077F /* comparisonop.hpp */,
 				5778D80915B616260015AAC9 /* digitalfilter.hpp */,
+				57BA700E15B43B07002F077F /* elementaryop.hpp */,
 				5778D80A15B616260015AAC9 /* firfilter.hpp */,
 				5778D80B15B616260015AAC9 /* iirfilter.hpp */,
+				5774892E21AC4D2200D949F8 /* matrix.hpp */,
 				57BA6FFE15B421F5002F077F /* matrixop.hpp */,
+				5708B0AE21A59B9B0000F5FD /* mclintrinsics.hpp */,
+				57BA700215B4263D002F077F /* mcltypes.hpp */,
+				57FE67CD1CFB795800E3CB2A /* point.hpp */,
 				57BA6FFC15B41B55002F077F /* pointwiseop.hpp */,
+				576B25781CF9DFD200673FC0 /* quaternion.hpp */,
 				57B71D12162DD224003411BA /* randomop.hpp */,
 				57BA701615B490C4002F077F /* transformop.hpp */,
 				577834D121AC6345007FD06C /* statisticsop.hpp */,
+				5788B8262185FD2F00D935DE /* vector.hpp */,
+				57BA700315B4274D002F077F /* vectorop.hpp */,
 			);
 			name = include;
 			sourceTree = "<group>";

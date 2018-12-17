@@ -8,6 +8,10 @@
 
 #pragma once
 
+#ifndef SMALL
+#define SMALL (0.00001)
+#endif
+
 #ifndef VERY_SMALL
 #define VERY_SMALL (0.0000000000001)
 #endif
@@ -234,19 +238,55 @@ bool IsEqual(
 }
 
 
-template<typename T, typename TPrecision>
-bool IsApproximatelyEqual(
-  const Vector<T>& vector_a,
-  const Vector<T>& vector_b,
-  const TPrecision precision = VERY_SMALL) noexcept
+inline bool IsApproximatelyEqual(
+  const Vector<double>& vector_a,
+  const Vector<double>& vector_b,
+  const double precision = double(VERY_SMALL)) noexcept
 {
-  return AreAllConditionsTrue<T>
+  return AreAllConditionsTrue<double>
   (
     vector_a,
     vector_b,
     [precision](
-    T a,
-    T b)
+    double a,
+    double b)
+    {
+      return IsApproximatelyEqual(a, b, precision);
+    });
+}
+
+
+inline bool IsApproximatelyEqual(
+  const Vector<float>& vector_a,
+  const Vector<float>& vector_b,
+  const float precision = float(VERY_SMALL)) noexcept
+{
+  return AreAllConditionsTrue<float>
+  (
+    vector_a,
+    vector_b,
+    [precision](
+    float a,
+    float b)
+    {
+      return IsApproximatelyEqual<float>(a, b, precision);
+    });
+}
+
+
+template<typename T>
+bool IsApproximatelyEqual(
+  const Vector<Complex<T>>& vector_a,
+  const Vector<Complex<T>>& vector_b,
+  const T precision = T(VERY_SMALL)) noexcept
+{
+  return AreAllConditionsTrue<Complex<T>>
+  (
+    vector_a,
+    vector_b,
+    [precision](
+    Complex<T> a,
+    Complex<T> b)
     {
       return IsApproximatelyEqual(a, b, precision);
     });

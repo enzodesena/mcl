@@ -51,7 +51,8 @@ private:
     inline bool operator>=(const GenIterator& rhs) const noexcept { return ptr_ >= rhs.ptr_; }
     inline bool operator<=(const GenIterator& rhs) const noexcept { return ptr_ <= rhs.ptr_; }
     
-    GenIterator() : ptr_(nullptr) {}
+    GenIterator() : ptr_(nullptr), vector_ref_(nullptr) {}
+    GenIterator(T* ptr) : ptr_(ptr), vector_ref_(nullptr) {}
 
     inline GenIterator& operator+=(DifferenceType rhs) noexcept { ptr_ += rhs; return *this; }
     inline GenIterator& operator-=(DifferenceType rhs) noexcept { ptr_ -= rhs; return *this; }
@@ -67,18 +68,19 @@ private:
     }
     
 #ifndef NDEBUG
-    GenIterator(T* ptr, const Vector<T>& vector) noexcept : ptr_(ptr) , vector_ref_(vector) {}
+    GenIterator(T* ptr, const Vector<T>* vector) noexcept : ptr_(ptr), vector_ref_(vector) {}
+    #define ASSERT_BOUNDS ASSERT((vector_ref_) ? IsWithinBoundsOf(*vector_ref_) : true);
     #define VECTOR_REF_ARG , vector_ref_
     #define VECTOR_RHS_REF_ARG , rhs.vector_ref_
 #else
-    GenIterator(T* ptr) : ptr_(ptr) {}
+    #define ASSERT_BOUNDS
     #define VECTOR_REF_ARG
     #define VECTOR_RHS_REF_ARG
 #endif
 
-    inline Reference operator*() const noexcept { ASSERT(IsWithinBoundsOf(vector_ref_)); return *ptr_; }
-    inline Reference operator[](DifferenceType rhs) const noexcept { ASSERT(IsWithinBoundsOf(vector_ref_)); return ptr_[rhs]; }
-    inline Pointer operator->() const noexcept { ASSERT(IsWithinBoundsOf(vector_ref_)); return ptr_; }
+    inline Reference operator*() const noexcept { ASSERT_BOUNDS return *ptr_; }
+    inline Reference operator[](DifferenceType rhs) const noexcept { ASSERT_BOUNDS return ptr_[rhs]; }
+    inline Pointer operator->() const noexcept { ASSERT_BOUNDS return ptr_; }
     
     inline GenIterator operator+(const GenIterator& rhs) noexcept { return GenIterator(ptr_+rhs.ptr VECTOR_REF_ARG); }
     inline GenIterator operator+(DifferenceType rhs) const noexcept { return GenIterator(ptr_+rhs VECTOR_REF_ARG); }
@@ -89,7 +91,7 @@ private:
   private:
     T* ptr_;
 #ifndef NDEBUG
-    const Vector<T>& vector_ref_;
+    const Vector<T>* vector_ref_;
 #endif
   };
   
@@ -193,7 +195,7 @@ public:
   }
 
 #ifndef NDEBUG
-    #define THIS_VECTOR_REF_ARG , *this
+    #define THIS_VECTOR_REF_ARG , this
 #else
     #define THIS_VECTOR_REF_ARG
 #endif
@@ -201,6 +203,45 @@ public:
   Iterator begin() noexcept
   {
     return Iterator(data_ptr_ THIS_VECTOR_REF_ARG);
+  }
+  
+  FwdIterator<T> GetFwdIteratorBegin() noexcept
+  {
+    return FwdIterator<T>
+    (
+      data_ptr_,
+      [](T*& ptr) { ++ptr; },
+      [](T* ptr) -> T& { return *ptr; });
+  }
+  
+  
+  FwdIterator<T> GetFwdIteratorEnd() noexcept
+  {
+    return FwdIterator<T>
+    (
+      data_ptr_ + size_,
+      [](T*& ptr) { ++ptr; },
+      [](T* ptr) -> T& { return *ptr; });
+  }
+  
+  
+  ConstFwdIterator<T> GetFwdIteratorBegin() const noexcept
+  {
+    return ConstFwdIterator<T>
+    (
+      data_ptr_,
+      [](T*& ptr) { ++ptr; },
+      [](T* ptr) -> T& { return *ptr; });
+  }
+  
+  
+  ConstFwdIterator<T> GetFwdIteratorEnd() const noexcept
+  {
+    return ConstFwdIterator<T>
+    (
+      data_ptr_ + size_,
+      [](T*& ptr) { ++ptr; },
+      [](T* ptr) -> T& { return *ptr; });
   }
 
 

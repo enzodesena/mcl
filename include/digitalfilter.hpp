@@ -19,6 +19,10 @@ public:
   virtual void Filter(
     const Vector<T>& input,
     Vector<T>& output) noexcept = 0;
+  virtual void FilterAdd(
+    const Vector<T>& input_to_filter,
+    const Vector<T>& input_to_add,
+    Vector<T>& output) noexcept = 0;
 
   virtual void Reset() noexcept = 0;
 };
@@ -62,20 +66,20 @@ public:
 
 
   void Filter(
-    const Vector<double>& input,
-    Vector<double>& output) noexcept
+    const Vector<T>& input,
+    Vector<T>& output) noexcept
   {
     self_->Filter_(input, output);
   }
 
 
-  void Filter(
-    const Vector<float>& input,
-    Vector<float>& output) noexcept
+  void FilterAdd(
+    const Vector<T>& input_to_filter,
+    const Vector<T>& input_to_add,
+    Vector<T>& output) noexcept
   {
-    self_->Filter_(input, output);
+    self_->FilterAdd_(input_to_filter, input_to_add, output);
   }
-
 
   void Reset() noexcept
   {
@@ -89,7 +93,11 @@ private:
     virtual ~DigitalFilterConcept() = default;
     virtual void Filter_(
       const Vector<T>& input,
-      Vector<T>& output) = 0;
+      Vector<T>& output) noexcept = 0;
+    virtual void FilterAdd_(
+      const Vector<T>& input_to_filter,
+      const Vector<T>& input_to_add,
+      Vector<T>& output) noexcept = 0;
     virtual void Reset_() = 0;
     virtual std::unique_ptr<DigitalFilterConcept> copy_() = 0;
   };
@@ -121,6 +129,13 @@ private:
       data_.Filter(input, output);
     }
 
+    void FilterAdd_(
+      const Vector<T>& input_to_filter,
+      const Vector<T>& input_to_add,
+      Vector<T>& output) noexcept override
+    {
+      data_.FilterAdd(input_to_filter, input_to_add, output);
+    }
 
     void Reset_() noexcept override
     {
@@ -174,6 +189,15 @@ public:
     Multiply(input, gain_, output);
   }
 
+  void FilterAdd(
+    const Vector<T>& input_to_filter,
+    const Vector<T>& input_to_add,
+    Vector<T>& output) noexcept
+  {
+    ASSERT(input_to_filter.size() == input_to_add.size());
+    ASSERT(input_to_filter.size() == output.size());
+    MultiplyAdd(input_to_filter, gain_, input_to_add, output);
+  }
 
   void Reset()
   {

@@ -253,6 +253,7 @@ void ConvSerial(
   ASSERT(N+P >= 1 && input.size() >= N+P-1);
   for (size_t n = 0; n < N; ++n)
   {
+    output[n] = T(0.0);
     for (size_t p = 0; p < P; ++p)
     {
       output[n] += input[n + p] * kernel[P - 1 - p];
@@ -264,15 +265,15 @@ void ConvSerial(
 
 inline void ConvApple(
   const Vector<double>& padded_input,
-  const Vector<double>& coefficients,
+  const Vector<double>& kernel,
   Vector<double>& output)
 {
   vDSP_convD(
     &padded_input[0], 1,
-    &coefficients[0]+coefficients.size()-1, -1,
+    &kernel[0]+kernel.size()-1, -1,
     &output[0], 1,
     output.size(),
-    coefficients.size());
+    kernel.size());
 }
 #endif
 
@@ -284,10 +285,10 @@ inline void ConvApple(
 {
   vDSP_conv(
     &input[0], 1,
-    &coefficients[0]+coefficients.size()-1, -1,
+    &kernel[0]+kernel.size()-1, -1,
     &output[0], 1,
     output.size(),
-    coefficients.size());
+    kernel.size());
 }
 #endif
 
@@ -395,11 +396,11 @@ void Conv(
 {
   ASSERT(input.size() >= kernel.size()+output.size()-1);
 #if defined(MCL_APPLE_ACCELERATE_MMA) && MCL_APPLE_ACCELERATE_MMA
-  MathIntrinsics<T>::ConvApple(input, kernel, output);
+  ConvApple(input, kernel, output);
 #elif defined(MCL_AVX_ACCELERATE) && MCL_AVX_ACCELERATE
-  MathIntrinsics<T>::ConvAvx(input, kernel, output);
+  ConvAvx(input, kernel, output);
 #elif defined(MCL_NEON_ACCELERATE) && MCL_NEON_ACCELERATE
-  MathIntrinsics<T>::ConvNeon(input, kernel, output);
+  ConvNeon(input, kernel, output);
 #else
   ConvSerial(input, kernel, output);
 #endif

@@ -120,10 +120,38 @@ public:
       ForEach<T,T>
       (
         input,
-        [this](
-        T element)
+        [this](T element)
         {
           return this->FilterSample(element);
+        },
+        output);
+    }
+  }
+  
+  
+  void FilterAdd(
+    const Vector<T>& input_to_filter,
+    const Vector<T>& input_to_add,
+    Vector<T>& output) noexcept override
+  {
+    if (B_.size() == 1)
+    {
+      MultiplyAdd
+      (
+        input_to_filter,
+        B_[0],
+        input_to_add,
+        output);
+    }
+    else
+    {
+      ForEach<T>
+      (
+        input_to_filter,
+        input_to_add,
+        [this](T element_to_filter, T element_to_add) -> T
+        {
+          return this->FilterSample(element_to_filter) + element_to_add;
         },
         output);
     }

@@ -88,12 +88,48 @@ using Complex = std::complex<T>;
 //typedef std::complex<Real> Complex; /**< Complex type */
 
 #ifdef MCL_ENV64BIT
-  typedef unsigned long long UInt; /**< Unsigned int type */
-  typedef long long Int; /**< Int type */
+typedef unsigned long long UInt; /**< Unsigned int type */
+typedef long long Int; /**< Int type */
 #else // If it is 32 bits or unknown then...
 typedef unsigned long UInt; /**< Unisgned int type */
 typedef long Int; /**< Int type */
 #endif
+
+template<typename T, bool is_const = false>
+class GenFwdIterator : public std::iterator<std::forward_iterator_tag, T>
+{
+public:
+  typedef typename std::conditional<is_const,const T*,T*>::type Pointer;
+  typedef typename std::conditional<is_const,const T&,T&>::type Reference;
+
+  GenFwdIterator(
+    T* ptr,
+    std::function<void(T*&)> increment_function,
+    std::function<T&(T*)> dereference_function)
+    : ptr_(ptr)
+    , increment_function_(increment_function)
+    , dereference_function_(dereference_function)
+  {
+  }
+
+  inline bool operator==(const GenFwdIterator& rhs) const noexcept { return ptr_ == rhs.ptr_; }
+  inline bool operator!=(const GenFwdIterator& rhs) const noexcept { return ptr_ != rhs.ptr_; }
+  
+  inline GenFwdIterator& operator++() noexcept { increment_function_(ptr_); return *this; }
+  inline GenFwdIterator operator++(int /* unused */) noexcept { GenFwdIterator temp(*this); increment_function_(ptr_); return temp; }
+  
+  inline Reference operator*() const noexcept { return dereference_function_(ptr_); }
+private:
+  T* ptr_;
+  std::function<void(T*&)> increment_function_;
+  std::function<T&(T*)> dereference_function_;
+};
+
+template<typename T>
+using FwdIterator = GenFwdIterator<T, false>;
+template<typename T>
+using ConstFwdIterator = GenFwdIterator<T, true>;
+
 
 /** Singleton class carrying information about the runtime environment */
 class RuntimeArchInfo
