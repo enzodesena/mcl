@@ -61,7 +61,7 @@ constexpr T pi_const = T(
 #endif
 
 // Exclude multiply and multiply-add as the compiler is able to do a better job
-#define MCL_APPLE_ACCELERATE_MMA 0
+#define MCL_APPLE_ACCELERATE_MMA 1
 
 #define MCL_MAX_VLA_LENGTH 16384
 

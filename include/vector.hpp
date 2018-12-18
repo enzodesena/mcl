@@ -51,8 +51,8 @@ private:
     inline bool operator>=(const GenIterator& rhs) const noexcept { return ptr_ >= rhs.ptr_; }
     inline bool operator<=(const GenIterator& rhs) const noexcept { return ptr_ <= rhs.ptr_; }
     
-    GenIterator() : ptr_(nullptr), vector_ref_(nullptr) {}
-    GenIterator(T* ptr) : ptr_(ptr), vector_ref_(nullptr) {}
+    GenIterator() : ptr_(nullptr) {}
+    GenIterator(T* ptr) : ptr_(ptr) {}
 
     inline GenIterator& operator+=(DifferenceType rhs) noexcept { ptr_ += rhs; return *this; }
     inline GenIterator& operator-=(DifferenceType rhs) noexcept { ptr_ -= rhs; return *this; }
@@ -91,7 +91,7 @@ private:
   private:
     T* ptr_;
 #ifndef NDEBUG
-    const Vector<T>* vector_ref_;
+    const Vector<T>* vector_ref_ = nullptr;
 #endif
   };
   

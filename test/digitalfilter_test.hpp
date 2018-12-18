@@ -471,53 +471,92 @@ inline bool FirFilterTest()
 
 inline void FirFilterSpeedTests() {
 
+  constexpr size_t kernel_length_pow2 = 1024;
+  constexpr size_t kernel_length_non_pow2 = 1023;
+  constexpr size_t batch_size = 128;
+  constexpr Real input_seconds = 5.0;
+  constexpr Real sampling_frequency = 44100;
+  
+  const size_t num_input_samples = round(input_seconds*sampling_frequency);
+  
   RandomGenerator random_generator;
 
-  Vector<Real> impulse_response = random_generator.Rand(1024);
+  Vector<Real> impulse_response = random_generator.Rand(kernel_length_pow2);
   FirFilter<Real> fir_filter(impulse_response);
-  Vector<Real> input = random_generator.Rand(44100);
-  Vector<Real> output(2205);
+  Vector<Real> input = random_generator.Rand(num_input_samples);
+  Vector<Real> output(num_input_samples);
+  Vector<Real> batch_input = random_generator.Rand(batch_size);
+  Vector<Real> batch_output(batch_size);
   
   clock_t launch=clock();
-  for (Int i = 0; i<20; i++) {
-    fir_filter.Filter(GetSegment(input, i, 2205), output);
+  for (size_t i = 0; i<floor(num_input_samples/batch_size); i++) {
+    fir_filter.Filter(batch_input, batch_output);
   }
   clock_t done=clock();
 
   std::cout<<"Fir filter speed (batch; filter length is not power of 2): "<<
-  (done - launch) / ((Real) CLOCKS_PER_SEC)*100<<"% \n";
+  (done - launch) / ((Real) CLOCKS_PER_SEC) / input_seconds*100<<"% \n";
 
   launch=clock();
-  for (Int i=0; i<(Int)input.size(); ++i) {
-    fir_filter.Filter(input[i]);
+  for (size_t i=0; i<input.size(); ++i) {
+    output[i] = fir_filter.Filter(input[i]);
   }
   done=clock();
 
   std::cout<<"Fir filter speed (sequential; filter length is not power of 2): "<<
-  (done - launch) / ((Real) CLOCKS_PER_SEC)*100<<"% \n";
+  (done - launch) / ((Real) CLOCKS_PER_SEC) / input_seconds*100<<"% \n";
 
-  FirFilter<Real> fir_filter_b(random_generator.Rand(1024));
 
-  Vector<Real> output_b(2205);
-  
+
+  FirFilter<Real> fir_filter_b(random_generator.Rand(kernel_length_non_pow2));
+
   launch=clock();
-  for (Int i = 0; i<20; i++) {
-    fir_filter_b.Filter(GetSegment(input, i, 2205), output_b);
+  for (size_t i = 0; i<floor(num_input_samples/batch_size); i++) {
+    fir_filter_b.Filter(batch_input, batch_output);
   }
   done=clock();
 
   std::cout<<"Fir filter speed (batch; filter length is power of 2): "<<
-  (done - launch) / ((Real) CLOCKS_PER_SEC)*100<<"% \n";
+  (done - launch) / ((Real) CLOCKS_PER_SEC) / input_seconds*100<<"% \n";
 
   launch=clock();
-  for (Int i=0; i<(Int)input.size(); ++i) {
-    fir_filter_b.Filter(input[i]);
+  for (size_t i=0; i<input.size(); ++i) {
+    output[i] = fir_filter_b.Filter(input[i]);
   }
   done=clock();
 
   std::cout<<"Fir filter speed (sequential; filter length is power of 2): "<<
-  (done - launch) / ((Real) CLOCKS_PER_SEC)*100<<"% \n";
+  (done - launch) / ((Real) CLOCKS_PER_SEC) / input_seconds*100<<"% \n";
 
+}
+
+
+inline void IirFilterSpeedTests() {
+
+  constexpr size_t filter_order = 3;
+  constexpr Real input_seconds = 10.0;
+  constexpr Real sampling_frequency = 44100;
+  
+  const size_t num_input_samples = round(input_seconds*sampling_frequency);
+  
+  RandomGenerator random_generator;
+
+  Vector<Real> B = random_generator.Rand(filter_order);
+  Vector<Real> A = random_generator.Rand(filter_order);
+  A[0] = 1.0;
+  
+  IirFilter<Real> iir_filter(B, A);
+  Vector<Real> input = random_generator.Rand(num_input_samples);
+  Vector<Real> output(num_input_samples);
+
+  clock_t launch=clock();
+  for (size_t i=0; i<input.size(); ++i) {
+    output[i] = iir_filter.Filter(input[i]);
+  }
+  clock_t done=clock();
+
+  std::cout<<"Iir filter speed (sequential; filter length is not power of 2): "<<
+  (done - launch) / ((Real) CLOCKS_PER_SEC) / input_seconds*100<<"% \n";
 }
 
 } // namespace mcl

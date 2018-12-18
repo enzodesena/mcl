@@ -85,7 +85,7 @@ inline bool PointWiseOpTest()
   pow_vector_e_cmp[2] = pow(vector_e[2], 3.0);
   pow_vector_e_cmp[3] = pow(vector_e[3], 3.0);
   
-  ASSERT(IsEqual(pow_vector_e, pow_vector_e_cmp));
+  ASSERT(IsApproximatelyEqual(pow_vector_e, pow_vector_e_cmp));
   
   
   
@@ -96,7 +96,7 @@ inline bool PointWiseOpTest()
   abs_vector_e_cmp[2] = 2.4;
   abs_vector_e_cmp[3] = 12.4;
   
-  ASSERT(IsEqual(abs_vector_e, abs_vector_e_cmp));
+  ASSERT(IsApproximatelyEqual(abs_vector_e, abs_vector_e_cmp));
   
   Vector<Real> abs_pow_vector_e = Pow(abs_vector_e, -1.0/3.0);
   

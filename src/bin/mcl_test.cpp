@@ -59,6 +59,7 @@ int main (int argc, char * const argv[]) {
 #endif
 
   mcl::FirFilterSpeedTests();
+  mcl::IirFilterSpeedTests();
   
   return 0;
 }

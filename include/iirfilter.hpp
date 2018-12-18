@@ -61,31 +61,33 @@ public:
     {
       return input * B_[0];
     }
-    size_t order = B_.size();
-    ASSERT(order > 1);
+    size_t size = B_.size();
+    ASSERT(size > 1);
     
-    // Transposed direct form II
-    T output = B_[0]*input + state_[0];
-    for (size_t i = 0; i <= order-2; ++i)
-    {
-      state_[i] = state_[i+1] + input*B_[i+1] - output*A_[i+1];
-    }
+    // Transposed direct form II (this appears to be slightly slower)
+//    T output = B_[0]*input + state_[0];
+//    for (size_t i = 0; i <= size-2; ++i)
+//    {
+//      state_[i] = state_[i+1] + input*B_[i+1] - output*A_[i+1];
+//    }
+
     // Direct form II
-//    T v = input; // The temporary value in the recursive branch.
-//    // The index i in both loops refers to the branch in the classic plot of a
-//    // direct form II, with the highest branch (the one multiplied by b(0) only)
-//    // being i=0.
-//    for (size_t i = 1; i < size; ++i)
-//    {
-//      v += state_[i - 1] * (-A_[i]);
-//      output += state_[i - 1] * B_[i];
-//    }
-//    for (size_t i = (size - 1); i >= 1; --i)
-//    {
-//      state_[i] = state_[i - 1];
-//    }
-//    state_[0] = input;
-//    output += v * B_[0];
+    T v = input; // The temporary value in the recursive branch.
+    T output(static_cast<T>(0.0));
+    // The index i in both loops refers to the branch in the classic plot of a
+    // direct form II, with the highest branch (the one multiplied by b(0) only)
+    // being i=0.
+    for (size_t i = 1; i < size; ++i)
+    {
+      v += state_[i - 1] * (-A_[i]);
+      output += state_[i - 1] * B_[i];
+    }
+    for (size_t i = (size - 1); i >= 1; --i)
+    {
+      state_[i] = state_[i - 1];
+    }
+    state_[0] = v;
+    output += v * B_[0];
     return output;
   }
 
