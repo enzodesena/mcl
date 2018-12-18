@@ -89,6 +89,8 @@ inline bool IirFilterTest()
   A_d[0] = 1.005844676087000;
   A_d[1] = -1.999977314492666;
   A_d[2] = 0.994178009420333;
+  B_d = Multiply(B_d, 1/A_d[0]);
+  A_d = Multiply(A_d, 1/A_d[0]);
   IirFilter<Real> filter_l(B_d, A_d);
   ASSERT(IsApproximatelyEqual(B_d, filter_l.B(), VERY_SMALL));
   ASSERT(IsApproximatelyEqual(A_d, filter_l.A(), VERY_SMALL));

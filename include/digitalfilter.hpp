@@ -19,6 +19,7 @@ public:
   virtual void Filter(
     const Vector<T>& input,
     Vector<T>& output) noexcept = 0;
+    
   virtual void FilterAdd(
     const Vector<T>& input_to_filter,
     const Vector<T>& input_to_add,

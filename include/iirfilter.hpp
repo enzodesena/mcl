@@ -23,13 +23,8 @@ public:
   IirFilter()
     : B_(mcl::UnaryVector<T>(1.0))
     , A_(mcl::UnaryVector<T>(1.0))
+    , state_()
   {
-    Int size = B_.size();
-    state_ = Vector<T>(size);
-    for (Int i = 0; i < size; ++i)
-    {
-      state_[i] = 0.0;
-    }
   }
 
 
@@ -42,24 +37,12 @@ public:
     const Vector<T>& A)
     : B_(B)
     , A_(A)
+    , state_(B.size(), static_cast<T>(0.0))
   {
     // TODO: implement also for B.size != A.size
     ASSERT(B.size() == A.size());
     ASSERT(B.size() >= 1);
-
-    A0_ = A[0];
-    if (! IsApproximatelyEqual(A[0], 1.0, std::numeric_limits<T>::epsilon()))
-    {
-      B_ = Multiply(B, (T)1.0 / A[0]);
-      A_ = Multiply(A, (T)1.0 / A[0]);
-    }
-
-    Int size = B.size();
-    state_ = Vector<T>(size);
-    for (Int i = 0; i < size; ++i)
-    {
-      state_[i] = 0.0;
-    }
+    ASSERT(IsApproximatelyEqual(A[0], 1.0, std::numeric_limits<T>::epsilon()));
   }
 
 
@@ -78,24 +61,31 @@ public:
     {
       return input * B_[0];
     }
-    size_t size = B_.size();
-    ASSERT(size >= 1);
-    T v = input; // The temporary value in the recursive branch.
-    T output(0.0);
-    // The index i in both loops refers to the branch in the classic plot of a
-    // direct form II, with the highest branch (the one multiplied by b(0) only)
-    // being i=0.
-    for (size_t i = 1; i < size; ++i)
+    size_t order = B_.size();
+    ASSERT(order > 1);
+    
+    // Transposed direct form II
+    T output = B_[0]*input + state_[0];
+    for (size_t i = 0; i <= order-2; ++i)
     {
-      v += state_[i - 1] * (-A_[i]);
-      output += state_[i - 1] * B_[i];
+      state_[i] = state_[i+1] + input*B_[i+1] - output*A_[i+1];
     }
-    for (size_t i = (size - 1); i >= 1; --i)
-    {
-      state_[i] = state_[i - 1];
-    }
-    state_[0] = v;
-    output += v * B_[0];
+    // Direct form II
+//    T v = input; // The temporary value in the recursive branch.
+//    // The index i in both loops refers to the branch in the classic plot of a
+//    // direct form II, with the highest branch (the one multiplied by b(0) only)
+//    // being i=0.
+//    for (size_t i = 1; i < size; ++i)
+//    {
+//      v += state_[i - 1] * (-A_[i]);
+//      output += state_[i - 1] * B_[i];
+//    }
+//    for (size_t i = (size - 1); i >= 1; --i)
+//    {
+//      state_[i] = state_[i - 1];
+//    }
+//    state_[0] = input;
+//    output += v * B_[0];
     return output;
   }
 
@@ -187,7 +177,6 @@ public:
     ASSERT(A_.size() == A.size());
     B_ = B;
     A_ = A;
-    A0_ = A[0];
   }
 
 
@@ -210,14 +199,14 @@ public:
     const size_t coeff_id) const noexcept
   {
     ASSERT(coeff_id>=0 && coeff_id<=order());
-    return B_[coeff_id] * A0_;
+    return B_[coeff_id];
   }
 
 
   T GetDenominatorCoefficient(
     const size_t coeff_id) const noexcept
   {
-    return A_.at(coeff_id);
+    return A_[coeff_id];
   }
 
 
@@ -226,7 +215,7 @@ public:
     const T value) noexcept
   {
     ASSERT(coeff_id >= 0 && coeff_id<=order());
-    B_[coeff_id] = value / A0_;
+    B_[coeff_id] = value;
   }
 
 
@@ -236,10 +225,6 @@ public:
   {
     ASSERT(coeff_id >= 0 &&coeff_id<(Int)A_.size());
     A_[coeff_id] = value;
-    if (coeff_id == 0)
-    {
-      A0_ = value;
-    }
   }
 
 
@@ -247,7 +232,7 @@ public:
   Vector<T> B() const
   {
     // Return the non-normalised version
-    return Multiply(B_, A0_);
+    return B_;
   }
 
 
@@ -255,7 +240,7 @@ public:
   Vector<T> A() const
   {
     // Return the non-normalised version
-    return Multiply(A_, A0_);
+    return A_;
   }
 
 
@@ -268,10 +253,6 @@ public:
 private:
   Vector<T> B_;
   Vector<T> A_;
-
-  // By storing A[0] before normalisation we can output B() and A() before
-  // normalisation while keeping the internal representation normalised
-  T A0_;
 
   Vector<T> state_;
 };
