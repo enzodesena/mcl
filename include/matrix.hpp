@@ -63,7 +63,7 @@ public:
       for (size_t i = 1; i < num_rows_; ++i)
       {
         // Check that all rows have the same number of columns
-        if ((Int)vectors[i].size() != num_columns_)
+        if (vectors[i].size() != num_columns_)
         {
           ASSERT_WITH_MESSAGE(false,
             "One or more rows do not have the same number of columns");
@@ -232,7 +232,7 @@ public:
       }
       else
       {
-        ASSERT(number_of_columns == (Int)elements.size());
+        ASSERT(number_of_columns == elements.size());
       }
 
       ++number_of_rows;

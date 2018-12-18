@@ -417,6 +417,17 @@ Vector<T> Add(
   return std::move(output);
 }
 
+template<typename T>
+Vector<T> Add(
+  const Vector<T>& input,
+  const T scalar) noexcept
+{
+  Vector<T> output(input.size());
+  std::function<T(T)> operation = [scalar] (T value) { return value+scalar; };
+  ForEach(input, operation, output);
+  return std::move(output);
+}
+
 
 /**
  Returns the point by point multiplication of the vector with the gain.
