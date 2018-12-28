@@ -252,8 +252,7 @@ inline bool FirFilterTest()
   impulse[1] = 0.0;
   impulse[2] = 0.0;
 
-  FirFilter<Real> filter_a;
-  filter_a.SetImpulseResponse(impulse_resp);
+  FirFilter<Real> filter_a(impulse_resp);
   Vector<Real> output_aa(impulse.size());
   filter_a.Filter(impulse, output_aa);
   ASSERT(IsEqual(output_aa, impulse_resp));
@@ -321,7 +320,7 @@ inline bool FirFilterTest()
   filter_l.Filter(input_b, output_b);
   ASSERT(IsApproximatelyEqual(output_b_cmp, output_b, VERY_SMALL));
 
-  filter_l.Reset();
+  filter_l.SetStateToZero();
   for (Int i=0; i<(Int)input_b.size(); ++i) {
     ASSERT(IsApproximatelyEqual(filter_l.Filter(input_b[i]), output_b_cmp[i]));
   }
@@ -356,7 +355,7 @@ inline bool FirFilterTest()
 
 
   // Various attempt to check that the batch processing does not mess up
-  filter_m.Reset();
+  filter_m.SetStateToZero();
   Vector<Real> input_c_sub_a(input_c.begin(), input_c.begin()+16);
   Vector<Real> output_c_cmp_sub_a(output_c_cmp.begin(), output_c_cmp.begin()+16);
   Vector<Real> output_cc(input_c_sub_a.size());
@@ -371,7 +370,7 @@ inline bool FirFilterTest()
   ASSERT(IsApproximatelyEqual(output_c_sub_b, output_c_cmp_sub_b, VERY_SMALL));
 
   //
-  filter_m.Reset();
+  filter_m.SetStateToZero();
   ASSERT(IsEqual(filter_m.Filter(input_c[0]), output_c_cmp[0]));
   ASSERT(IsApproximatelyEqual(filter_m.Filter(input_c[1]), output_c_cmp[1]));
   ASSERT(IsApproximatelyEqual(filter_m.Filter(input_c[2]), output_c_cmp[2]));
@@ -393,13 +392,13 @@ inline bool FirFilterTest()
   ASSERT(IsApproximatelyEqual(output_k, output_k_cmp, VERY_SMALL));
 
   //
-  filter_k.Reset();
+  filter_k.SetStateToZero();
   for (Int i=0; i<(Int)input_c.size()-1; ++i) {
     ASSERT(IsApproximatelyEqual(filter_k.Filter(input_k[i]), output_k_cmp[i]));
   }
 
   //
-  filter_k.Reset();
+  filter_k.SetStateToZero();
   ASSERT(IsApproximatelyEqual(filter_k.Filter(input_k[0]), output_k_cmp[0]));
   ASSERT(IsApproximatelyEqual(filter_k.Filter(input_k[1]), output_k_cmp[1]));
   Vector<Real> input_k_sub_a = Vector<Real>(input_k.begin()+2,
@@ -423,7 +422,7 @@ inline bool FirFilterTest()
   ASSERT(IsApproximatelyEqual(output_k_sub_c, Vector<Real>(output_k_cmp.begin()+11, output_k_cmp.begin()+20), VERY_SMALL));
 
   //
-  filter_k.Reset();
+  filter_k.SetStateToZero();
   ASSERT(IsApproximatelyEqual(filter_k.Filter(input_k[0]), output_k_cmp[0]));
   ASSERT(IsApproximatelyEqual(filter_k.Filter(input_k[1]), output_k_cmp[1]));
   ASSERT(IsApproximatelyEqual(filter_k.Filter(input_k[2]), output_k_cmp[2]));
@@ -442,7 +441,7 @@ inline bool FirFilterTest()
   FirFilter<Real> filter_t(UnaryVector<Real>(1.0));
   ASSERT(IsApproximatelyEqual(filter_t.Filter(0.76), 0.76));
   ASSERT(IsApproximatelyEqual(filter_t.Filter(1.0), 1.0));
-  filter_t.SetImpulseResponse(UnaryVector<Real>(0.3), 1);
+  filter_t.SetNumeratorCoeffs(UnaryVector<Real>(0.3), 2);
   ASSERT(IsApproximatelyEqual(filter_t.Filter(1.0), 0.5*1.0+0.5*0.3));
   ASSERT(IsApproximatelyEqual(filter_t.Filter(1.0), 0.3));
 
@@ -450,7 +449,7 @@ inline bool FirFilterTest()
   FirFilter<Real> filter_u(BinaryVector<Real>(1.0, 0.5));
   ASSERT(IsApproximatelyEqual(filter_u.Filter(0.76), 0.76));
   ASSERT(IsApproximatelyEqual(filter_u.Filter(1.0), 1.0+0.76*0.5));
-  filter_u.SetImpulseResponse(BinaryVector<Real>(2.0, -0.5), 2);
+  filter_u.SetNumeratorCoeffs(BinaryVector<Real>(2.0, -0.5), 3);
   ASSERT(IsApproximatelyEqual(filter_u.Filter(0.76), 1.18));
   ASSERT(IsApproximatelyEqual(filter_u.Filter(1.0), 1.54));
   ASSERT(IsApproximatelyEqual(filter_u.Filter(0.76), 1.02));
@@ -482,10 +481,12 @@ inline void FirFilterSpeedTests() {
   constexpr size_t kernel_length_pow2 = 1024;
   constexpr size_t kernel_length_non_pow2 = 1023;
   constexpr size_t batch_size = 128;
-  constexpr Real input_seconds = 5.0;
+  constexpr Real input_seconds = 10.0;
+  constexpr Real input_single_seconds = input_seconds*10.0;
   constexpr Real sampling_frequency = 44100;
   
   const size_t num_input_samples = round(input_seconds*sampling_frequency);
+  const size_t num_input_single_samples = round(input_single_seconds*sampling_frequency);
   
   RandomGenerator random_generator;
 
@@ -535,7 +536,31 @@ inline void FirFilterSpeedTests() {
 
   std::cout<<"Fir filter speed (sequential; filter length is power of 2): "<<
   (done - launch) / ((Real) CLOCKS_PER_SEC) / input_seconds*100<<"% \n";
+  
+  
+  
+  Vector<Real> input_single = random_generator.Rand(num_input_single_samples);
+  Vector<Real> output_single(num_input_single_samples, 0.0);
+  
+  FirFilter<Real> fir_filter_c(UnaryVector<Real>(1.32));
 
+  launch=clock();
+  for (size_t i = 0; i<floor(num_input_single_samples/batch_size); i++) {
+    fir_filter_c.Filter(batch_input, batch_output);
+  }
+  done=clock();
+
+  std::cout<<"Fir filter speed (batch; filter length is 1): "<<
+  (done - launch) / ((Real) CLOCKS_PER_SEC) / input_single_seconds*100<<"% \n";
+
+  launch=clock();
+  for (size_t i=0; i<input_single.size(); ++i) {
+    output_single[i] = fir_filter_c.Filter(input_single[i]);
+  }
+  done=clock();
+
+  std::cout<<"Fir filter speed (sequential; filter length is 1): "<<
+  (done - launch) / ((Real) CLOCKS_PER_SEC) / input_single_seconds*100<<"% \n";
 }
 
 

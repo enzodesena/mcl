@@ -327,33 +327,6 @@ public:
 };
 
 
-//
-//  /** Implements a first-order IIR low-pass filter with a given decay constant. */
-//  class RampSmoothingFilter : public DigitalFilter {
-//  public:
-//    
-//    /**
-//     @param[in] ramp_samples number of samples after which the value is
-//     to 1/e away from target value. */
-//    RampSmoothingFilter(const T ramp_samples) noexcept {
-//      ASSERT_WITH_MESSAGE(std::isgreaterequal(ramp_samples, 0),
-//                          "Decay constant cannot be negative ");
-//      
-//      
-//    }
-//    
-//    virtual T Filter(const T input) noexcept {
-//      return filter_.Filter(input);
-//    }
-//    
-//    using DigitalFilter::Filter;
-//    
-//    virtual void Reset() noexcept { filter_.Reset(); }
-//    
-//    
-//  private:
-//  };
-//  
 ///** Implements a first-order IIR low-pass filter with a given decay constant. */
 //class LowPassSmoothingFilter : public DigitalFilter {
 //public:

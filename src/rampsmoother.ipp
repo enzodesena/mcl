@@ -8,7 +8,7 @@
  */
 
 
-namespace sal
+namespace mcl
 {
 template<typename T>
 RampSmoother<T>::RampSmoother(
@@ -116,13 +116,13 @@ T RampSmoother<T>::target_value() const noexcept
 template<typename T>
 void RampSmoother<T>::SetTargetValue(
   const T target_value,
-  const Time ramp_samples) noexcept
+  const double ramp_samples) noexcept
 {
   ASSERT_WITH_MESSAGE
   (
     std::isgreaterequal(ramp_samples, 0.0),
     "Ramp samples cannot be negative ");
-  if ((mcl::RoundToInt(ramp_samples)) == 0)
+  if (ramp_samples < 1.0)
   {
     target_value_ = target_value;
     current_value_ = target_value;
@@ -132,7 +132,7 @@ void RampSmoother<T>::SetTargetValue(
 
   if (std::islessgreater(target_value, target_value_))
   {
-    const Int num_update_samples = mcl::RoundToInt(ramp_time);
+    const Int num_update_samples = mcl::RoundToInt(ramp_samples);
     countdown_ = num_update_samples;
     target_value_ = target_value;
 

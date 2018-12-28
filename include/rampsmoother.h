@@ -8,7 +8,7 @@
 
 #pragma once
 
-namespace sal
+namespace mcl
 {
 
 template<typename T>
@@ -55,7 +55,7 @@ public:
     */
   void SetTargetValue(
     const T target_value,
-    const Time ramp_samples) noexcept;
+    const double ramp_samples) noexcept;
 
   bool IsUpdating() const noexcept;
 

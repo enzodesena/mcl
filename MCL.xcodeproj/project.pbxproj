@@ -143,8 +143,8 @@
 			children = (
 				577834D921AC9190007FD06C /* basicop_test.hpp */,
 				577834D621AC9190007FD06C /* comparisonop_test.hpp */,
-				577834D821AC9190007FD06C /* digitalfilter_test.hpp */,
 				577834DD21AC9191007FD06C /* elementaryop_test.hpp */,
+				577834D821AC9190007FD06C /* digitalfilter_test.hpp */,
 				577834E221AC9191007FD06C /* matrixop_test.hpp */,
 				577834DB21AC9191007FD06C /* mclintrinsics_test.hpp */,
 				577834E121AC9191007FD06C /* point_test.hpp */,
