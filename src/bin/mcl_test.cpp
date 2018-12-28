@@ -58,7 +58,7 @@ int main (int argc, char * const argv[]) {
 #endif
 
   mcl::DigitalFilterSpeedTests();
-//  mcl::IirFilterSpeedTests();
+  mcl::IirFilterSpeedTests();
   
   return 0;
 }

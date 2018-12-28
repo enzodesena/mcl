@@ -49,7 +49,8 @@
 		5778D80915B616260015AAC9 /* digitalfilterbank.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = digitalfilterbank.hpp; path = include/digitalfilterbank.hpp; sourceTree = "<group>"; };
 		5778D80A15B616260015AAC9 /* digitalfilter.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = digitalfilter.hpp; path = include/digitalfilter.hpp; sourceTree = "<group>"; };
 		5788B8262185FD2F00D935DE /* vector.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = vector.hpp; path = include/vector.hpp; sourceTree = "<group>"; };
-		578E3CF521D67D8000571019 /* digitalfilter.ipp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = digitalfilter.ipp; path = src/digitalfilter.ipp; sourceTree = "<group>"; };
+		578E3CFC21D698D300571019 /* digitalfilter.ipp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = digitalfilter.ipp; path = include/impl/digitalfilter.ipp; sourceTree = "<group>"; };
+		578E3CFD21D698D300571019 /* rampsmoother.ipp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = rampsmoother.ipp; path = include/impl/rampsmoother.ipp; sourceTree = "<group>"; };
 		57A158AA1593501200AA6445 /* MCL_test */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = MCL_test; sourceTree = BUILT_PRODUCTS_DIR; };
 		57B71D12162DD224003411BA /* randomop.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = randomop.hpp; path = include/randomop.hpp; sourceTree = "<group>"; };
 		57BA6FFC15B41B55002F077F /* pointwiseop.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = pointwiseop.hpp; path = include/pointwiseop.hpp; sourceTree = "<group>"; };
@@ -61,7 +62,6 @@
 		57BA701615B490C4002F077F /* transformop.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = transformop.hpp; path = include/transformop.hpp; sourceTree = "<group>"; };
 		57BA701A15B49263002F077F /* basicop.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = basicop.hpp; path = include/basicop.hpp; sourceTree = "<group>"; };
 		57DF97D621D64DFB00079106 /* rampsmoother.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = rampsmoother.h; path = include/rampsmoother.h; sourceTree = "<group>"; };
-		57DF97D821D64E1800079106 /* rampsmoother.ipp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = rampsmoother.ipp; path = src/rampsmoother.ipp; sourceTree = "<group>"; };
 		57E73F9C1CD7CB1D00095F6E /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		57FE67CD1CFB795800E3CB2A /* point.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = point.hpp; path = include/point.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -112,14 +112,24 @@
 			name = include;
 			sourceTree = "<group>";
 		};
+		578E3CFB21D698C400571019 /* impl */ = {
+			isa = PBXGroup;
+			children = (
+				578E3CFC21D698D300571019 /* digitalfilter.ipp */,
+				578E3CFD21D698D300571019 /* rampsmoother.ipp */,
+			);
+			name = impl;
+			sourceTree = "<group>";
+		};
 		57A1565115933B8A00AA6445 /* include */ = {
 			isa = PBXGroup;
 			children = (
+				578E3CFB21D698C400571019 /* impl */,
 				57BA701A15B49263002F077F /* basicop.hpp */,
 				57BA701215B43BC9002F077F /* comparisonop.hpp */,
 				57BA700E15B43B07002F077F /* elementaryop.hpp */,
-				5778D80915B616260015AAC9 /* digitalfilterbank.hpp */,
 				5778D80A15B616260015AAC9 /* digitalfilter.hpp */,
+				5778D80915B616260015AAC9 /* digitalfilterbank.hpp */,
 				5774892E21AC4D2200D949F8 /* matrix.hpp */,
 				57BA6FFE15B421F5002F077F /* matrixop.hpp */,
 				5708B0AE21A59B9B0000F5FD /* mclintrinsics.hpp */,
@@ -187,8 +197,6 @@
 		57DF97D721D64E0900079106 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				578E3CF521D67D8000571019 /* digitalfilter.ipp */,
-				57DF97D821D64E1800079106 /* rampsmoother.ipp */,
 				57A1566015933C5200AA6445 /* bin */,
 			);
 			name = src;

@@ -9,7 +9,6 @@
 
 namespace mcl
 {
-
 template<typename T>
 DigitalFilter<T>::DigitalFilter() noexcept
   : DigitalFilter(UnaryVector<T>(1.0))
@@ -40,6 +39,7 @@ DigitalFilter<T>::DigitalFilter(
   }
 }
 
+
 template<typename T>
 T DigitalFilter<T>::Filter(
   const T input_sample) noexcept
@@ -50,6 +50,7 @@ T DigitalFilter<T>::Filter(
   }
   return FilterSample(input_sample);
 }
+
 
 template<typename T>
 T DigitalFilter<T>::FilterSample(
@@ -112,11 +113,38 @@ void DigitalFilter<T>::SetNumeratorCoeffs(
   const Vector<T>& numerator_coeffs,
   const double update_length) noexcept
 {
-  ASSERT(numerator_coeffs.size() == length_);
+  ASSERT(denominator_coeffs_.size() == 1 ||
+    numerator_coeffs.size() == denominator_coeffs_.size());
   
-  for (size_t i=0; i<length_; ++i)
+  if (numerator_coeffs.size() != numerator_coeffs_.size())
   {
-    numerator_smoothers_[i].SetTargetValue(numerator_coeffs[i], update_length);
+    // If the impulse response changes length, then reset everything.
+    length_ = numerator_coeffs.size();
+    state_ = mcl::Vector(length_, 0.0);
+    counter_ = length_-1;
+    numerator_coeffs_ = numerator_coeffs;
+    numerator_smoothers_ = Vector<RampSmoother<T>>
+    (
+      numerator_coeffs.size(),
+      RampSmoother(T(0.0)));
+    // TODO: for N current length and M new length, make smooth transition for
+    // the first N coefficients
+  }
+  
+  if (update_length < 1.0)
+  {
+    std::copy
+    (
+      numerator_coeffs.begin(),
+      numerator_coeffs.end(),
+      numerator_coeffs_.begin());
+  }
+  else
+  {
+    for (size_t i=0; i<length_; ++i)
+    {
+      numerator_smoothers_[i].SetTargetValue(numerator_coeffs[i], update_length);
+    }
   }
 }
 
@@ -129,11 +157,16 @@ void DigitalFilter<T>::SetDenominatorCoeffs(
   ASSERT(denominator_coeffs.size() == denominator_coeffs_.size());
   ASSERT(IsApproximatelyEqual(denominator_coeffs[0], 1.0, std::numeric_limits<T>::epsilon()));
   
-  std::copy(denominator_coeffs_.begin(), denominator_coeffs_.end(), denominator_coeffs.begin());
+  std::copy
+  (
+    denominator_coeffs.begin(),
+    denominator_coeffs.end(),
+    denominator_coeffs_.begin());
 }
 
+
 template<typename T>
-void DigitalFilter<T>::SetStateToZero() noexcept
+void DigitalFilter<T>::ResetState() noexcept
 {
   SetToZero(state_);
 }
@@ -213,6 +246,7 @@ void DigitalFilter<T>::Filter(
   }
 }
 
+
 template<typename T>
 Vector<T> DigitalFilter<T>::Filter(
   const Vector<T>& input) noexcept
@@ -221,6 +255,7 @@ Vector<T> DigitalFilter<T>::Filter(
   Filter(input, output);
   return std::move(output);
 }
+
 
 template<typename T>
 void DigitalFilter<T>::GetExtendedInput(
@@ -249,6 +284,7 @@ void DigitalFilter<T>::GetExtendedInput(
   }
 }
 
+
 template<typename T>
 void DigitalFilter<T>::UpdateCoefficients() noexcept
 { 
@@ -257,6 +293,7 @@ void DigitalFilter<T>::UpdateCoefficients() noexcept
     numerator_coeffs_[i] = numerator_smoothers_[i].GetNextValue();
   }
 }
+
 
 /**
  Get wall filters of type wall_type and for FS given by sampling_frequency

@@ -107,8 +107,8 @@ inline bool IirFilterTest()
   filter_poly.Filter(signal_d, output_d);
   ASSERT(IsApproximatelyEqual(output_d, signal_d_out_cmp, VERY_SMALL));
 
-  // Testing Reset()
-  filter_l.SetStateToZero();
+  // Testing ResetState()
+  filter_l.ResetState();
   ASSERT(IsApproximatelyEqual(filter_l.Filter(0.0), 0.0, VERY_SMALL));
 
   Vector<Real> impulse_resp_2(3);
@@ -118,7 +118,7 @@ inline bool IirFilterTest()
 
   DigitalFilter<Real> filter_m(impulse_resp_2);
   ASSERT(! IsApproximatelyEqual(filter_m.Filter(1.0), 0.0));
-  filter_m.SetStateToZero();
+  filter_m.ResetState();
   ASSERT(IsApproximatelyEqual(filter_m.Filter(0.0), 0.0));
 
 
@@ -194,15 +194,15 @@ inline bool IirFilterTest()
 //  ASSERT(octave_bank_a.num_filters() == 1);
 //
 //  DigitalFilterBank octave_bank_b = OctaveFilterBank(3, 2, 2000.0, 44100.0);
-//  octave_a.SetStateToZero();
+//  octave_a.ResetState();
 //  ASSERT(IsApproximatelyEqual(octave_bank_b.Filter(1.25)[1], octave_a.Filter(1.25)));
 //  ASSERT(IsApproximatelyEqual(octave_bank_b.Filter(0.25)[1], octave_a.Filter(0.25)));
 //  ASSERT(IsApproximatelyEqual(octave_bank_b.Filter(5.0)[1], octave_a.Filter(5.0)));
 //  ASSERT(octave_bank_b.Filter(1.25).size() == 2);
 //  ASSERT(octave_bank_b.num_filters() == 2);
 //
-//  octave_a.SetStateToZero();
-//  octave_bank_b.SetStateToZero();
+//  octave_a.ResetState();
+//  octave_bank_b.ResetState();
 //  ASSERT(IsApproximatelyEqual(octave_bank_b.Filter(1.25)[1], octave_a.Filter(1.25)));
 //  ASSERT(IsApproximatelyEqual(octave_bank_b.Filter(0.25)[1], octave_a.Filter(0.25)));
 //  ASSERT(IsApproximatelyEqual(octave_bank_b.Filter(5.0)[1], octave_a.Filter(5.0)));
@@ -212,33 +212,33 @@ inline bool IirFilterTest()
 }
 
 
-//inline void IirFilterSpeedTests() {
-//
-//  constexpr size_t filter_order = 3;
-//  constexpr Real input_seconds = 10.0;
-//  constexpr Real sampling_frequency = 44100;
-//  
-//  const size_t num_input_samples = round(input_seconds*sampling_frequency);
-//  
-//  RandomGenerator random_generator;
-//
-//  Vector<Real> B = random_generator.Rand(filter_order);
-//  Vector<Real> A = random_generator.Rand(filter_order);
-//  A[0] = 1.0;
-//  
-//  DigitalFilter<Real> iir_filter(B, A);
-//  Vector<Real> input = random_generator.Rand(num_input_samples);
-//  Vector<Real> output(num_input_samples);
-//
-//  clock_t launch=clock();
-//  for (size_t i=0; i<input.size(); ++i) {
-//    output[i] = iir_filter.Filter(input[i]);
-//  }
-//  clock_t done=clock();
-//
-//  std::cout<<"Iir filter speed (sequential; filter length is not power of 2): "<<
-//  (done - launch) / ((Real) CLOCKS_PER_SEC) / input_seconds*100<<"% \n";
-//}
+inline void IirFilterSpeedTests() {
+
+  constexpr size_t filter_order = 3;
+  constexpr Real input_seconds = 10.0;
+  constexpr Real sampling_frequency = 44100;
+  
+  const size_t num_input_samples = round(input_seconds*sampling_frequency);
+  
+  RandomGenerator random_generator;
+
+  Vector<Real> B = random_generator.Rand(filter_order);
+  Vector<Real> A = random_generator.Rand(filter_order);
+  A[0] = 1.0;
+  
+  DigitalFilter<Real> iir_filter(B, A);
+  Vector<Real> input = random_generator.Rand(num_input_samples);
+  Vector<Real> output(num_input_samples);
+
+  clock_t launch=clock();
+  for (size_t i=0; i<input.size(); ++i) {
+    output[i] = iir_filter.Filter(input[i]);
+  }
+  clock_t done=clock();
+
+  std::cout<<"Iir filter speed (sequential; filter length is not power of 2): "<<
+  (done - launch) / ((Real) CLOCKS_PER_SEC) / input_seconds*100<<"% \n";
+}
   
   
 inline bool DigitalFilterTest()
@@ -260,7 +260,7 @@ inline bool DigitalFilterTest()
 //  ASSERT(IsEqual(cmp_lasplita_b, output_lasplita_b));
 #endif
 
-//  filter_lasplita.SetStateToZero();
+//  filter_lasplita.ResetState();
 //  Vector<Real,kReference> refa(input, 0, 3);
 //  Vector<Real,kReference> refb(input, 0, 3);
 //  filter_lasplita.Filter(refa, output_lasplita_a);
@@ -348,7 +348,7 @@ inline bool DigitalFilterTest()
   filter_l.Filter(input_b, output_b);
   ASSERT(IsApproximatelyEqual(output_b_cmp, output_b, VERY_SMALL));
 
-  filter_l.SetStateToZero();
+  filter_l.ResetState();
   for (Int i=0; i<(Int)input_b.size(); ++i) {
     ASSERT(IsApproximatelyEqual(filter_l.Filter(input_b[i]), output_b_cmp[i]));
   }
@@ -383,7 +383,7 @@ inline bool DigitalFilterTest()
 
 
   // Various attempt to check that the batch processing does not mess up
-  filter_m.SetStateToZero();
+  filter_m.ResetState();
   Vector<Real> input_c_sub_a(input_c.begin(), input_c.begin()+16);
   Vector<Real> output_c_cmp_sub_a(output_c_cmp.begin(), output_c_cmp.begin()+16);
   Vector<Real> output_cc(input_c_sub_a.size());
@@ -398,7 +398,7 @@ inline bool DigitalFilterTest()
   ASSERT(IsApproximatelyEqual(output_c_sub_b, output_c_cmp_sub_b, VERY_SMALL));
 
   //
-  filter_m.SetStateToZero();
+  filter_m.ResetState();
   ASSERT(IsEqual(filter_m.Filter(input_c[0]), output_c_cmp[0]));
   ASSERT(IsApproximatelyEqual(filter_m.Filter(input_c[1]), output_c_cmp[1]));
   ASSERT(IsApproximatelyEqual(filter_m.Filter(input_c[2]), output_c_cmp[2]));
@@ -420,13 +420,13 @@ inline bool DigitalFilterTest()
   ASSERT(IsApproximatelyEqual(output_k, output_k_cmp, VERY_SMALL));
 
   //
-  filter_k.SetStateToZero();
+  filter_k.ResetState();
   for (Int i=0; i<(Int)input_c.size()-1; ++i) {
     ASSERT(IsApproximatelyEqual(filter_k.Filter(input_k[i]), output_k_cmp[i]));
   }
 
   //
-  filter_k.SetStateToZero();
+  filter_k.ResetState();
   ASSERT(IsApproximatelyEqual(filter_k.Filter(input_k[0]), output_k_cmp[0]));
   ASSERT(IsApproximatelyEqual(filter_k.Filter(input_k[1]), output_k_cmp[1]));
   Vector<Real> input_k_sub_a = Vector<Real>(input_k.begin()+2,
@@ -450,7 +450,7 @@ inline bool DigitalFilterTest()
   ASSERT(IsApproximatelyEqual(output_k_sub_c, Vector<Real>(output_k_cmp.begin()+11, output_k_cmp.begin()+20), VERY_SMALL));
 
   //
-  filter_k.SetStateToZero();
+  filter_k.ResetState();
   ASSERT(IsApproximatelyEqual(filter_k.Filter(input_k[0]), output_k_cmp[0]));
   ASSERT(IsApproximatelyEqual(filter_k.Filter(input_k[1]), output_k_cmp[1]));
   ASSERT(IsApproximatelyEqual(filter_k.Filter(input_k[2]), output_k_cmp[2]));
@@ -509,7 +509,7 @@ inline void DigitalFilterSpeedTests() {
   constexpr size_t kernel_length_pow2 = 1024;
   constexpr size_t kernel_length_non_pow2 = 1023;
   constexpr size_t batch_size = 128;
-  constexpr Real input_seconds = 10.0;
+  constexpr Real input_seconds = 5.0;
   constexpr Real input_single_seconds = input_seconds*10.0;
   constexpr Real sampling_frequency = 44100;
   

@@ -63,7 +63,7 @@ public:
     const double update_length = 0) noexcept;
 
   /** Resets the state of the filter */
-  void SetStateToZero() noexcept;
+  void ResetState() noexcept;
 
   void FilterAdd(
     const Vector<T>& input_to_filter,

@@ -26,7 +26,7 @@ public:
     const Vector<T>& input) = 0;
 
   /** Resets the state of the filter */
-  virtual void Reset() = 0;
+  virtual void ResetState() = 0;
 
   virtual Int num_filters() = 0;
 };
