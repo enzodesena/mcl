@@ -104,8 +104,8 @@ public:
 
   GenFwdIterator(
     T* ptr,
-    std::function<void(T*&)> increment_function,
-    std::function<T&(T*)> dereference_function)
+    std::function<void(Pointer&)> increment_function,
+    std::function<Reference(Pointer)> dereference_function)
     : ptr_(ptr)
     , increment_function_(increment_function)
     , dereference_function_(dereference_function)
@@ -120,9 +120,9 @@ public:
   
   inline Reference operator*() const noexcept { return dereference_function_(ptr_); }
 private:
-  T* ptr_;
-  std::function<void(T*&)> increment_function_;
-  std::function<T&(T*)> dereference_function_;
+  Pointer ptr_;
+  std::function<void(Pointer&)> increment_function_;
+  std::function<Reference(Pointer)> dereference_function_;
 };
 
 template<typename T>

@@ -149,6 +149,12 @@ public:
     }
   }
 
+  void OverwriteParameters(
+    const IirFilter& other)
+  {
+    B_ = other.B();
+    A_ = other.A();
+  }
 
   Vector<T> Filter(
     const Vector<T>& input) noexcept

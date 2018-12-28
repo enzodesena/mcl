@@ -664,7 +664,7 @@ Vector<T> CumSum(
   const size_t N = input.size();
   Vector<T> output(input.size());
   output[N - 1] = Sum(input);
-  for (size_t i = N - 2; i >= 0; --i)
+  for (int i = ((int)N) - 2; i >= 0; --i)
   {
     output[i] = output[i + 1] - input[i + 1];
   }
