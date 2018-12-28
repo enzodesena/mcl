@@ -8,11 +8,10 @@
  */
 
 
-#ifndef MCL_BUTTER_H
-#define MCL_BUTTER_H
+#pragma once
 
 #include <vector>
-#include "iirfilter.hpp"
+#include "filterbank.hpp"
 
 namespace mcl {
   
@@ -164,7 +163,7 @@ inline Vector<T> ComputeDenCoeffs(
  butter(order, [w_low, w_high])
  */
 template<typename T>
-inline IirFilter<T> Butter(
+inline DigitalFilter<T> Butter(
   const Int order,
   const Real w_low,
   const Real w_high) noexcept
@@ -173,14 +172,14 @@ inline IirFilter<T> Butter(
   Vector<T> NumC = ComputeNumCoeffs((int) order, w_low, w_high, DenC);
   Vector<T> denominator(DenC.begin(), DenC.end());
   Vector<T> numerator(NumC.begin(), NumC.end());
-  return IirFilter<T>(numerator, denominator);
+  return DigitalFilter<T>(numerator, denominator);
 }
 
 /** Constructs a digital octave filter with given center frequency
  and sampling frequency.
  */
 template<typename T>
-inline IirFilter<T> OctaveFilter(
+inline DigitalFilter<T> OctaveFilter(
   const Int order,
   const T center_frequency,
   const T sampling_frequency) noexcept
@@ -202,24 +201,24 @@ inline IirFilter<T> OctaveFilter(
 }
 
 template<typename T>
-inline IirFilterBank<T> OctaveFilterBank(
+inline DigitalFilterBank<T> OctaveFilterBank(
   const Int order,
   const Int num_bands,
   const T starting_frequency,
   const T sampling_frequency) noexcept
 {
   T current_frequency = starting_frequency;
-  Vector<IirFilter<T>> filters(num_bands);
+  Vector<DigitalFilter<T>> filters(num_bands);
   for (size_t i=0; i<(size_t)num_bands; ++i)
   {
-    mcl::IirFilter octave_filter = mcl::OctaveFilter<T>(
+    mcl::DigitalFilter octave_filter = mcl::OctaveFilter<T>(
       order,
       current_frequency,
       sampling_frequency);
     filters[i] = octave_filter;
     current_frequency = current_frequency * 2.0;
   }
-  return IirFilterBank<T>(filters);
+  return DigitalFilterBank<T>(filters);
 }
 
 template<typename T>
@@ -262,5 +261,3 @@ inline Vector<T> TrinomialMultiply(
 
   
 } // namespace mcl
-  
-#endif
