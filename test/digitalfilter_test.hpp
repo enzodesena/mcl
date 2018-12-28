@@ -446,7 +446,15 @@ inline bool FirFilterTest()
   ASSERT(IsApproximatelyEqual(filter_t.Filter(1.0), 0.5*1.0+0.5*0.3));
   ASSERT(IsApproximatelyEqual(filter_t.Filter(1.0), 0.3));
 
-
+  
+  FirFilter<Real> filter_u(BinaryVector<Real>(1.0, 0.5));
+  ASSERT(IsApproximatelyEqual(filter_u.Filter(0.76), 0.76));
+  ASSERT(IsApproximatelyEqual(filter_u.Filter(1.0), 1.0+0.76*0.5));
+  filter_u.SetImpulseResponse(BinaryVector<Real>(2.0, -0.5), 2);
+  ASSERT(IsApproximatelyEqual(filter_u.Filter(0.76), 1.18));
+  ASSERT(IsApproximatelyEqual(filter_u.Filter(1.0), 1.54));
+  ASSERT(IsApproximatelyEqual(filter_u.Filter(0.76), 1.02));
+  ASSERT(IsApproximatelyEqual(filter_u.Filter(1.0), 1.62));
 
 //  MaxGradientFilter filter_y(1.0);
 //  ASSERT(IsApproximatelyEqual(filter_y.Filter(0.0), 0.0));
