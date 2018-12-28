@@ -46,9 +46,8 @@
 		577834E121AC9191007FD06C /* point_test.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = point_test.hpp; path = test/point_test.hpp; sourceTree = "<group>"; };
 		577834E221AC9191007FD06C /* matrixop_test.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = matrixop_test.hpp; path = test/matrixop_test.hpp; sourceTree = "<group>"; };
 		577834E321AC91E8007FD06C /* mcl_test.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mcl_test.cpp; path = src/bin/mcl_test.cpp; sourceTree = "<group>"; };
-		5778D80915B616260015AAC9 /* filterbank.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = filterbank.hpp; path = include/filterbank.hpp; sourceTree = "<group>"; };
-		5778D80A15B616260015AAC9 /* firfilter.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = firfilter.hpp; path = include/firfilter.hpp; sourceTree = "<group>"; };
-		5778D80B15B616260015AAC9 /* iirfilter.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = iirfilter.hpp; path = include/iirfilter.hpp; sourceTree = "<group>"; };
+		5778D80915B616260015AAC9 /* digitalfilterbank.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = digitalfilterbank.hpp; path = include/digitalfilterbank.hpp; sourceTree = "<group>"; };
+		5778D80A15B616260015AAC9 /* digitalfilter.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = digitalfilter.hpp; path = include/digitalfilter.hpp; sourceTree = "<group>"; };
 		5788B8262185FD2F00D935DE /* vector.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = vector.hpp; path = include/vector.hpp; sourceTree = "<group>"; };
 		578E3CF521D67D8000571019 /* digitalfilter.ipp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = digitalfilter.ipp; path = src/digitalfilter.ipp; sourceTree = "<group>"; };
 		57A158AA1593501200AA6445 /* MCL_test */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = MCL_test; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -119,9 +118,8 @@
 				57BA701A15B49263002F077F /* basicop.hpp */,
 				57BA701215B43BC9002F077F /* comparisonop.hpp */,
 				57BA700E15B43B07002F077F /* elementaryop.hpp */,
-				5778D80915B616260015AAC9 /* filterbank.hpp */,
-				5778D80A15B616260015AAC9 /* firfilter.hpp */,
-				5778D80B15B616260015AAC9 /* iirfilter.hpp */,
+				5778D80915B616260015AAC9 /* digitalfilterbank.hpp */,
+				5778D80A15B616260015AAC9 /* digitalfilter.hpp */,
 				5774892E21AC4D2200D949F8 /* matrix.hpp */,
 				57BA6FFE15B421F5002F077F /* matrixop.hpp */,
 				5708B0AE21A59B9B0000F5FD /* mclintrinsics.hpp */,

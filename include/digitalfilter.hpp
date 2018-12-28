@@ -39,6 +39,9 @@ public:
   T FilterSample(
     const T input_sample) noexcept;
 
+  Vector<T> GetNumeratorCoeffs() noexcept;
+  
+  Vector<T> GetDenominatorCoeffs() noexcept;
 
   /** 
    Updates the filter coefficients. You can set how long it takes to 
@@ -62,16 +65,6 @@ public:
   /** Resets the state of the filter */
   void SetStateToZero() noexcept;
 
-
-  /** Returns the impulse response of the filter */
-  Vector<T> impulse_response() const noexcept;
-
-
-  void FilterSerial(
-    const Vector<T>& input,
-    Vector<T>& output) noexcept;
-
-
   void FilterAdd(
     const Vector<T>& input_to_filter,
     const Vector<T>& input_to_add,
@@ -80,6 +73,9 @@ public:
   void Filter(
     const Vector<T>& input,
     Vector<T>& output) noexcept;
+  
+  Vector<T> Filter(
+    const Vector<T>& input) noexcept;
 private:
   /* This is the current vector of coefficients. When the filter is updating
    this will in general be different from target_coefficients_. */
@@ -89,7 +85,6 @@ private:
   size_t counter_;
   size_t length_;
   Vector<RampSmoother<T>> numerator_smoothers_;
-  Vector<RampSmoother<T>> denominator_smoothers_;
   Vector<T> temp_conv_data_;
   Vector<T> temp_add_data_;
 
@@ -102,6 +97,11 @@ private:
    if updating_ = true. TODO: uniformise action between sequential and
    batch. */
   void UpdateCoefficients() noexcept;
+  
+
+  void FilterSerial(
+    const Vector<T>& input,
+    Vector<T>& output) noexcept;
 };
 } // namespace mcl
 

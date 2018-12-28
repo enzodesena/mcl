@@ -11,7 +11,7 @@
 #pragma once
 
 #include <vector>
-#include "filterbank.hpp"
+#include "digitalfilterbank.hpp"
 
 namespace mcl {
   

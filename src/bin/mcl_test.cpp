@@ -19,7 +19,7 @@
 #include "mclintrinsics.hpp"
 #include "statisticsop.hpp"
 #include "transformop.hpp"
-#include "firfilter.hpp"
+#include "digitalfilter.hpp"
 
 #include "basicop_test.hpp"
 #include "comparisonop_test.hpp"
@@ -50,7 +50,7 @@ int main (int argc, char * const argv[]) {
   mcl::TransformOpTest();
   mcl::MatrixOpTest();
   mcl::PointTest();
-//  mcl::IirFilterTest();
+  mcl::IirFilterTest();
   mcl::StatisticsOpTest();
   std::cout<<"All tests succeded!\n";
 #else
