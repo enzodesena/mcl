@@ -62,6 +62,13 @@ public:
   {
   }
 
+  Quaternion() noexcept
+    : w_(T(1.0))
+    , x_(T(0.0))
+    , y_(T(0.0))
+    , z_(T(0.0))
+  {
+  }
 
   T w() const noexcept
   {
@@ -198,7 +205,6 @@ Point<T> QuatRotate(
 {
   T norm = Norm(q);
   Quaternion q_norm(q.w() / norm, q.x() / norm, q.y() / norm, q.z() / norm);
-
   Quaternion p(0.0, r.x(), r.y(), r.z());
 
   if (handedness == kRightHanded)
@@ -206,8 +212,11 @@ Point<T> QuatRotate(
     Quaternion result = QuatMultiply(QuatMultiply(q_norm, p), QuatConj(q_norm));
     return Point(result.x(), result.y(), result.z());
   }
-  Quaternion result = QuatMultiply(QuatMultiply(QuatConj(q_norm), p), q_norm);
-  return Point(result.x(), result.y(), result.z());
+  else
+  {
+    Quaternion result = QuatMultiply(QuatMultiply(QuatConj(q_norm), p), q_norm);
+    return Point(result.x(), result.y(), result.z());
+  }
 }
 
 
@@ -375,12 +384,12 @@ template<typename T>
 bool IsApproximatelyEqual(
   const Quaternion<T>& quat_a,
   const Quaternion<T>& quat_b,
-  const T precision = VERY_SMALL)
+  const T precision = T(VERY_SMALL))
 {
   return
-    IsApproximatelyEqual(quat_a.w(), quat_b.w()) &&
-    IsApproximatelyEqual(quat_a.x(), quat_b.x()) &&
-    IsApproximatelyEqual(quat_a.y(), quat_b.y()) &&
-    IsApproximatelyEqual(quat_a.z(), quat_b.z());
+    IsApproximatelyEqual(quat_a.w(), quat_b.w(), precision) &&
+    IsApproximatelyEqual(quat_a.x(), quat_b.x(), precision) &&
+    IsApproximatelyEqual(quat_a.y(), quat_b.y(), precision) &&
+    IsApproximatelyEqual(quat_a.z(), quat_b.z(), precision);
 }
 } // namespace mcl

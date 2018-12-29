@@ -152,8 +152,9 @@ void DigitalFilter<T>::SetNumeratorCoeffs(
 template<typename T>
 void DigitalFilter<T>::SetDenominatorCoeffs(
   const Vector<T>& denominator_coeffs,
-  const double update_length) noexcept
+  const double /* update_length */ ) noexcept
 {
+  // TODO: implement slow update
   ASSERT(denominator_coeffs.size() == denominator_coeffs_.size());
   ASSERT(IsApproximatelyEqual(denominator_coeffs[0], 1.0, std::numeric_limits<T>::epsilon()));
   
@@ -162,6 +163,16 @@ void DigitalFilter<T>::SetDenominatorCoeffs(
     denominator_coeffs.begin(),
     denominator_coeffs.end(),
     denominator_coeffs_.begin());
+}
+
+
+template<typename T>
+void DigitalFilter<T>::CopyParametersFrom(
+  const DigitalFilter<T>& other_filter,
+  const double update_length) noexcept
+{
+  this->SetNumeratorCoeffs(other_filter.numerator_coeffs_);
+  this->SetDenominatorCoeffs(other_filter.denominator_coeffs_);
 }
 
 

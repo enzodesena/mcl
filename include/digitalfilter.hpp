@@ -43,6 +43,10 @@ public:
   
   Vector<T> GetDenominatorCoeffs() noexcept;
 
+  void CopyParametersFrom(
+    const DigitalFilter<T>& other_filter,
+    const double update_length = 0) noexcept;
+  
   /** 
    Updates the filter coefficients. You can set how long it takes to 
    update the coefficients (using linear interpolation between old and new
@@ -55,7 +59,7 @@ public:
    Filter(const Vector<T>& input).
    */
   void SetNumeratorCoeffs(
-    const Vector<T>& impulse_response,
+    const Vector<T>& numerator_coeffs,
     const double update_length = 0) noexcept;
 
   void SetDenominatorCoeffs(

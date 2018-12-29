@@ -490,7 +490,7 @@ template<typename T>
 bool IsApproximatelyEqual(
   const Point<T>& point_a,
   const Point<T>& point_b,
-  const T precision = VERY_SMALL) noexcept
+  const T precision = T(VERY_SMALL)) noexcept
 {
   return
     mcl::IsApproximatelyEqual(point_a.x(), point_b.x(), precision) &&
