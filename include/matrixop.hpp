@@ -219,6 +219,32 @@ bool IsEqual(
   return true;
 }
 
+template<class T>
+bool IsApproximatelyEqual(
+  const Matrix<T>& matrix_a,
+  const Matrix<T>& matrix_b,
+  const T precision = std::numeric_limits<T>::epsilon()) noexcept
+{
+  if (matrix_a.num_rows() != matrix_b.num_rows() |
+    matrix_a.num_columns() != matrix_b.num_columns())
+  {
+    return false;
+  }
+
+  for (size_t i = 0; i < matrix_a.num_rows(); ++i)
+  {
+    for (size_t j = 0; j < matrix_a.num_columns(); ++j)
+    {
+      if (!IsApproximatelyEqual(matrix_a.GetElement(i, j), matrix_b.GetElement(i, j), precision))
+      {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
+
 
 /** Writes the vector to a file. The separator is endline. */
 template<typename T>
