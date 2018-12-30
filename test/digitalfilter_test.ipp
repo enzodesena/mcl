@@ -466,7 +466,7 @@ inline bool DigitalFilterTest()
   ASSERT(IsApproximatelyEqual(filter_k.Filter(input_k[19]), output_k_cmp[19]));
 
   // Testing slow update of filter
-  DigitalFilter<Real> filter_t(UnaryVector<Real>(1.0));
+  DigitalFilter<Real> filter_t = GainFilter(1.0);
   ASSERT(IsApproximatelyEqual(filter_t.Filter(0.76), 0.76));
   ASSERT(IsApproximatelyEqual(filter_t.Filter(1.0), 1.0));
   filter_t.SetNumeratorCoeffs(UnaryVector<Real>(0.3), 2);

@@ -115,7 +115,14 @@ private:
     const Vector<T>& input,
     Vector<T>& output) noexcept;
 };
-} // namespace mcl
 
+
+template<typename T>
+DigitalFilter<T> GainFilter(T gain)
+{
+  return DigitalFilter<T>(UnaryVector<T>(gain));
+}
+
+} // namespace mcl
 
 #include "digitalfilter.ipp"
