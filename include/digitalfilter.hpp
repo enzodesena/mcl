@@ -39,9 +39,9 @@ public:
   T FilterSample(
     const T input_sample) noexcept;
 
-  Vector<T> GetNumeratorCoeffs() noexcept;
+  Vector<T> GetNumeratorCoeffs() const noexcept;
   
-  Vector<T> GetDenominatorCoeffs() noexcept;
+  Vector<T> GetDenominatorCoeffs() const noexcept;
 
   /**
     Copies the numerator and denominator coefficients from another filter.

@@ -184,14 +184,14 @@ void DigitalFilter<T>::ResetState() noexcept
 
 
 template<typename T>
-Vector<T> DigitalFilter<T>::GetNumeratorCoeffs() noexcept
+Vector<T> DigitalFilter<T>::GetNumeratorCoeffs() const noexcept
 {
   return numerator_coeffs_;
 }
   
   
 template<typename T>
-Vector<T> DigitalFilter<T>::GetDenominatorCoeffs() noexcept
+Vector<T> DigitalFilter<T>::GetDenominatorCoeffs() const noexcept
 {
   return denominator_coeffs_;
 }
