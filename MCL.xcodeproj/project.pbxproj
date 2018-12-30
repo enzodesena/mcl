@@ -32,19 +32,19 @@
 		576B25781CF9DFD200673FC0 /* quaternion.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = quaternion.hpp; path = include/quaternion.hpp; sourceTree = "<group>"; };
 		5774892E21AC4D2200D949F8 /* matrix.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = matrix.hpp; path = include/matrix.hpp; sourceTree = "<group>"; };
 		577834D121AC6345007FD06C /* statisticsop.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = statisticsop.hpp; path = include/statisticsop.hpp; sourceTree = "<group>"; };
-		577834D621AC9190007FD06C /* comparisonop_test.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = comparisonop_test.hpp; path = test/comparisonop_test.hpp; sourceTree = "<group>"; };
-		577834D721AC9190007FD06C /* random_test.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = random_test.hpp; path = test/random_test.hpp; sourceTree = "<group>"; };
-		577834D821AC9190007FD06C /* digitalfilter_test.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = digitalfilter_test.hpp; path = test/digitalfilter_test.hpp; sourceTree = "<group>"; };
-		577834D921AC9190007FD06C /* basicop_test.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = basicop_test.hpp; path = test/basicop_test.hpp; sourceTree = "<group>"; };
-		577834DA21AC9191007FD06C /* quaternion_test.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = quaternion_test.hpp; path = test/quaternion_test.hpp; sourceTree = "<group>"; };
-		577834DB21AC9191007FD06C /* mclintrinsics_test.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = mclintrinsics_test.hpp; path = test/mclintrinsics_test.hpp; sourceTree = "<group>"; };
-		577834DC21AC9191007FD06C /* pointwiseop_test.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = pointwiseop_test.hpp; path = test/pointwiseop_test.hpp; sourceTree = "<group>"; };
-		577834DD21AC9191007FD06C /* elementaryop_test.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = elementaryop_test.hpp; path = test/elementaryop_test.hpp; sourceTree = "<group>"; };
-		577834DE21AC9191007FD06C /* vectorop_test.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = vectorop_test.hpp; path = test/vectorop_test.hpp; sourceTree = "<group>"; };
-		577834DF21AC9191007FD06C /* transformop_test.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = transformop_test.hpp; path = test/transformop_test.hpp; sourceTree = "<group>"; };
-		577834E021AC9191007FD06C /* statisticsop_test.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = statisticsop_test.hpp; path = test/statisticsop_test.hpp; sourceTree = "<group>"; };
-		577834E121AC9191007FD06C /* point_test.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = point_test.hpp; path = test/point_test.hpp; sourceTree = "<group>"; };
-		577834E221AC9191007FD06C /* matrixop_test.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = matrixop_test.hpp; path = test/matrixop_test.hpp; sourceTree = "<group>"; };
+		577834D621AC9190007FD06C /* comparisonop_test.ipp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = comparisonop_test.ipp; path = test/comparisonop_test.ipp; sourceTree = "<group>"; };
+		577834D721AC9190007FD06C /* random_test.ipp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = random_test.ipp; path = test/random_test.ipp; sourceTree = "<group>"; };
+		577834D821AC9190007FD06C /* digitalfilter_test.ipp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = digitalfilter_test.ipp; path = test/digitalfilter_test.ipp; sourceTree = "<group>"; };
+		577834D921AC9190007FD06C /* basicop_test.ipp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = basicop_test.ipp; path = test/basicop_test.ipp; sourceTree = "<group>"; };
+		577834DA21AC9191007FD06C /* quaternion_test.ipp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = quaternion_test.ipp; path = test/quaternion_test.ipp; sourceTree = "<group>"; };
+		577834DB21AC9191007FD06C /* mclintrinsics_test.ipp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = mclintrinsics_test.ipp; path = test/mclintrinsics_test.ipp; sourceTree = "<group>"; };
+		577834DC21AC9191007FD06C /* pointwiseop_test.ipp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = pointwiseop_test.ipp; path = test/pointwiseop_test.ipp; sourceTree = "<group>"; };
+		577834DD21AC9191007FD06C /* elementaryop_test.ipp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = elementaryop_test.ipp; path = test/elementaryop_test.ipp; sourceTree = "<group>"; };
+		577834DE21AC9191007FD06C /* vectorop_test.ipp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = vectorop_test.ipp; path = test/vectorop_test.ipp; sourceTree = "<group>"; };
+		577834DF21AC9191007FD06C /* transformop_test.ipp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = transformop_test.ipp; path = test/transformop_test.ipp; sourceTree = "<group>"; };
+		577834E021AC9191007FD06C /* statisticsop_test.ipp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = statisticsop_test.ipp; path = test/statisticsop_test.ipp; sourceTree = "<group>"; };
+		577834E121AC9191007FD06C /* point_test.ipp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = point_test.ipp; path = test/point_test.ipp; sourceTree = "<group>"; };
+		577834E221AC9191007FD06C /* matrixop_test.ipp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = matrixop_test.ipp; path = test/matrixop_test.ipp; sourceTree = "<group>"; };
 		577834E321AC91E8007FD06C /* mcl_test.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mcl_test.cpp; path = src/bin/mcl_test.cpp; sourceTree = "<group>"; };
 		5778D80915B616260015AAC9 /* digitalfilterbank.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = digitalfilterbank.hpp; path = include/digitalfilterbank.hpp; sourceTree = "<group>"; };
 		5778D80A15B616260015AAC9 /* digitalfilter.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = digitalfilter.hpp; path = include/digitalfilter.hpp; sourceTree = "<group>"; };
@@ -61,7 +61,8 @@
 		57BA701215B43BC9002F077F /* comparisonop.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = comparisonop.hpp; path = include/comparisonop.hpp; sourceTree = "<group>"; };
 		57BA701615B490C4002F077F /* transformop.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = transformop.hpp; path = include/transformop.hpp; sourceTree = "<group>"; };
 		57BA701A15B49263002F077F /* basicop.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = basicop.hpp; path = include/basicop.hpp; sourceTree = "<group>"; };
-		57DF97D621D64DFB00079106 /* rampsmoother.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = rampsmoother.h; path = include/rampsmoother.h; sourceTree = "<group>"; };
+		57BCF3C221D847B40088502C /* rampsmoother_test.ipp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = rampsmoother_test.ipp; path = test/rampsmoother_test.ipp; sourceTree = "<group>"; };
+		57DF97D621D64DFB00079106 /* rampsmoother.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = rampsmoother.hpp; path = include/rampsmoother.hpp; sourceTree = "<group>"; };
 		57E73F9C1CD7CB1D00095F6E /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		57FE67CD1CFB795800E3CB2A /* point.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = point.hpp; path = include/point.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -124,7 +125,6 @@
 		57A1565115933B8A00AA6445 /* include */ = {
 			isa = PBXGroup;
 			children = (
-				578E3CFB21D698C400571019 /* impl */,
 				57BA701A15B49263002F077F /* basicop.hpp */,
 				57BA701215B43BC9002F077F /* comparisonop.hpp */,
 				57BA700E15B43B07002F077F /* elementaryop.hpp */,
@@ -137,7 +137,7 @@
 				57FE67CD1CFB795800E3CB2A /* point.hpp */,
 				57BA6FFC15B41B55002F077F /* pointwiseop.hpp */,
 				576B25781CF9DFD200673FC0 /* quaternion.hpp */,
-				57DF97D621D64DFB00079106 /* rampsmoother.h */,
+				57DF97D621D64DFB00079106 /* rampsmoother.hpp */,
 				57B71D12162DD224003411BA /* randomop.hpp */,
 				57BA701615B490C4002F077F /* transformop.hpp */,
 				577834D121AC6345007FD06C /* statisticsop.hpp */,
@@ -150,19 +150,20 @@
 		57A1565315933B9500AA6445 /* test */ = {
 			isa = PBXGroup;
 			children = (
-				577834D921AC9190007FD06C /* basicop_test.hpp */,
-				577834D621AC9190007FD06C /* comparisonop_test.hpp */,
-				577834DD21AC9191007FD06C /* elementaryop_test.hpp */,
-				577834D821AC9190007FD06C /* digitalfilter_test.hpp */,
-				577834E221AC9191007FD06C /* matrixop_test.hpp */,
-				577834DB21AC9191007FD06C /* mclintrinsics_test.hpp */,
-				577834E121AC9191007FD06C /* point_test.hpp */,
-				577834DC21AC9191007FD06C /* pointwiseop_test.hpp */,
-				577834DA21AC9191007FD06C /* quaternion_test.hpp */,
-				577834D721AC9190007FD06C /* random_test.hpp */,
-				577834E021AC9191007FD06C /* statisticsop_test.hpp */,
-				577834DF21AC9191007FD06C /* transformop_test.hpp */,
-				577834DE21AC9191007FD06C /* vectorop_test.hpp */,
+				577834D921AC9190007FD06C /* basicop_test.ipp */,
+				577834D621AC9190007FD06C /* comparisonop_test.ipp */,
+				577834DD21AC9191007FD06C /* elementaryop_test.ipp */,
+				577834D821AC9190007FD06C /* digitalfilter_test.ipp */,
+				577834E221AC9191007FD06C /* matrixop_test.ipp */,
+				577834DB21AC9191007FD06C /* mclintrinsics_test.ipp */,
+				577834E121AC9191007FD06C /* point_test.ipp */,
+				577834DC21AC9191007FD06C /* pointwiseop_test.ipp */,
+				577834DA21AC9191007FD06C /* quaternion_test.ipp */,
+				577834D721AC9190007FD06C /* random_test.ipp */,
+				577834E021AC9191007FD06C /* statisticsop_test.ipp */,
+				577834DF21AC9191007FD06C /* transformop_test.ipp */,
+				577834DE21AC9191007FD06C /* vectorop_test.ipp */,
+				57BCF3C221D847B40088502C /* rampsmoother_test.ipp */,
 			);
 			name = test;
 			sourceTree = "<group>";
@@ -179,6 +180,7 @@
 			isa = PBXGroup;
 			children = (
 				57A1565115933B8A00AA6445 /* include */,
+				578E3CFB21D698C400571019 /* impl */,
 				57DF97D721D64E0900079106 /* src */,
 				57A1565315933B9500AA6445 /* test */,
 				57E73F8D1CD7CAA600095F6E /* lib */,

@@ -25,10 +25,10 @@ private:
   
   Vector(
     Vector<T>& other,
-    size_t first_element_index,
-    size_t size) noexcept
+    const size_t first_element_index,
+    const size_t size) noexcept
     : data_()
-    , data_ptr_(other.data_.data() + first_element_index)
+    , data_ptr_(other.data_ptr_ + first_element_index)
     , size_(size)
     , owns_data_(false)
   {
@@ -102,7 +102,7 @@ public:
 
   Vector() noexcept
     : data_()
-    , data_ptr_(nullptr)
+    , data_ptr_(data_.data())
     , size_(0)
     , owns_data_(true)
   {
@@ -170,15 +170,18 @@ public:
   Vector& operator=(
     const Vector& other)
   {
-    if (owns_data_ && other.data_.data() == data_.data())
+    if (owns_data_ && ! other.owns_data_ && other.data_ptr_ == data_ptr_)
     {
-      return *this;
+      // Detected that client is trying to assign a data reference like this:
+      // Vector<T> vec(3);
+      // Vector<T> ref = MakeReference(vec);
+      // vec = ref;
+      ASSERT_WITH_MESSAGE(false, "Trying to assign reference to data owner.");
     }
-
     data_ = other.data_;
     data_ptr_ = (other.owns_data_) ? data_.data() : other.data_ptr_;
     size_ = other.size_;
-    
+    owns_data_ = other.owns_data_;
     return *this;
   }
 
@@ -286,7 +289,7 @@ public:
 
   friend Vector MakeReference(
     Vector<T>& vector,
-    size_t first_element_index = 0,
+    const size_t first_element_index = 0,
     size_t size = std::numeric_limits<size_t>::max()) noexcept
   {
     size = (size < std::numeric_limits<size_t>::max()) ? size : vector.size();

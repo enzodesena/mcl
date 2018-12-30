@@ -9,7 +9,7 @@
 #pragma once
 
 #include "mclintrinsics.hpp"
-#include "rampsmoother.h"
+#include "rampsmoother.hpp"
 
 namespace mcl
 {

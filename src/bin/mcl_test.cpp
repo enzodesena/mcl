@@ -21,20 +21,20 @@
 #include "transformop.hpp"
 #include "digitalfilter.hpp"
 
-#include "basicop_test.hpp"
-#include "comparisonop_test.hpp"
-#include "elementaryop_test.hpp"
-#include "matrixop_test.hpp"
-#include "mclintrinsics_test.hpp"
-#include "pointwiseop_test.hpp"
-#include "point_test.hpp"
-#include "quaternion_test.hpp"
-#include "random_test.hpp"
-#include "statisticsop_test.hpp"
-#include "transformop_test.hpp"
-#include "vectorop_test.hpp"
-
-#include "digitalfilter_test.hpp"
+#include "basicop_test.ipp"
+#include "comparisonop_test.ipp"
+#include "elementaryop_test.ipp"
+#include "matrixop_test.ipp"
+#include "mclintrinsics_test.ipp"
+#include "pointwiseop_test.ipp"
+#include "point_test.ipp"
+#include "quaternion_test.ipp"
+#include "random_test.ipp"
+#include "statisticsop_test.ipp"
+#include "transformop_test.ipp"
+#include "vectorop_test.ipp"
+#include "rampsmoother_test.ipp"
+#include "digitalfilter_test.ipp"
 
 int main (int argc, char * const argv[]) {
 #ifndef NDEBUG
@@ -52,6 +52,7 @@ int main (int argc, char * const argv[]) {
   mcl::PointTest();
   mcl::IirFilterTest();
   mcl::StatisticsOpTest();
+  mcl::RampSmootherTest();
   std::cout<<"All tests succeded!\n";
 #else
   std::cout<<"Not running tests since NDEBUG is defined and asserts are ignored.\n";
