@@ -167,7 +167,7 @@ void DigitalFilter<T>::SetDenominatorCoeffs(
 
 
 template<typename T>
-void DigitalFilter<T>::CopyParametersFrom(
+void DigitalFilter<T>::CopyCoefficientsFrom(
   const DigitalFilter<T>& other_filter,
   const double update_length) noexcept
 {

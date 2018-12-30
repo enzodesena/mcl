@@ -43,7 +43,15 @@ public:
   
   Vector<T> GetDenominatorCoeffs() noexcept;
 
-  void CopyParametersFrom(
+  /**
+    Copies the numerator and denominator coefficients from another filter.
+    If the filter order is the same, this also leaves the state intact.
+    If desired, the coefficients can be update smoothly.
+    @param[in] other_filter the other filter
+    @param[in] update_length how many calls to `Filter` it takes to update
+    the coefficients
+  */
+  void CopyCoefficientsFrom(
     const DigitalFilter<T>& other_filter,
     const double update_length = 0) noexcept;
   

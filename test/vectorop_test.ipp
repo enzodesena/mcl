@@ -42,9 +42,6 @@ inline bool VectorOpTest()
   ASSERT(myvector_a_copy[1] == 0.2); // Should not have changed
   myvector_a[1] = 0.2; // Put it back
   
-  myvector_a = myvector_a_reference;
-  
-  
   Vector<double> myvector_b(3);
   myvector_b[0] = 0.1;
   myvector_b[1] = 0.2;

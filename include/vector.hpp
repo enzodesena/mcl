@@ -162,6 +162,7 @@ public:
   }
 
 
+
   /** Copy assignment operator. If you are trying to assign the object onto
    itself, this operator has no effect. Also, there is no effect if you try
    to assign a buffer that is referencing itself. For
@@ -185,7 +186,13 @@ public:
     return *this;
   }
 
-
+//  Vector(
+//    Vector&& x) noexcept = default;
+//
+//  /** Move assignment operator */
+//  Vector& operator=(
+//    Vector&& x) noexcept = default;
+    
   ~Vector()
   {
     data_ptr_ = nullptr;
