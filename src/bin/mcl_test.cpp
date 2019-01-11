@@ -60,6 +60,7 @@ int main (int argc, char * const argv[]) {
 
   mcl::DigitalFilterSpeedTests();
   mcl::IirFilterSpeedTests();
+  mcl::FwdIteratorSpeedTests();
   
   return 0;
 }

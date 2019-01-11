@@ -727,6 +727,46 @@ inline bool VectorOpTest()
   ASSERT(++iter_fwd == iter_fwd_end);
   return true;
 }
+
+
+template<typename Iterator>
+void FwdIteratorSpeedRoutine(Iterator iter, Iterator end)
+{
+  int k = 0;
+  while (iter != end)
+  {
+    *iter++ = k++;
+  }
+}
+
+inline void FwdIteratorSpeedTests()
+{
+  const size_t vector_length = 1000000;
+  Vector<Real> vec_a(vector_length, 1.0);
   
+  auto iter_fwd = vec_a.GetFwdIteratorBegin();
+  auto iter_fwd_end = vec_a.GetFwdIteratorEnd();
+  
+  
+  clock_t launch = clock();
+  FwdIteratorSpeedRoutine
+  (
+    vec_a.begin(),
+    vec_a.end());
+  clock_t done = clock();
+  std::cout<<"Iterator (std::vector): "<<(done - launch) / ((Real) CLOCKS_PER_SEC)<<"s \n";
+  
+  launch = clock();
+  FwdIteratorSpeedRoutine
+  (
+    vec_a.GetFwdIteratorBegin(),
+    vec_a.GetFwdIteratorEnd());
+  done = clock();
+  
+  std::cout<<"Iterator (MCL): "<<(done - launch) / ((Real) CLOCKS_PER_SEC)<<"s \n";
+  
+  
+  
+}
   
 } // namespace mcl

@@ -42,6 +42,7 @@ inline bool RampSmootherTest()
 
   smoother.SetTargetValue(15000.0, 6.0); // ramp time
   RampSmoother smoother_copy(smoother);
+  AVOID_UNUSED_WARNING(smoother_copy);
   ASSERT(IsEqual(smoother.GetNextValue(), smoother_copy.GetNextValue(1)));
   smoother.GetNextValue();
   smoother.GetNextValue();
