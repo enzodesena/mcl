@@ -308,7 +308,7 @@ inline void ConvAvx(
     return;
   }
 #endif
-
+  const size_t length = kernel.size();
   const size_t batch_size = 8;
   ALIGNED(16) __m256 input_frame;
   ALIGNED(16) __m256 coefficient;
@@ -317,23 +317,23 @@ inline void ConvAvx(
   for (size_t n = 0; (n + batch_size) <= num_samples; n += batch_size)
   {
     accumulator = _mm256_setzero_ps();
-    for (size_t k = 0; k < length_; k++)
+    for (size_t k = 0; k < length; k++)
     {
-      coefficient = _mm256_set1_ps((float)coefficients_[length_ - k - 1]);
-      input_frame = _mm256_loadu_ps(extended_input_data + n + k);
+      coefficient = _mm256_set1_ps(kernel[length - k - 1]);
+      input_frame = _mm256_loadu_ps(input.data() + n + k);
       accumulator = _mm256_add_ps(
-        _mm256_mul_ps(coefficient, input_frame), accumulator);
+        _mm256_mul_ps(kernel, input_frame), accumulator);
     }
-    _mm256_storeu_ps(output_data_float + n, accumulator);
+    _mm256_storeu_ps(output + n, accumulator);
   }
 
   const size_t num_samples_completed = num_samples - (num_samples % batch_size);
 
   for (size_t n = num_samples_completed; n < num_samples; ++n)
   {
-    for (size_t p = 0; p < length_; ++p)
+    for (size_t p = 0; p < length; ++p)
     {
-      output_data[n] += coefficients_[length_ - p - 1] * extended_input_data[n +
+      output[n] += kernel[length - p - 1] * input[n +
         p];
     }
   }
