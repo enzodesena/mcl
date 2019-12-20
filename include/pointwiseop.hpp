@@ -14,15 +14,15 @@
 namespace mcl
 {
 template<
-  typename ConstForwardIterator,
-  typename ForwardIterator,
-  typename ForwardIteratorT = typename std::iterator_traits<ForwardIterator>::value_type,
-  typename ConstForwardIteratorT = typename std::iterator_traits<ConstForwardIterator>::value_type>
+  typename InputIterator,
+  typename OutputIterator,
+  typename InputIteratorT = typename std::iterator_traits<InputIterator>::value_type,
+  typename OutputIteratorT = typename std::iterator_traits<OutputIterator>::value_type>
 void ForEach(
-  ConstForwardIterator input_begin,
-  const ConstForwardIterator input_end,
-  std::function<ForwardIteratorT(ConstForwardIteratorT)> operation,
-  ForwardIterator output_begin) noexcept
+  InputIterator input_begin,
+  InputIterator input_end,
+  std::function<OutputIteratorT(InputIteratorT)> operation,
+  OutputIterator output_begin) noexcept
 {
   while (input_begin != input_end)
   {
@@ -32,16 +32,16 @@ void ForEach(
 
 
 template<
-  typename ForwardIteratorInputA,
-  typename ForwardIteratorInputB,
-  typename ForwardIteratorOutput,
-  typename T = typename std::iterator_traits<ForwardIteratorOutput>::value_type>
+  typename InputIteratorA,
+  typename InputIteratorB,
+  typename OutputIterator,
+  typename T = typename std::iterator_traits<OutputIterator>::value_type>
 void ForEach(
-  ForwardIteratorInputA input_a_begin,
-  const ForwardIteratorInputA input_a_end,
-  ForwardIteratorInputB input_b_begin,
+  InputIteratorA input_a_begin,
+  InputIteratorA input_a_end,
+  InputIteratorB input_b_begin,
   std::function<T(T,T)> pointwise_operation,
-  ForwardIteratorOutput output_iter) noexcept
+  OutputIterator output_iter) noexcept
 {
   while (input_a_begin != input_a_end)
   {

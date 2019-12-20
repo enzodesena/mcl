@@ -16,18 +16,14 @@
 #define VERY_SMALL (0.0000000000001)
 #endif
 
-#ifndef VERY_SMALLF
-#define VERY_SMALLF (0.0000000000001f)
-#endif
-
 #if defined(__APPLE__)
-#if (__GNUC__ >= 4)
-#include <cmath>
-#define isnan(x) std::isnan(x)
-#else
-#include <math.h>
-#define isnan(x) __isnand((double)x)
-#endif
+  #if (__GNUC__ >= 4)
+    #include <cmath>
+  #define isnan(x) std::isnan(x)
+  #else
+    #include <math.h>
+    #define isnan(x) __isnand((double)x)
+  #endif
 #endif
 
 #include "vector.hpp"
@@ -68,7 +64,7 @@ inline bool IsApproximatelyEqual(
 inline bool IsApproximatelyEqual(
   const float num_a,
   const float num_b,
-  const float precision = VERY_SMALLF)
+  const float precision = float(VERY_SMALL))
 {
   return std::abs(num_a - num_b) < precision;
 }

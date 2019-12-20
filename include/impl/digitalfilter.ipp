@@ -27,7 +27,8 @@ DigitalFilter<T>::DigitalFilter(
   , counter_(numerator_coeffs.size() - 1)
   , length_(numerator_coeffs.size())
   , numerator_smoothers_(numerator_coeffs.size(), T(0.0))
-  , temp_conv_data_(Vector(max_expected_input_length + length_ - 1, T(0.0)))
+  , temp_conv_input_(Vector(max_expected_input_length + length_ - 1, T(0.0)))
+  , temp_conv_output_(Vector(max_expected_input_length, T(0.0)))
   , temp_add_data_(Vector(max_expected_input_length, T(0.0)))
 {
   ASSERT(denominator_coeffs.size() == 1 ||
@@ -57,7 +58,7 @@ T DigitalFilter<T>::FilterSample(
   const T input_sample) noexcept
 {
   if (denominator_coeffs_.size() == 1)
-  {
+  { // FIR FILTER
     if (length_ == 1)
     {
       state_[0] = input_sample;
@@ -78,14 +79,13 @@ T DigitalFilter<T>::FilterSample(
     return result;
   }
   else
-  {
+  { // IIR FILTER
     // Transposed direct form II (this appears to be slightly slower)
-//    T output = B_[0]*input + state_[0];
-//    for (size_t i = 0; i <= size-2; ++i)
-//    {
-//      state_[i] = state_[i+1] + input*B_[i+1] - output*A_[i+1];
-//    }
-
+    // T output = B_[0]*input + state_[0];
+    // for (size_t i = 0; i <= size-2; ++i)
+    // {
+    //   state_[i] = state_[i+1] + input*B_[i+1] - output*A_[i+1];
+    // }
     // Direct form II
     T v = input_sample; // The temporary value in the recursive branch.
     T output(static_cast<T>(0.0));
@@ -184,26 +184,29 @@ void DigitalFilter<T>::ResetState() noexcept
 
 
 template<typename T>
-Vector<T> DigitalFilter<T>::GetNumeratorCoeffs() const noexcept
+const Vector<T>& DigitalFilter<T>::GetNumeratorCoeffs() const noexcept
 {
   return numerator_coeffs_;
 }
   
   
 template<typename T>
-Vector<T> DigitalFilter<T>::GetDenominatorCoeffs() const noexcept
+const Vector<T>& DigitalFilter<T>::GetDenominatorCoeffs() const noexcept
 {
   return denominator_coeffs_;
 }
 
 
 template<typename T>
+template<typename InputIterator, typename OutputIterator>
 void DigitalFilter<T>::FilterSerial(
-  const Vector<T>& input,
-  Vector<T>& output) noexcept
+  InputIterator input_iter,
+  InputIterator input_end,
+  OutputIterator output_iter) noexcept
 {
-  for (size_t i=0; i<input.size(); ++i) {
-    output[i] = FilterSample(input[i]);
+  while (input_iter != input_end)
+  {
+    *(input_iter++) = FilterSample(*(output_iter++));
   }
 }
 
@@ -229,6 +232,18 @@ void DigitalFilter<T>::Filter(
   const Vector<T>& input,
   Vector<T>& output) noexcept
 {
+  Filter(input.begin(), input.end(), output.begin());
+}
+
+
+template<typename T>
+template<typename InputIterator, typename OutputIterator>
+void DigitalFilter<T>::Filter(
+  InputIterator input_begin,
+  InputIterator input_end,
+  OutputIterator output_begin) noexcept
+{
+  const size_t input_size = input_end-input_begin;
   ASSERT(input.size() == output.size());
   
   if (numerator_smoothers_[0].IsUpdating())
@@ -236,22 +251,28 @@ void DigitalFilter<T>::Filter(
     UpdateCoefficients();
   }
   
-  if (denominator_coeffs_.size() > 1 || input.size() < length_)
+  if (denominator_coeffs_.size() > 1 || input_size < length_)
   {
-    FilterSerial(input, output);
+    FilterSerial(input_begin, input_end, output_begin);
   }
   else
   {
-    if (temp_conv_data_.size() < (input.size() + length_ - 1))
+    if (temp_conv_input_.size() < (input_size + length_ - 1))
     {
-      temp_conv_data_ = Vector<T>(input.size() + length_ - 1);
+      temp_conv_input_ = Vector<T>(input_size + length_ - 1);
+      temp_conv_output_ = Vector<T>(input_size);
     }
-    GetExtendedInput(input, temp_conv_data_);
-    Conv(temp_conv_data_, numerator_coeffs_, output);
+    GetExtendedInput(input_begin, input_end, temp_conv_input_);
+    Conv(temp_conv_input_, numerator_coeffs_, temp_conv_output_);
+    auto temp_output_iter = temp_conv_output_.begin();
+    for (size_t i = 0; i < input_size; ++i)
+    {
+      *(output_begin++) = *(temp_output_iter++);
+    }
     // Reorganise state for the next run
     for (size_t i = 0; i < length_; ++i)
     {
-      state_[i] = input[input.size() - 1 - i];
+      state_[i] = *(--input_end);
     }
     counter_ = length_ - 1;
   }
