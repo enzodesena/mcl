@@ -181,12 +181,14 @@ IirFilter GainFilter(Real gain) {
 IirFilter IdenticalFilter() { return GainFilter(1.0); }
 
 IirFilter WallFilter(WallType wall_type, Real sampling_frequency) {
+#ifndef MCL_IGNORE_WALL_FILTER_WARNING
   // TODO: implement for frequencies other than 44100
   if (! IsEqual(sampling_frequency, 44100)) {
     mcl::Logger::GetInstance().LogError("Attempting to use a wall filter "
         "designed for 44100 Hz sampling frequency with a sampling frequency "
         "of %f Hz. The filter response will be inaccurate.", sampling_frequency);
   }
+#endif
   
   std::vector<Real> B;
   std::vector<Real> A;
